@@ -12,7 +12,7 @@ import { Header, Button } from 'semantic-ui-react';
 const fs = require('fs');
 const path = require('path');
 import { ipcRenderer } from 'electron';
-import EnabledUserFilesPathForm from './components/EnabledUserFilesPathForm';
+import EnabledUserFilesPathFormContainer from './containers/EnabledUserFilesPathFormContainer';
 
 ipcRenderer.on('eventFromMain', (_, arg) => {
   store.dispatch({
@@ -150,7 +150,7 @@ const LoadConfigFileScreen = ({ configScreenErrorMessage }) => {
       current.matches('configFileDoesntExist.askingForUserFilesPath.submitButtonEnabled')
     ) {
       return (
-        <EnabledUserFilesPathForm
+        <EnabledUserFilesPathFormContainer
           onInput={(directoryPath) => {
             store.dispatch({
               type: RECEIVE_ENTITIES,
