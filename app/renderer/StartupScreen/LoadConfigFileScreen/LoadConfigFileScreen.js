@@ -4,7 +4,7 @@ import { interpret } from 'xstate';
 import { useService } from '@xstate/react';
 
 import LoadUserFilesScreen from '../LoadUserFilesScreen/LoadUserFilesScreen';
-import configFileMachine from './configFileMachine';
+import machine from './machine';
 import store from '../../redux/store';
 import { RECEIVE_ENTITIES } from '../actionTypes';
 import DisabledUserFilesPathForm from './components/DisabledUerFilesPathForm';
@@ -110,7 +110,7 @@ const checkUserFilesDirExists = () => {
   });
 };
 
-const configFileMachineConfigured = configFileMachine.withConfig({
+const configFileMachineConfigured = machine.withConfig({
   actions: {
     sendEventToMainProcess: (_, __) => ipcRenderer.send('eventFromRenderer'),
   },

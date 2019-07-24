@@ -1,7 +1,7 @@
 //@ts-check
 import { Machine } from 'xstate';
 
-const configFileMachine = Machine({
+const machine = Machine({
   id: 'config-file',
   initial: 'fetchingAppDataPath',
   states: {
@@ -67,4 +67,4 @@ const configFileMachine = Machine({
   },
 });
 
-export default configFileMachine;
+export default machine;
