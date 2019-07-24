@@ -8,6 +8,7 @@ import GraphExplorerScreen from './screens/GraphExplorerScreen/GraphExplorerScre
 import FileScreen from './screens/FileScreen/FileScreen';
 import routes from './routes';
 import CategoryScreen from './screens/CategoryScreen/CategoryScreen';
+import HomeScreen from './screens/HomeScreen';
 
 const linkClass = css({
   fontSize: 20,
@@ -68,10 +69,6 @@ const Layout = ({ BodyComponent, HeaderComponent }) => {
   );
 };
 
-const Home = () => {
-  return <h2>Home</h2>;
-};
-
 const RouteController = () => {
   return (
     <Router>
@@ -79,7 +76,9 @@ const RouteController = () => {
         <Route
           exact
           path={routes.HOME}
-          render={() => <Layout BodyComponent={<Home />} HeaderComponent={<NavigationBox />} />}
+          render={() => (
+            <Layout BodyComponent={<HomeScreen />} HeaderComponent={<NavigationBox />} />
+          )}
         />
         <Route
           exact
