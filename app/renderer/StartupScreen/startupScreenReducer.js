@@ -9,6 +9,7 @@ const initialState = {
   userFilesSubdirFilesPath: '',
   sqliteFilePath: '',
   addNewInstanceErrorMessage: '',
+  loadUserFilesErrorMessage: '',
 };
 
 export default function(state = initialState, action) {

@@ -2,6 +2,7 @@ import React from 'react';
 import RouteController from '../../RouteController';
 import machine from './machine';
 import { useMachine } from '@xstate/react';
+import { connect } from 'react-redux';
 import store from '../../redux/store';
 import {
   USER_FILES_DIR,
@@ -17,6 +18,7 @@ import {
   insertRootCategoryIfNotExists,
 } from './sqlQueries';
 import { RECEIVE_ENTITIES } from '../actionTypes';
+const fs = require('fs');
 const path = require('path');
 const sqlite3 = require('sqlite3');
 
@@ -95,17 +97,50 @@ const writeSqliteFileAndInitializingIfNotExists = async () => {
   return await initializeDatabaseIfNotInitialized(sqliteFilePath);
 };
 
+const updateErrorMessage = (errorMessage) => {
+  store.dispatch({
+    type: RECEIVE_ENTITIES,
+    payload: {
+      loadUserFilesErrorMessage: errorMessage,
+    },
+  });
+};
+
+const DIR_NOT_EXIST_ERROR_CODE = 'ENOENT';
+
+const checkUserFilesDirExists = () => {
+  return new Promise((resolve, reject) => {
+    const chosenInstancePath = getChosenInstancePath(store.getState());
+    fs.access(chosenInstancePath, function(err) {
+      if (err) {
+        if (err.code === DIR_NOT_EXIST_ERROR_CODE) {
+          reject(`Directory at ${chosenInstancePath} is missing`);
+        } else {
+          reject(`Unknown error while accessing directory at: ${chosenInstancePath}`);
+        }
+      } else {
+        resolve();
+      }
+    });
+  });
+};
+
 const machineWithConfig = machine.withConfig({
   services: {
+    checkUserFilesDirExists: () => checkUserFilesDirExists(),
     writeUserFilesDirIfNotExists: () => writeUserFilesDirIfNotExists(),
     writeFilesSubdirIfNotExists: () => writeFilesSubdirIfNotExists(),
     writeSqliteFileAndInitializingIfNotExists: () => writeSqliteFileAndInitializingIfNotExists(),
   },
+  actions: {
+    updateErrorMessage: (_, event) => updateErrorMessage(event.data),
+  },
 });
 
-const LoadUserFilesScreen = () => {
+const LoadUserFilesScreen = ({ loadUserFilesErrorMessage }) => {
   const [current] = useMachine(machineWithConfig);
   if (
+    current.matches('checkingUserFilesDirExists') ||
     current.matches('writingUserFilesDirIfNotExists') ||
     current.matches('writingFilesSubdirIfNotExists') ||
     current.matches('writingSqliteFileAndInitializingIfNotExists')
@@ -114,10 +149,20 @@ const LoadUserFilesScreen = () => {
   } else if (current.matches('finished')) {
     return <RouteController />;
   } else if (current.matches('failure')) {
-    return <h2>Failed due to error</h2>;
+    return (
+      <>
+        <h1>Failed due to error</h1>
+        <h2>{loadUserFilesErrorMessage}</h2>
+      </>
+    );
   } else {
     return <h2>Unknown state</h2>;
   }
 };
 
-export default LoadUserFilesScreen;
+const getLoadUserFilesErrorMessage = (store) =>
+  store && store.startupScreen ? store.startupScreen.loadUserFilesErrorMessage : '';
+
+export default connect((state) => ({
+  loadUserFilesErrorMessage: getLoadUserFilesErrorMessage(state),
+}))(LoadUserFilesScreen);
