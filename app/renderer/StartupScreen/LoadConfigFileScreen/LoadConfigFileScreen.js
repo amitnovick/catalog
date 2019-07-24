@@ -7,11 +7,12 @@ import LoadUserFilesScreen from '../LoadUserFilesScreen/LoadUserFilesScreen';
 import configFileMachine from './configFileMachine';
 import store from '../../redux/store';
 import { RECEIVE_ENTITIES } from '../actionTypes';
-import UserFilesPathFormContainer from './containers/UserFilesPathFormContainer';
+import DisabledUserFilesPathForm from './components/DisabledUerFilesPathForm';
 import { Header, Button } from 'semantic-ui-react';
 const fs = require('fs');
 const path = require('path');
 import { ipcRenderer } from 'electron';
+import EnabledUserFilesPathForm from './components/EnabledUserFilesPathForm';
 
 ipcRenderer.on('eventFromMain', (_, arg) => {
   store.dispatch({
@@ -52,16 +53,13 @@ const attemptToReadConfigFile = () => {
   });
 };
 
-const getChosenUserFilesPath = (store) =>
-  store && store.startupScreen ? store.startupScreen.chosenUserFilesPath : '';
-
 const writeUserFilesPathToConfigFile = () => {
   return new Promise((resolve, reject) => {
     const appDataPath = getAppDataPath(store.getState());
     const configFilePath = path.join(appDataPath, CONFIG_FILE_NAME);
-    const chosenUserFilesPath = getChosenUserFilesPath(store.getState());
+    const userFilesPath = getUserFilesPath(store.getState());
     const configFileContent = JSON.stringify({
-      [CONFIG_FILE_KEY]: chosenUserFilesPath,
+      [CONFIG_FILE_KEY]: userFilesPath,
     });
     fs.writeFile(configFilePath, configFileContent, (err) => {
       if (err) {
@@ -76,16 +74,6 @@ const writeUserFilesPathToConfigFile = () => {
         resolve();
       }
     });
-  });
-};
-
-const updateUserFilesPath = () => {
-  const chosenUserFilesPath = getChosenUserFilesPath(store.getState());
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      userFilesPath: chosenUserFilesPath,
-    },
   });
 };
 
@@ -125,18 +113,6 @@ const checkUserFilesDirExists = () => {
 const configFileMachineConfigured = configFileMachine.withConfig({
   actions: {
     sendEventToMainProcess: (_, __) => ipcRenderer.send('eventFromRenderer'),
-
-    // setTimeout(() => {
-    //   console.log('tick!');
-    //   store.dispatch({
-    //     type: RECEIVE_ENTITIES,
-    //     payload: {
-    //       appDataPath: '/home/felix/.config/WikiFs',
-    //     },
-    //   });
-    //   service.send('RECEIVE_APP_DATA_PATH');
-    // }, 3000),
-    updateUserFilesPath: (_, __) => updateUserFilesPath(),
   },
   services: {
     attemptToReadConfigFile: (_, __) => attemptToReadConfigFile(),
@@ -156,7 +132,41 @@ const LoadConfigFileScreen = ({ configScreenErrorMessage }) => {
   ) {
     return <h2>Loading...</h2>;
   } else if (current.matches('configFileDoesntExist')) {
-    return <UserFilesPathFormContainer onSubmit={() => send('SUBMIT_SAVE_LOCATION')} />;
+    if (current.matches('configFileDoesntExist.askingForUserFilesPath.submitButtonDisabled')) {
+      return (
+        <DisabledUserFilesPathForm
+          onInput={(directoryPath) => {
+            store.dispatch({
+              type: RECEIVE_ENTITIES,
+              payload: {
+                userFilesPath: directoryPath,
+              },
+            });
+            send('INPUT_DIRECTORY_PATH');
+          }}
+        />
+      );
+    } else if (
+      current.matches('configFileDoesntExist.askingForUserFilesPath.submitButtonEnabled')
+    ) {
+      return (
+        <EnabledUserFilesPathForm
+          onInput={(directoryPath) => {
+            store.dispatch({
+              type: RECEIVE_ENTITIES,
+              payload: {
+                userFilesPath: directoryPath,
+              },
+            });
+          }}
+          onSubmit={() => send('CLICK_SUBMIT_DIRECTORY_PATH_BUTTON')}
+        />
+      );
+    } else if (current.matches('configFileDoesntExist.writingUserFilesPathToConfigFile')) {
+      return <h2>Loading...</h2>;
+    } else {
+      return <h2>Unknown state</h2>;
+    }
   } else if (current.matches('finished')) {
     return <LoadUserFilesScreen />;
   } else if (current.matches('userFilesDirDoesntExistError')) {

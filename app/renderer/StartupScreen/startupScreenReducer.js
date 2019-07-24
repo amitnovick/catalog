@@ -3,10 +3,9 @@ import { RECEIVE_ENTITIES } from './actionTypes';
 const initialState = {
   appDataPath: '',
   userFilesPath: '',
-  chosenUserFilesPath: '',
   configScreenErrorMessage: '',
   userFilesSubdirFilesPath: '',
-  sqliteFilePath: ''
+  sqliteFilePath: '',
 };
 
 export default function(state = initialState, action) {
