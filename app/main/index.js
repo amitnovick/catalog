@@ -1,8 +1,9 @@
 import path from 'path';
 import { app, crashReporter, BrowserWindow, Menu, ipcMain } from 'electron';
+import { EVENT_FROM_RENDERER, EVENT_FROM_MAIN } from '../shared/ipcChannelNames';
 
-ipcMain.on('eventFromRenderer', (event) => {
-  event.sender.send('eventFromMain', {
+ipcMain.on(EVENT_FROM_RENDERER, (event) => {
+  event.sender.send(EVENT_FROM_MAIN, {
     userDataPath: app.getPath('userData'),
   });
 });
