@@ -13,8 +13,9 @@ const fs = require('fs');
 const path = require('path');
 import { ipcRenderer } from 'electron';
 import EnabledUserFilesPathFormContainer from './containers/EnabledUserFilesPathFormContainer';
+import { EVENT_FROM_RENDERER, EVENT_FROM_MAIN } from '../../../shared/ipcChannelNames';
 
-ipcRenderer.on('eventFromMain', (_, arg) => {
+ipcRenderer.on(EVENT_FROM_MAIN, (_, arg) => {
   store.dispatch({
     type: RECEIVE_ENTITIES,
     payload: {
@@ -112,7 +113,7 @@ const checkUserFilesDirExists = () => {
 
 const configFileMachineConfigured = machine.withConfig({
   actions: {
-    sendEventToMainProcess: (_, __) => ipcRenderer.send('eventFromRenderer'),
+    sendEventToMainProcess: (_, __) => ipcRenderer.send(EVENT_FROM_RENDERER),
   },
   services: {
     attemptToReadConfigFile: (_, __) => attemptToReadConfigFile(),
