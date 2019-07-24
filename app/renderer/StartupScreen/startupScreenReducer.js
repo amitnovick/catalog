@@ -1,11 +1,14 @@
 import { RECEIVE_ENTITIES } from './actionTypes';
 
 const initialState = {
-  appDataPath: '',
-  userFilesPath: '',
+  configDirectoryPath: '',
+  instancesPaths: [],
+  chosenInstancePath: '',
+  inputPath: '',
   configScreenErrorMessage: '',
   userFilesSubdirFilesPath: '',
   sqliteFilePath: '',
+  addNewInstanceErrorMessage: '',
 };
 
 export default function(state = initialState, action) {

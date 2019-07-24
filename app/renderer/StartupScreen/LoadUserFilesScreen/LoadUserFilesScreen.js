@@ -20,18 +20,22 @@ import { RECEIVE_ENTITIES } from '../actionTypes';
 const path = require('path');
 const sqlite3 = require('sqlite3');
 
-const getUserFilesPath = (store) =>
-  store && store.startupScreen ? store.startupScreen.userFilesPath : '';
+const getChosenInstancePath = (store) =>
+  store && store.startupScreen ? store.startupScreen.chosenInstancePath : '';
 
 const writeUserFilesDirIfNotExists = async () => {
-  const userFilesPath = getUserFilesPath(store.getState());
-  const userFilesDirPath = path.join(userFilesPath, USER_FILES_DIR);
-  return await writeDirIfNotExists(userFilesDirPath);
+  const chosenInstancePath = getChosenInstancePath(store.getState());
+  const chosenInstanceSubdirPath = path.join(chosenInstancePath, USER_FILES_DIR);
+  return await writeDirIfNotExists(chosenInstanceSubdirPath);
 };
 
 const writeFilesSubdirIfNotExists = async () => {
-  const userFilesPath = getUserFilesPath(store.getState());
-  const userFilesDirPath = path.join(userFilesPath, USER_FILES_DIR, USER_FILES_SUBDIR_FILES_NAME);
+  const chosenInstancePath = getChosenInstancePath(store.getState());
+  const userFilesDirPath = path.join(
+    chosenInstancePath,
+    USER_FILES_DIR,
+    USER_FILES_SUBDIR_FILES_NAME,
+  );
   store.dispatch({
     type: RECEIVE_ENTITIES,
     payload: {
@@ -72,8 +76,8 @@ const initializeDatabaseIfNotInitialized = (sqliteFilePath) => {
 };
 
 const writeSqliteFileAndInitializingIfNotExists = async () => {
-  const userFilesPath = getUserFilesPath(store.getState());
-  const sqliteFilePath = path.join(userFilesPath, USER_FILES_DIR, SQLITE_FILE_NAME);
+  const chosenInstancePath = getChosenInstancePath(store.getState());
+  const sqliteFilePath = path.join(chosenInstancePath, USER_FILES_DIR, SQLITE_FILE_NAME);
   store.dispatch({
     type: RECEIVE_ENTITIES,
     payload: {

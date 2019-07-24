@@ -4,7 +4,6 @@ import { Button, Header, Label } from 'semantic-ui-react';
 import { css } from 'emotion';
 
 /* TODO:
-  - This component and `DisabledUserFIlesPathForm` should be refactored due to shared functionality that should not diverge
   - This component implements non-trivial tricks that should probably be refactored into an external component entirely, to emphasize that it works only for Electron environment
 */
 
@@ -17,14 +16,14 @@ const inputClass = css`
   display: none;
 `;
 
-const EnabledUserFilesPathForm = ({ onInput, onSubmit, userFilesPath }) => {
+const AddNewInstance = ({ onInput, onSubmit, inputPath }) => {
+  const isDisabled = inputPath === '';
   return (
     <>
       <Header as="h1">Please choose the directory that would contain your WikiFS Data Files</Header>
-      <Label
-        as="label"
-        size="massive"
-        htmlFor="directory-picker">{`Chosen: ${userFilesPath}`}</Label>
+      {isDisabled ? null : (
+        <Label as="label" size="massive" htmlFor="directory-picker">{`Chosen: ${inputPath}`}</Label>
+      )}
       <label
         className={
           wrapperLabelClass
@@ -56,21 +55,23 @@ const EnabledUserFilesPathForm = ({ onInput, onSubmit, userFilesPath }) => {
           htmlFor="directory-picker"
           size="massive" /* Note: It is necessary to have `htmlFor` here and point to the <input/> in order to trigger the Filepicker element */
         >
-          Change Directory
+          {isDisabled ? 'Choose Directory' : 'Change Directory'}
         </Button>
       </label>
       <br />
-      <Button positive size="massive" onClick={onSubmit}>
-        Save
-      </Button>
+      {isDisabled ? null : (
+        <Button positive size="massive" onClick={() => onSubmit(inputPath)}>
+          Save
+        </Button>
+      )}
     </>
   );
 };
 
-EnabledUserFilesPathForm.propTypes = {
+AddNewInstance.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onInput: PropTypes.func.isRequired,
-  userFilesPath: PropTypes.string.isRequired,
+  inputPath: PropTypes.string.isRequired,
 };
 
-export default EnabledUserFilesPathForm;
+export default AddNewInstance;

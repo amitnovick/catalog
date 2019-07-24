@@ -14,43 +14,24 @@ const machine = Machine({
     attemptingToReadConfigFile: {
       invoke: {
         src: 'attemptToReadConfigFile',
-        onDone: '#config-file.checkingUserFilesDirExists',
-        onError: 'configFileDoesntExist',
+        onDone: {
+          target: '#config-file.finished',
+          actions: 'updateInstancesPaths',
+        },
+        onError: 'writingDefaultConfigFile',
       },
     },
-    configFileDoesntExist: {
-      initial: 'askingForUserFilesPath',
-      states: {
-        askingForUserFilesPath: {
-          initial: 'submitButtonDisabled',
-          states: {
-            submitButtonDisabled: {
-              on: {
-                INPUT_DIRECTORY_PATH: 'submitButtonEnabled',
-              },
-            },
-            submitButtonEnabled: {
-              on: {
-                CLICK_SUBMIT_DIRECTORY_PATH_BUTTON:
-                  '#config-file.configFileDoesntExist.writingUserFilesPathToConfigFile',
-              },
-            },
-          },
-        },
-        writingUserFilesPathToConfigFile: {
-          invoke: {
-            src: 'writeUserFilesPathToConfigFile',
-            onDone: '#config-file.checkingUserFilesDirExists',
-            onError: '#config-file.couldntWriteToConfigFileError',
-          },
-        },
-      },
-    },
-    checkingUserFilesDirExists: {
+    writingDefaultConfigFile: {
       invoke: {
-        src: 'checkUserFilesDirExists',
-        onDone: 'finished',
-        onError: 'userFilesDirDoesntExistError',
+        src: 'writeDefaultConfigFile',
+        onDone: {
+          target: '#config-file.finished',
+          actions: 'updateInstancesPaths',
+        },
+        onError: {
+          target: '#config-file.couldntWriteToConfigFileError',
+          actions: 'updateErrorMessage',
+        },
       },
     },
     finished: {
@@ -58,11 +39,6 @@ const machine = Machine({
     },
     couldntWriteToConfigFileError: {
       type: 'final',
-    },
-    userFilesDirDoesntExistError: {
-      on: {
-        CLICK_PROVIDE_DIFFERENT_DIRECTORY: 'configFileDoesntExist',
-      },
     },
   },
 });
