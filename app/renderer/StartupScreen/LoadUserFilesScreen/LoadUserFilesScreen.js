@@ -100,9 +100,7 @@ const machineWithConfig = machine.withConfig({
 });
 
 const LoadUserFilesScreen = () => {
-  const [current] = useMachine(machineWithConfig, {
-    devTools: true,
-  });
+  const [current] = useMachine(machineWithConfig);
   if (
     current.matches('writingUserFilesDirIfNotExists') ||
     current.matches('writingFilesSubdirIfNotExists') ||

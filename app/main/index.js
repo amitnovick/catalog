@@ -1,5 +1,11 @@
 import path from 'path';
-import { app, crashReporter, BrowserWindow, Menu } from 'electron';
+import { app, crashReporter, BrowserWindow, Menu, ipcMain } from 'electron';
+
+ipcMain.on('eventFromRenderer', (event) => {
+  event.sender.send('eventFromMain', {
+    userDataPath: app.getPath('userData'),
+  });
+});
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 

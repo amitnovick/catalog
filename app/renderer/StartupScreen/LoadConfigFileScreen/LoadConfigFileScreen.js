@@ -11,6 +11,17 @@ import UserFilesPathFormContainer from './containers/UserFilesPathFormContainer'
 import { Header, Button } from 'semantic-ui-react';
 const fs = require('fs');
 const path = require('path');
+import { ipcRenderer } from 'electron';
+
+ipcRenderer.on('eventFromMain', (_, arg) => {
+  store.dispatch({
+    type: RECEIVE_ENTITIES,
+    payload: {
+      appDataPath: arg.userDataPath,
+    },
+  });
+  service.send('RECEIVE_APP_DATA_PATH');
+});
 
 const CONFIG_FILE_NAME = 'config.json';
 
@@ -113,17 +124,18 @@ const checkUserFilesDirExists = () => {
 
 const configFileMachineConfigured = configFileMachine.withConfig({
   actions: {
-    sendEventToMainProcess: (_, __) =>
-      setTimeout(() => {
-        console.log('tick!');
-        store.dispatch({
-          type: RECEIVE_ENTITIES,
-          payload: {
-            appDataPath: '/home/felix/.config/WikiFs',
-          },
-        });
-        service.send('RECEIVE_APP_DATA_PATH');
-      }, 3000),
+    sendEventToMainProcess: (_, __) => ipcRenderer.send('eventFromRenderer'),
+
+    // setTimeout(() => {
+    //   console.log('tick!');
+    //   store.dispatch({
+    //     type: RECEIVE_ENTITIES,
+    //     payload: {
+    //       appDataPath: '/home/felix/.config/WikiFs',
+    //     },
+    //   });
+    //   service.send('RECEIVE_APP_DATA_PATH');
+    // }, 3000),
     updateUserFilesPath: (_, __) => updateUserFilesPath(),
   },
   services: {
@@ -133,9 +145,7 @@ const configFileMachineConfigured = configFileMachine.withConfig({
   },
 });
 
-const service = interpret(configFileMachineConfigured)
-  .onTransition((state) => console.log('state.value:', state.value))
-  .start();
+const service = interpret(configFileMachineConfigured).start();
 
 const LoadConfigFileScreen = ({ configScreenErrorMessage }) => {
   const [current, send] = useService(service);
