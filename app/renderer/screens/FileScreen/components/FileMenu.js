@@ -13,7 +13,7 @@ const FileMenu = ({
   onClickCategory,
   onClickDeleteFile,
   onChangeNewFileName,
-  onClickRenameFile
+  onClickRenameFile,
 }) => {
   return (
     <>
@@ -27,10 +27,7 @@ const FileMenu = ({
                 value={newFileName}
                 onChange={({ target }) => onChangeNewFileName(target.value)}
               />
-              <Button
-                size="massive"
-                onClick={() => onClickRenameFile(file, newFileName)}
-              >
+              <Button size="massive" onClick={() => onClickRenameFile(file, newFileName)}>
                 <Icon name="edit" />
                 Rename file
               </Button>
@@ -38,21 +35,11 @@ const FileMenu = ({
           </List.Item>
         </List>
         <br />
-        <Button
-          onClick={() => onClickOpenFile(file)}
-          style={{
-            fontSize: '2em',
-            border: '1px solid black',
-            borderRadius: 5
-          }}
-        >
+        <Button size="massive" color="green" onClick={() => onClickOpenFile(file)}>
+          <Icon name="envelope open" />
           Open file
         </Button>
-        <Button
-          size="massive"
-          color="red"
-          onClick={() => onClickDeleteFile(file)}
-        >
+        <Button size="massive" color="red" onClick={() => onClickDeleteFile(file)}>
           <Icon name="remove" /> Delete file
         </Button>
       </div>
@@ -70,7 +57,7 @@ FileMenu.propTypes = {
   onClickDeleteFile: PropTypes.func.isRequired,
   newFileName: PropTypes.string.isRequired,
   onChangeNewFileName: PropTypes.func.isRequired,
-  onClickRenameFile: PropTypes.func.isRequired
+  onClickRenameFile: PropTypes.func.isRequired,
 };
 
 export default FileMenu;
