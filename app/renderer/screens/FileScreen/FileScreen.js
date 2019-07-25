@@ -337,7 +337,7 @@ const queryRemoveFileFromFilesTable = (fileId) => {
         } else {
           const { changes: affectedRowsCount } = this;
           if (affectedRowsCount !== 1) {
-            console.log('No affected rows error');
+            console.log('queryRemoveFileFromFilesTable: No affected rows error');
             reject();
           } else {
             resolve();
@@ -360,13 +360,7 @@ const queryRemoveFileFromCategoriesFilesTable = (fileId) => {
           console.log('unknown error:', err);
           reject();
         } else {
-          const { changes: affectedRowsCount } = this;
-          if (affectedRowsCount !== 1) {
-            console.log('No affected rows error');
-            reject();
-          } else {
-            resolve();
-          }
+          resolve();
         }
       },
     );
