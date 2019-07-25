@@ -1,6 +1,5 @@
 import React from 'react';
-import { HashRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import { css } from 'emotion';
+import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 
 import SearchScreen from './screens/SearchScreen/SearchScreen';
 import ControlPanelScreen from './screens/ControlPanelScreen/ControlPanelScreen';
@@ -9,56 +8,7 @@ import FileScreen from './screens/FileScreen/FileScreen';
 import routes from './routes';
 import CategoryScreen from './screens/CategoryScreen/CategoryScreen';
 import HomeScreen from './screens/HomeScreen';
-
-const linkClass = css({
-  fontSize: 20,
-  fontFamily: 'helvetica',
-  textDecoration: 'none',
-  color: 'black',
-});
-
-const listItemClass = css({
-  margin: 5,
-  border: '1px solid black',
-  borderRadius: 5,
-  padding: '2px 6px',
-  ':hover': {
-    backgroundColor: '#f0f0f0',
-  },
-});
-
-const NavigationBox = () => {
-  return (
-    <ul
-      className={css({
-        display: 'flex',
-        flexDirection: 'row',
-        listStyle: 'none',
-        padding: 5,
-      })}>
-      <li className={listItemClass}>
-        <Link to={routes.HOME} className={linkClass}>
-          Home
-        </Link>
-      </li>
-      <li className={listItemClass}>
-        <Link to={routes.CONTROL_PANEL} className={linkClass}>
-          Control Panel
-        </Link>
-      </li>
-      <li className={listItemClass}>
-        <Link to={routes.SEARCH} className={linkClass}>
-          Search
-        </Link>
-      </li>
-      <li className={listItemClass}>
-        <Link to={routes.TREE_EXPLORER} className={linkClass}>
-          Tree Explorer
-        </Link>
-      </li>
-    </ul>
-  );
-};
+import NavigationBox from './NavigationBox';
 
 const Layout = ({ BodyComponent, HeaderComponent }) => {
   return (
