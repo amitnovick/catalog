@@ -32,11 +32,12 @@ const machine = Machine({
     writingSqliteFileAndInitializingIfNotExists: {
       invoke: {
         src: 'writeSqliteFileAndInitializingIfNotExists',
-        onDone: 'finished',
+        onDone: {
+          actions: 'navigateToHomeScreen',
+        },
         onError: 'failure',
       },
     },
-    finished: {},
     failure: {},
   },
 });

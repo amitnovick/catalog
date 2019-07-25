@@ -9,6 +9,7 @@ import routes from './routes';
 import CategoryScreen from './screens/CategoryScreen/CategoryScreen';
 import HomeScreen from './screens/HomeScreen';
 import NavigationBox from './NavigationBox';
+import LoadConfigFileScreenContainer from './StartupScreen/LoadConfigFileScreen/LoadConfigFileScreen';
 
 const Layout = ({ BodyComponent, HeaderComponent }) => {
   return (
@@ -23,6 +24,7 @@ const RouteController = () => {
   return (
     <Router>
       <Switch>
+        <Route exact path={routes.STARTUP} render={() => <LoadConfigFileScreenContainer />} />
         <Route
           exact
           path={routes.HOME}

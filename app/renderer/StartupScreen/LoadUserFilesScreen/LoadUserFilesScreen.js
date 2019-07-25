@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import RouteController from '../../RouteController';
 import machine from './machine';
 import { useMachine } from '@xstate/react';
@@ -18,6 +19,7 @@ import {
   insertRootCategoryIfNotExists,
 } from './sqlQueries';
 import { RECEIVE_ENTITIES } from '../actionTypes';
+import routes from '../../routes';
 const fs = require('fs');
 const path = require('path');
 const sqlite3 = require('sqlite3');
@@ -137,8 +139,14 @@ const machineWithConfig = machine.withConfig({
   },
 });
 
-const LoadUserFilesScreen = ({ loadUserFilesErrorMessage }) => {
-  const [current] = useMachine(machineWithConfig);
+const LoadUserFilesScreen = ({ loadUserFilesErrorMessage, history }) => {
+  const [current] = useMachine(
+    machineWithConfig.withConfig({
+      actions: {
+        navigateToHomeScreen: (_, __) => history.push(routes.HOME),
+      },
+    }),
+  );
   if (
     current.matches('checkingUserFilesDirExists') ||
     current.matches('writingUserFilesDirIfNotExists') ||
@@ -146,8 +154,6 @@ const LoadUserFilesScreen = ({ loadUserFilesErrorMessage }) => {
     current.matches('writingSqliteFileAndInitializingIfNotExists')
   ) {
     return <h2>Loading...</h2>;
-  } else if (current.matches('finished')) {
-    return <RouteController />;
   } else if (current.matches('failure')) {
     return (
       <>
@@ -163,6 +169,8 @@ const LoadUserFilesScreen = ({ loadUserFilesErrorMessage }) => {
 const getLoadUserFilesErrorMessage = (store) =>
   store && store.startupScreen ? store.startupScreen.loadUserFilesErrorMessage : '';
 
-export default connect((state) => ({
-  loadUserFilesErrorMessage: getLoadUserFilesErrorMessage(state),
-}))(LoadUserFilesScreen);
+export default withRouter(
+  connect((state) => ({
+    loadUserFilesErrorMessage: getLoadUserFilesErrorMessage(state),
+  }))(LoadUserFilesScreen),
+);
