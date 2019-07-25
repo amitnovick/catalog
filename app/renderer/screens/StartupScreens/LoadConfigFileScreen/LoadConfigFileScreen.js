@@ -4,7 +4,7 @@ import { interpret } from 'xstate';
 import { useService } from '@xstate/react';
 
 import machine from './machine';
-import store from '../../redux/store';
+import store from '../../../redux/store';
 import { RECEIVE_ENTITIES } from '../actionTypes';
 import { Header } from 'semantic-ui-react';
 const fs = require('fs');
@@ -14,7 +14,7 @@ import {
   EVENT_FROM_RENDERER,
   EVENT_FROM_MAIN,
   ARG_CONFIG_DIRECTORY_PATH,
-} from '../../../shared/ipcChannelNames';
+} from '../../../../shared/ipcChannelNames';
 import InstancesMenuScreen from '../InstancesMenuScreen/InstancesMenuScreen';
 import { CONFIG_FILE_KEY, CONFIG_FILE_NAME } from '../configConstants';
 

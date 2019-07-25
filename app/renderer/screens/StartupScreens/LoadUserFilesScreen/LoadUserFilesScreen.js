@@ -1,17 +1,17 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import RouteController from '../../RouteController';
+import RouteController from '../../../RouteController';
 import machine from './machine';
 import { useMachine } from '@xstate/react';
 import { connect } from 'react-redux';
-import store from '../../redux/store';
+import store from '../../../redux/store';
 import {
   USER_FILES_DIR,
   USER_FILES_SUBDIR_FILES_NAME,
   SQLITE_FILE_NAME,
 } from './userFilesConfigurationConstants';
-import writeDirIfNotExists from '../../utils/writeDirIfNotExists';
-import writeFileIfNotExist from '../../utils/writeFileIfNotExists';
+import writeDirIfNotExists from '../../../utils/writeDirIfNotExists';
+import writeFileIfNotExist from '../../../utils/writeFileIfNotExists';
 import {
   createFilesTableIfNotExists,
   createCategoriesTableIfNotExists,
@@ -19,7 +19,7 @@ import {
   insertRootCategoryIfNotExists,
 } from './sqlQueries';
 import { RECEIVE_ENTITIES } from '../actionTypes';
-import routes from '../../routes';
+import routes from '../../../routes';
 const fs = require('fs');
 const path = require('path');
 const sqlite3 = require('sqlite3');

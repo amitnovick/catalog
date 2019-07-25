@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { useMachine } from '@xstate/react';
 import { Header, Button } from 'semantic-ui-react';
 
-import store from '../../../redux/store';
+import store from '../../../../redux/store';
 import { RECEIVE_ENTITIES } from '../../actionTypes';
 import { CONFIG_FILE_KEY, CONFIG_FILE_NAME } from '../../configConstants';
 import AddNewInstanceContainer from './AddNewInstanceContainer';

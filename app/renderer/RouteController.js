@@ -9,7 +9,7 @@ import routes from './routes';
 import CategoryScreen from './screens/CategoryScreen/CategoryScreen';
 import HomeScreen from './screens/HomeScreen';
 import NavigationBox from './NavigationBox';
-import LoadConfigFileScreenContainer from './StartupScreen/LoadConfigFileScreen/LoadConfigFileScreen';
+import LoadConfigFileScreenContainer from './screens/StartupScreens/LoadConfigFileScreen/LoadConfigFileScreen';
 
 const Layout = ({ BodyComponent, HeaderComponent }) => {
   return (

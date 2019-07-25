@@ -4,7 +4,7 @@ import tagControlPanelScreenReducer from '../screens/ControlPanelScreen/tagContr
 import graphExplorerScreenReducer from '../screens/GraphExplorerScreen/graphExplorerReducer';
 import specificTagScreenReducer from '../screens/FileScreen/FileScreenReducer';
 import categoryScreenReducer from '../screens/CategoryScreen/CategoryScreenReducer';
-import startupScreenReducer from '../StartupScreen/startupScreenReducer';
+import startupScreenReducer from '../screens/StartupScreens/startupScreenReducer';
 
 export default combineReducers({
   searchScreen: searchScreenReducer,

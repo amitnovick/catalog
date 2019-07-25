@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Header, List, Button, Icon } from 'semantic-ui-react';
 import machine from './machine';
 import { useMachine } from '@xstate/react';
-import store from '../../../redux/store';
+import store from '../../../../redux/store';
 import { RECEIVE_ENTITIES } from '../../actionTypes';
 import { CONFIG_FILE_KEY, CONFIG_FILE_NAME } from '../../configConstants';
 const fs = require('fs');
