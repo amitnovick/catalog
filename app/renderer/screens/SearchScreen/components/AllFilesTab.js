@@ -7,7 +7,6 @@ import SearchResultsListContainer from '../containers/SearchResultsListContainer
 const AllFilesTab = ({ onSearchButtonClick }) => {
   return (
     <>
-      <Header>All Files</Header>
       <SearchBoxContainer onSearchButtonClick={onSearchButtonClick} />
       <SearchResultsListContainer />
     </>
@@ -15,7 +14,7 @@ const AllFilesTab = ({ onSearchButtonClick }) => {
 };
 
 AllFilesTab.propTypes = {
-  onSearchButtonClick: PropTypes.func.isRequired
+  onSearchButtonClick: PropTypes.func.isRequired,
 };
 
 export default AllFilesTab;

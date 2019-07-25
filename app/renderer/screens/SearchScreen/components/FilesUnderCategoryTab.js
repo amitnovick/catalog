@@ -5,21 +5,16 @@ import SearchBoxContainer from '../containers/SearchBoxContainer';
 import SearchResultsListContainer from '../containers/SearchResultsListContainer';
 import { Input } from 'semantic-ui-react';
 
-const FilesUnderCategoryTab = ({
-  onSearchButtonClick,
-  onChangeCategoryName,
-  categoryName
-}) => {
+const FilesUnderCategoryTab = ({ onSearchButtonClick, onChangeCategoryName, categoryName }) => {
   return (
     <>
-      <Header>Files under Category</Header>
-      <label htmlFor="category-name-input">Category name:</label>
       <Input
-        type="text"
-        id="category-name-input"
-        onChange={({ target }) => onChangeCategoryName(target.value)}
+        label={{ content: 'Category name', icon: 'folder' }}
+        size="massive"
         value={categoryName}
+        onChange={({ target }) => onChangeCategoryName(target.value)}
       />
+
       <br />
       <SearchBoxContainer onSearchButtonClick={onSearchButtonClick} />
       <SearchResultsListContainer />
@@ -30,7 +25,7 @@ const FilesUnderCategoryTab = ({
 FilesUnderCategoryTab.propTypes = {
   onSearchButtonClick: PropTypes.func.isRequired,
   onChangeCategoryName: PropTypes.func.isRequired,
-  categoryName: PropTypes.string.isRequired
+  categoryName: PropTypes.string.isRequired,
 };
 
 export default FilesUnderCategoryTab;

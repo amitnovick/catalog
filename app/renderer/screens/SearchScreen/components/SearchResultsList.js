@@ -7,16 +7,16 @@ import { List, Icon, Button } from 'semantic-ui-react';
 const threeDotsCss = {
   overflow: 'hidden',
   whiteSpace: 'nowrap',
-  textOverflow: 'ellipsis'
+  textOverflow: 'ellipsis',
 };
 
 const SearchResultsList = ({ files }) => {
   return (
     <List>
-      {files.map(file => (
+      {files.map((file) => (
         <List.Item key={file.name}>
           <div style={threeDotsCss}>
-            <Button as={Link} size="big" to={`${routes.FILE}/${file.id}`}>
+            <Button as={Link} size="big" color="yellow" to={`${routes.FILE}/${file.id}`}>
               <Icon name="sign-in alternate" /> {`${file.name}`}
             </Button>
           </div>
@@ -27,7 +27,7 @@ const SearchResultsList = ({ files }) => {
 };
 
 SearchResultsList.propTypes = {
-  files: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired
+  files: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
 };
 
 export default SearchResultsList;

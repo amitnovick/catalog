@@ -5,10 +5,10 @@ import { Input } from 'semantic-ui-react';
 const AddNewFile = ({ onClickAddFile, newFileName, onChangeNewFileName }) => {
   return (
     <Input
-      label="File name"
+      label={{ content: 'File name', icon: 'file' }}
       action={{
-        icon: 'file',
-        color: 'teal',
+        icon: 'add',
+        color: 'yellow',
         size: 'massive',
         content: 'Add File',
         onClick: () => onClickAddFile(newFileName),
