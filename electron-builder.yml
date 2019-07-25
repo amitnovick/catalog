@@ -1,6 +1,6 @@
 appId: com.example.app
 copyright: Example co
-productName: MyApp
+productName: WikiFS
 
 asar: true
 
@@ -33,5 +33,4 @@ win:
 
 linux:
   target:
-    - deb
     - AppImage

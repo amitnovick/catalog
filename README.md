@@ -13,23 +13,7 @@ For me as a computer user, storing my own files (text files, audio files, image 
 
 ### Categories, not Directories
 
-Consider this common scenario:
-```
-Your colleague gives you a link to a document with your last metting's notes.
-You download the file `Notes.txt` to your File System, and by default it goes under `Downloads` directory.
-You may have a bunch of other files in the `Downloads` directory as well, that you occasionally need to use.
-Your File System has another directory: `Documents`, where you already have some other documents.
-You realize that you have to put it under `Documents` if you want that directory to include all the documents you own.
-
-The following week, you realize you need to read something from this important file, and the first thing that comes up is that you downoaded the file.
-So you open up the File System on the `Downloads` directory, because you clearly remember downloading the file!
-However, you forgot that you decided to move the file somewhere else, in order to aggregate all `Documents` under one place.
-```
-
-Using the **Category** concept, the file could be assigned both `Downloads` and `Documents`, and be available to you in whichever lookup keyword makes most sense to you!
-
-Therefore, I eschew the use of the Directory semantic in favour of the Category semantic.
-The origin of the word Category that I use comes from its usage in MediaWiki (the software powering Wikipedia) 
+Using the **Category** concept, files may be assigned multiple categories, and be available to you in whichever lookup keyword makes most sense to you!
 
 ## Features
 
