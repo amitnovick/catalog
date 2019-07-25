@@ -17,7 +17,7 @@ const getOpenProgramName = () => {
 
 const openFileByName = (fileName) => {
   const filePath = formatFilePath(fileName);
-  const openProgramProcess = childProcess.spawn(getOpenProgramName(), [filePath]);
+  const openProgramProcess = childProcess.exec(`${getOpenProgramName()} ${filePath}`);
   openProgramProcess.stderr.on('data', (data) => {
     console.log('Error while trying to open file:', data);
   });
