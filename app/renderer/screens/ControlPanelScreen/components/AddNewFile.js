@@ -14,7 +14,6 @@ const AddNewFile = ({ onClickAddFile, newFileName, onChangeNewFileName }) => {
         onClick: () => onClickAddFile(newFileName),
       }}
       size="massive"
-      id="file-name-input"
       value={newFileName}
       onChange={(event) => onChangeNewFileName(event.target.value)}
     />
