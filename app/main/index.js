@@ -50,6 +50,22 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
+  const menuTemplate = [
+    {
+      label: 'View',
+      submenu: [
+        {
+          label: 'Zoom In',
+          role: 'zoomin',
+        },
+        { label: 'Zoom Out', role: 'zoomout' },
+      ],
+    },
+  ];
+
+  const menu = Menu.buildFromTemplate(menuTemplate);
+  Menu.setApplicationMenu(menu);
+
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 800,
