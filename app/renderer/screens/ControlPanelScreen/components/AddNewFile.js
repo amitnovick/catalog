@@ -9,6 +9,7 @@ const AddNewFile = ({ onClickAddFile, newFileName, onChangeNewFileName }) => {
       action={{
         icon: 'add',
         color: 'yellow',
+        style: { color: '#101010' },
         size: 'massive',
         content: 'Add File',
         onClick: () => onClickAddFile(newFileName),

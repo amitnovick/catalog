@@ -8,6 +8,7 @@ const SearchBox = ({ onSearchButtonClick, updateSearchText, searchText }) => {
       action={{
         icon: 'search',
         color: 'yellow',
+        style: { color: '#101010' },
         size: 'massive',
         content: 'Search',
         onClick: onSearchButtonClick,

@@ -16,7 +16,12 @@ const SearchResultsList = ({ files }) => {
       {files.map((file) => (
         <List.Item key={file.name}>
           <div style={threeDotsCss}>
-            <Button as={Link} size="big" color="yellow" to={`${routes.FILE}/${file.id}`}>
+            <Button
+              as={Link}
+              size="big"
+              color="yellow"
+              style={{ color: '#101010' }}
+              to={`${routes.FILE}/${file.id}`}>
               <Icon name="sign-in alternate" /> {`${file.name}`}
             </Button>
           </div>
