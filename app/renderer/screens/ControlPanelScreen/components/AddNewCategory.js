@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { css } from 'emotion';
+import { Input } from 'semantic-ui-react';
 
 const buttonClass = css`
   margin: 5px;
@@ -17,37 +18,28 @@ const formClass = css`
   font-size: 2em;
 `;
 
-const AddNewCategory = ({
-  onClickAddCategory,
-  newCategoryName,
-  onChangeNewCategoryName
-}) => {
+const AddNewCategory = ({ onClickAddCategory, newCategoryName, onChangeNewCategoryName }) => {
   return (
-    <div>
-      <label htmlFor="category-name-input" className={formClass}>
-        Category name:
-      </label>
-      <input
-        id="category-name-input"
-        className={formClass}
-        value={newCategoryName}
-        onChange={event => onChangeNewCategoryName(event.target.value)}
-      />
-      <button
-        type="button"
-        className={buttonClass}
-        onClick={() => onClickAddCategory(newCategoryName)}
-      >
-        +
-      </button>
-    </div>
+    <Input
+      label="Category name"
+      action={{
+        icon: 'folder',
+        color: 'teal',
+        size: 'massive',
+        content: 'Add Category',
+        onClick: () => onClickAddCategory(newCategoryName),
+      }}
+      size="massive"
+      value={newCategoryName}
+      onChange={(event) => onChangeNewCategoryName(event.target.value)}
+    />
   );
 };
 
 AddNewCategory.propTypes = {
   onClickAddCategory: PropTypes.func.isRequired,
   newCategoryName: PropTypes.string.isRequired,
-  onChangeNewCategoryName: PropTypes.func.isRequired
+  onChangeNewCategoryName: PropTypes.func.isRequired,
 };
 
 export default AddNewCategory;
