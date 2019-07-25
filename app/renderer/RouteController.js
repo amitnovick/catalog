@@ -26,32 +26,41 @@ const RouteController = () => {
         <Route
           exact
           path={routes.HOME}
-          render={() => (
-            <Layout BodyComponent={<HomeScreen />} HeaderComponent={<NavigationBox />} />
+          render={({ match }) => (
+            <Layout
+              BodyComponent={<HomeScreen />}
+              HeaderComponent={<NavigationBox path={match.path} />}
+            />
           )}
         />
         <Route
           exact
           path={routes.CONTROL_PANEL}
-          render={() => (
-            <Layout BodyComponent={<ControlPanelScreen />} HeaderComponent={<NavigationBox />} />
+          render={({ match }) => (
+            <Layout
+              BodyComponent={<ControlPanelScreen />}
+              HeaderComponent={<NavigationBox path={match.path} />}
+            />
           )}
         />
         <Route
           exact
           path={routes.SEARCH}
-          render={() => (
-            <Layout BodyComponent={<SearchScreen />} HeaderComponent={<NavigationBox />} />
+          render={({ match }) => (
+            <Layout
+              BodyComponent={<SearchScreen />}
+              HeaderComponent={<NavigationBox path={match.path} />}
+            />
           )}
         />
         <Route
           exact
           path={routes.TREE_EXPLORER}
-          render={() => (
+          render={({ match }) => (
             <Layout
               key="root"
               BodyComponent={<GraphExplorerScreen initialCategoryId={undefined} />}
-              HeaderComponent={<NavigationBox />}
+              HeaderComponent={<NavigationBox path={match.path} />}
             />
           )}
         />

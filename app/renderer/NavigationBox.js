@@ -1,7 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { css } from 'emotion';
 import { Link } from 'react-router-dom';
 import routes from './routes';
+import { Menu } from 'semantic-ui-react';
 
 const linkClass = css({
   fontSize: 20,
@@ -20,37 +22,27 @@ const listItemClass = css({
   },
 });
 
-const NavigationBox = () => {
+const NavigationBox = ({ path }) => {
   return (
-    <ul
-      className={css({
-        display: 'flex',
-        flexDirection: 'row',
-        listStyle: 'none',
-        padding: 5,
-      })}>
-      <li className={listItemClass}>
-        <Link to={routes.HOME} className={linkClass}>
-          Home
-        </Link>
-      </li>
-      <li className={listItemClass}>
-        <Link to={routes.CONTROL_PANEL} className={linkClass}>
-          Control Panel
-        </Link>
-      </li>
-      <li className={listItemClass}>
-        <Link to={routes.SEARCH} className={linkClass}>
-          Search
-        </Link>
-      </li>
-      <li className={listItemClass}>
-        <Link to={routes.TREE_EXPLORER} className={linkClass}>
-          Tree Explorer
-        </Link>
-      </li>
-    </ul>
+    <Menu size="massive">
+      <Menu.Item active={path === routes.HOME} as={Link} to={routes.HOME}>
+        Home
+      </Menu.Item>
+      <Menu.Item active={path === routes.CONTROL_PANEL} as={Link} to={routes.CONTROL_PANEL}>
+        Control Panel
+      </Menu.Item>
+      <Menu.Item active={path === routes.SEARCH} as={Link} to={routes.SEARCH}>
+        Search
+      </Menu.Item>
+      <Menu.Item active={path === routes.TREE_EXPLORER} as={Link} to={routes.TREE_EXPLORER}>
+        Tree Explorer
+      </Menu.Item>
+    </Menu>
   );
+};
+
+NavigationBox.propTypes = {
+  path: PropTypes.string,
 };
 
 export default NavigationBox;
