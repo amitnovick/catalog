@@ -8,7 +8,8 @@ const initialState = {
   newFileName: '',
   searchResultCategories: [],
   inputSearchQuery: '',
-  chosenSearchResultCategoryId: undefined,
+  chosenSearchResultCategory: {},
+  errorMessageCreatingRelationship: '',
 };
 
 export default function(state = initialState, action) {

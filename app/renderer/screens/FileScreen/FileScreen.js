@@ -7,10 +7,6 @@ import { RECEIVE_ENTITIES } from './actionTypes';
 import machine from './machine';
 import {
   selectCategoriesOfFile,
-  selectCategoryByName,
-  insertCategoryOfFile,
-  selectCategoryAncestors,
-  deleteCategoryOfFile,
   updateFileName,
   selectFileName,
   deleteFileFromFiles,
@@ -23,7 +19,8 @@ import openFileByName from '../../utils/openFileByName';
 import BroaderCategoriesModalContainer from './containers/BroaderCategoriesModalContainer';
 import CategoryActionsModalContainer from './containers/CategoryActionsModalContainer';
 import formatFilePath from '../../utils/formatFilePath';
-import querySelectCategoriesWithMatchingName from '../../query-functions/querySelectCategoriesWithMatchingName';
+import AddCategoryWidget from './AddCategoryWidget/AddCategoryWidget';
+import queryDeleteFileCategory from '../../query-functions/queryDeleteFileCategory';
 const fs = require('fs');
 
 const renameFileToFs = (oldFileName, newFileName) =>
@@ -110,174 +107,6 @@ const fetchFileData = async (fileId) => {
       categories: categories,
     },
   });
-};
-
-const queryCategorId = (categoryName) => {
-  return new Promise((resolve, reject) => {
-    getSqlDriver().all(
-      selectCategoryByName,
-      {
-        $category_name: categoryName,
-      },
-      (err, rows) => {
-        if (err) {
-          console.log('err:', err);
-          reject();
-        } else {
-          const categoryRow = rows[0];
-          const { id: categoryId } = categoryRow;
-          resolve(categoryId);
-        }
-      },
-    );
-  });
-};
-
-const categoryAlreadyExistsErrorMessage = `SQLITE_CONSTRAINT: UNIQUE constraint failed: categories_files.category_id, categories_files.file_id`;
-
-const queryAddCategoryToFile = (fileId, categoryId) => {
-  return new Promise((resolve, reject) => {
-    getSqlDriver().run(
-      insertCategoryOfFile,
-      {
-        $category_id: categoryId,
-        $file_id: fileId,
-      },
-      function(err) {
-        if (err) {
-          if (err.message === categoryAlreadyExistsErrorMessage) {
-            console.log('Error: category already exists on file');
-          } else {
-            console.log('unknown error:', err);
-          }
-          reject();
-        } else {
-          const { changes: affectedRowsCount } = this;
-          if (affectedRowsCount !== 1) {
-            console.log('No affected rows error');
-            reject();
-          } else {
-            resolve();
-          }
-        }
-      },
-    );
-  });
-};
-
-const getCategories = (store) =>
-  store && store.specificTagScreen ? store.specificTagScreen.categories : [];
-
-const getParentCategoryName = (store) =>
-  store && store.specificTagScreen ? store.specificTagScreen.inputParentTag : '';
-
-const queryCategoryAncestors = (categoryId) => {
-  return new Promise((resolve, reject) => {
-    getSqlDriver().all(
-      selectCategoryAncestors,
-      {
-        $category_id: categoryId,
-      },
-      (err, rows) => {
-        if (err) {
-          console.log('unknown error:', err);
-          reject();
-        } else {
-          resolve(rows);
-        }
-      },
-    );
-  });
-};
-
-const checkIfCategoryIsInNacestors = async (categoryId) => {
-  const fileCategories = getCategories(store.getState());
-  for (let i = 0; i < fileCategories.length; i++) {
-    const fileCategory = fileCategories[i];
-    const fileCategoryAncestors = await queryCategoryAncestors(fileCategory.id);
-    const fileCategoryAncestorIds = fileCategoryAncestors.map(({ id }) => id);
-    if (fileCategoryAncestorIds.includes(categoryId)) {
-      return true;
-    }
-  }
-  return false;
-};
-
-const queryDeleteFileCategory = (categoryId, fileId) => {
-  return new Promise((resolve, reject) => {
-    getSqlDriver().run(
-      deleteCategoryOfFile,
-      {
-        $category_id: categoryId,
-        $file_id: fileId,
-      },
-      function(err) {
-        if (err) {
-          console.log('unknown error:', err);
-          reject();
-        } else {
-          const { changes: affectedRowsCount } = this;
-          if (affectedRowsCount !== 1) {
-            console.log('No affected rows error');
-            reject();
-          } else {
-            resolve();
-          }
-        }
-      },
-    );
-  });
-};
-
-const getBroaderFileCategories = async (categoryId) => {
-  const categoryAncestors = await queryCategoryAncestors(categoryId);
-  const categoryAncestorIds = categoryAncestors.map(({ id }) => id);
-  const fileCategories = getCategories(store.getState());
-  const broaderFileCategories = fileCategories.filter((fileCategory) =>
-    categoryAncestorIds.includes(fileCategory.id),
-  );
-  return Promise.resolve(broaderFileCategories);
-};
-
-const removeBroaderFileCategoriesIfExist = async (categoryId, fileId) => {
-  const broaderFileCategories = await getBroaderFileCategories(categoryId);
-  for (let i = 0; i < broaderFileCategories.length; i++) {
-    const broaderFileCategory = broaderFileCategories[i];
-    await queryDeleteFileCategory(broaderFileCategory.id, fileId);
-  }
-};
-
-const getChosenSearchResultCategoryId = (store) =>
-  store && store.specificTagScreen
-    ? store.specificTagScreen.chosenSearchResultCategoryId
-    : undefined;
-
-const attemptCreatingRelationship = async () => {
-  const file = getFile(store.getState());
-  const categoryId = getChosenSearchResultCategoryId(store.getState());
-
-  const isCategoryInAncestors = await checkIfCategoryIsInNacestors(categoryId);
-  if (isCategoryInAncestors) {
-    throw new Error();
-  } else {
-    await removeBroaderFileCategoriesIfExist(categoryId, file.id);
-    return await queryAddCategoryToFile(file.id, categoryId);
-  }
-};
-
-const checkExistenceBroadCategories = async (categoryId) => {
-  const broaderFileCategories = await getBroaderFileCategories(categoryId); // TODO: Think of more elaborate way to handle an error here, it should not cause transition to `attemptingToCreateRelationshipLoading` but to some other state that shows that an error occurred.
-  if (broaderFileCategories.length > 0) {
-    store.dispatch({
-      type: RECEIVE_ENTITIES,
-      payload: {
-        broaderFileCategories: broaderFileCategories,
-      },
-    });
-    return Promise.resolve();
-  } else {
-    return Promise.reject();
-  }
 };
 
 const removeCategoryOfFile = async (category) => {
@@ -381,52 +210,12 @@ const deleteFile = async (file) => {
   }
 };
 
-const fetchSearchResultCategories = (searchQuery) => {
-  return querySelectCategoriesWithMatchingName(searchQuery);
-};
-
-const updateInputSearchQuery = (searchQuery) => {
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      inputSearchQuery: searchQuery,
-    },
-  });
-};
-
-const updateSearchResultCategories = (searchResultCategories) => {
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      searchResultCategories: searchResultCategories,
-    },
-  });
-};
-
-const updateChosenSearchResultCategoryId = (categoryId) => {
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      chosenSearchResultCategoryId: categoryId,
-    },
-  });
-};
-
 const machineWithConfig = machine.withConfig({
   services: {
     fetchFileData: (context, _) => fetchFileData(context.fileId),
-    fetchSearchResultCategories: (_, event) => fetchSearchResultCategories(event.searchQuery),
-    attemptCreatingRelationship: (_, __) => attemptCreatingRelationship(),
-    checkExistenceBroadCategories: (_, event) => checkExistenceBroadCategories(event.categoryId),
     removeCategoryOfFile: (_, event) => removeCategoryOfFile(event.category),
     attemptToRenameFile: (_, event) => attemptToRenameFile(event.file, event.newFileName),
     deleteFile: (_, event) => deleteFile(event.file),
-  },
-  actions: {
-    updateInputSearchQuery: (_, event) => updateInputSearchQuery(event.searchQuery),
-    updateSearchResultCategories: (_, event) => updateSearchResultCategories(event.data),
-    updateChosenSearchResultCategoryId: (_, event) =>
-      updateChosenSearchResultCategoryId(event.categoryId),
   },
 });
 
@@ -485,6 +274,7 @@ const FileScreen = ({ updateCategoryForActionsModal, fileId }) => {
             })
           }
         />
+        <AddCategoryWidget fetchFileData={() => send('REFETCH_FILE_DATA')} />
         {current.matches('idle.success') ? <h2 style={{ color: 'green' }}>Succeeded</h2> : null}
         {current.matches('idle.failure') ? <h2 style={{ color: 'red' }}>Failed</h2> : null}
       </>

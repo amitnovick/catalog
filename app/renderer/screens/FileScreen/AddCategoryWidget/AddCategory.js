@@ -9,7 +9,7 @@ const AddCategory = ({
   onChangeInputSearchQuery: onSearchQueryChange,
 }) => {
   const handleChange = (e, { result }) => {
-    onChangeValue(result.id);
+    onChangeValue({ id: result.id, name: result.title });
   };
 
   const handleSearchChange = (e, { value }) => {
@@ -17,15 +17,22 @@ const AddCategory = ({
   };
 
   return (
-    <Search
-      onResultSelect={handleChange}
-      onSearchChange={handleSearchChange}
-      results={searchResultCategories.map((searchResultCategory) => ({
-        id: searchResultCategory.id,
-        title: searchResultCategory.name,
-      }))}
-      value={inputSearchQuery}
-    />
+    <div
+      style={{
+        margin: '0 auto',
+        width: '9em',
+      }} /* The results width seems to be 18em, so we need half of that */
+    >
+      <Search
+        onResultSelect={handleChange}
+        onSearchChange={handleSearchChange}
+        results={searchResultCategories.map((searchResultCategory) => ({
+          id: searchResultCategory.id,
+          title: searchResultCategory.name,
+        }))}
+        value={inputSearchQuery}
+      />
+    </div>
   );
 };
 

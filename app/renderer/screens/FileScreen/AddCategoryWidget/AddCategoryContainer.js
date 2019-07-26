@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import AddCategory from '../components/AddCategory';
+import AddCategory from './AddCategory';
 
 const getSearchResultCategories = (store) =>
   store && store.specificTagScreen ? store.specificTagScreen.searchResultCategories : [];

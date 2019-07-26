@@ -7,12 +7,6 @@ const idleStates = {
     idle: {},
     success: {},
     failure: {},
-    broadCategoriesModal: {
-      on: {
-        CLICK_ACCEPT_BROAD_CATEGORIES_MODAL: '#file-screen.loading.attemptingToCreateRelationship',
-        CLOSE_BROAD_CATEGORIES_MODAL_REJECT: 'idle',
-      },
-    },
     fileCategoryActionsModal: {
       on: {
         CLOSE_FILE_CATEGORY_ACTIONS_MODAL: 'idle',
@@ -32,17 +26,10 @@ const machine = Machine({
     idle: {
       ...idleStates,
       on: {
-        CHECK_BROAD_CATEGORIES: {
-          target: 'loading.checkingExistenceBroaderCategories',
-          actions: 'updateChosenSearchResultCategoryId',
-        },
         OPEN_FILE_CATEGORY_ACTIONS_MODAL: 'idle.fileCategoryActionsModal',
         CLICK_DELETE_FILE: 'loading.deletingFile',
         CLICK_RENAME_FILE: 'loading.attemptingToRenameFile',
-        INPUT_SEARCH_QUERY_CHANGED: {
-          target: 'loading.fetchingSearchResultCategories',
-          actions: 'updateInputSearchQuery',
-        },
+        REFETCH_FILE_DATA: 'loading.fetchingFileData',
       },
     },
     loading: {
@@ -53,30 +40,6 @@ const machine = Machine({
             src: 'fetchFileData',
             onDone: '#file-screen.idle.idle',
             onError: '#file-screen.failedFetching',
-          },
-        },
-        fetchingSearchResultCategories: {
-          invoke: {
-            src: 'fetchSearchResultCategories',
-            onDone: {
-              target: '#file-screen.idle.idle',
-              actions: 'updateSearchResultCategories',
-            },
-            onError: '#file-screen.idle.failure',
-          },
-        },
-        attemptingToCreateRelationship: {
-          invoke: {
-            src: 'attemptCreatingRelationship',
-            onDone: 'fetchingFileData',
-            onError: '#file-screen.idle.failure',
-          },
-        },
-        checkingExistenceBroaderCategories: {
-          invoke: {
-            src: 'checkExistenceBroadCategories',
-            onDone: '#file-screen.idle.broadCategoriesModal',
-            onError: 'attemptingToCreateRelationship',
           },
         },
         removingCategoryOfFile: {

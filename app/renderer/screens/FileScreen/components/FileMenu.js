@@ -1,15 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import AddCategoryContainer from '../containers/AddCategoryContainer';
 import CategoriesContainer from '../containers/CategoriesContainer';
 import { Button, Icon, Header, Input, List } from 'semantic-ui-react';
 
 const FileMenu = ({
   file,
   newFileName,
-  onChooseSearchResultCategory,
-  onChangeInputSearchQuery,
   onClickOpenFile,
   onClickCategory,
   onClickDeleteFile,
@@ -45,18 +42,12 @@ const FileMenu = ({
         </Button>
       </div>
       <CategoriesContainer onClickCategory={onClickCategory} />
-      <AddCategoryContainer
-        onChooseSearchResultCategory={onChooseSearchResultCategory}
-        onChangeInputSearchQuery={onChangeInputSearchQuery}
-      />
     </>
   );
 };
 
 FileMenu.propTypes = {
   file: PropTypes.object.isRequired,
-  onChooseSearchResultCategory: PropTypes.func.isRequired,
-  onChangeInputSearchQuery: PropTypes.func.isRequired,
   onClickOpenFile: PropTypes.func.isRequired,
   onClickCategory: PropTypes.func.isRequired,
   onClickDeleteFile: PropTypes.func.isRequired,

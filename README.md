@@ -37,7 +37,7 @@ npm install
 npm run pack
 ```
 
-4. Install a binary on `/dist` that should be named `MyApp...`
+4. Install a binary on `/dist` that should be named `WikiFS...`
 
 ## Development
 
