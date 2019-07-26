@@ -1,12 +1,14 @@
 import { RECEIVE_ENTITIES } from './actionTypes';
 
 const initialState = {
-  inputParentTag: '',
   file: {},
   categories: [],
   broaderFileCategories: [],
   chosenCategoryForActionsModal: {},
-  newFileName: ''
+  newFileName: '',
+  searchResultCategories: [],
+  inputSearchQuery: '',
+  chosenSearchResultCategoryId: undefined,
 };
 
 export default function(state = initialState, action) {

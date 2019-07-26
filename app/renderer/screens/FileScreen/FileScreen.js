@@ -23,6 +23,7 @@ import openFileByName from '../../utils/openFileByName';
 import BroaderCategoriesModalContainer from './containers/BroaderCategoriesModalContainer';
 import CategoryActionsModalContainer from './containers/CategoryActionsModalContainer';
 import formatFilePath from '../../utils/formatFilePath';
+import querySelectCategoriesWithMatchingName from '../../query-functions/querySelectCategoriesWithMatchingName';
 const fs = require('fs');
 
 const renameFileToFs = (oldFileName, newFileName) =>
@@ -246,10 +247,14 @@ const removeBroaderFileCategoriesIfExist = async (categoryId, fileId) => {
   }
 };
 
+const getChosenSearchResultCategoryId = (store) =>
+  store && store.specificTagScreen
+    ? store.specificTagScreen.chosenSearchResultCategoryId
+    : undefined;
+
 const attemptCreatingRelationship = async () => {
-  const categoryName = getParentCategoryName(store.getState());
   const file = getFile(store.getState());
-  const categoryId = await queryCategorId(categoryName);
+  const categoryId = getChosenSearchResultCategoryId(store.getState());
 
   const isCategoryInAncestors = await checkIfCategoryIsInNacestors(categoryId);
   if (isCategoryInAncestors) {
@@ -260,8 +265,7 @@ const attemptCreatingRelationship = async () => {
   }
 };
 
-const checkExistenceBroadCategories = async (parentCategoryName) => {
-  const categoryId = await queryCategorId(parentCategoryName);
+const checkExistenceBroadCategories = async (categoryId) => {
   const broaderFileCategories = await getBroaderFileCategories(categoryId); // TODO: Think of more elaborate way to handle an error here, it should not cause transition to `attemptingToCreateRelationshipLoading` but to some other state that shows that an error occurred.
   if (broaderFileCategories.length > 0) {
     store.dispatch({
@@ -377,15 +381,52 @@ const deleteFile = async (file) => {
   }
 };
 
+const fetchSearchResultCategories = (searchQuery) => {
+  return querySelectCategoriesWithMatchingName(searchQuery);
+};
+
+const updateInputSearchQuery = (searchQuery) => {
+  store.dispatch({
+    type: RECEIVE_ENTITIES,
+    payload: {
+      inputSearchQuery: searchQuery,
+    },
+  });
+};
+
+const updateSearchResultCategories = (searchResultCategories) => {
+  store.dispatch({
+    type: RECEIVE_ENTITIES,
+    payload: {
+      searchResultCategories: searchResultCategories,
+    },
+  });
+};
+
+const updateChosenSearchResultCategoryId = (categoryId) => {
+  store.dispatch({
+    type: RECEIVE_ENTITIES,
+    payload: {
+      chosenSearchResultCategoryId: categoryId,
+    },
+  });
+};
+
 const machineWithConfig = machine.withConfig({
   services: {
     fetchFileData: (context, _) => fetchFileData(context.fileId),
+    fetchSearchResultCategories: (_, event) => fetchSearchResultCategories(event.searchQuery),
     attemptCreatingRelationship: (_, __) => attemptCreatingRelationship(),
-    checkExistenceBroadCategories: (_, event) =>
-      checkExistenceBroadCategories(event.parentCategoryName),
+    checkExistenceBroadCategories: (_, event) => checkExistenceBroadCategories(event.categoryId),
     removeCategoryOfFile: (_, event) => removeCategoryOfFile(event.category),
     attemptToRenameFile: (_, event) => attemptToRenameFile(event.file, event.newFileName),
     deleteFile: (_, event) => deleteFile(event.file),
+  },
+  actions: {
+    updateInputSearchQuery: (_, event) => updateInputSearchQuery(event.searchQuery),
+    updateSearchResultCategories: (_, event) => updateSearchResultCategories(event.data),
+    updateChosenSearchResultCategoryId: (_, event) =>
+      updateChosenSearchResultCategoryId(event.categoryId),
   },
 });
 
@@ -400,10 +441,9 @@ const FileScreen = ({ updateCategoryForActionsModal, fileId }) => {
     }),
   );
 
-  const checkExistenceBroadCategories = (file, parentCategoryName) =>
+  const checkExistenceBroadCategories = (categoryId) =>
     send('CHECK_BROAD_CATEGORIES', {
-      file: file,
-      parentCategoryName: parentCategoryName,
+      categoryId: categoryId,
     });
 
   const openCategoryActionsModal = (category) => {
@@ -427,7 +467,10 @@ const FileScreen = ({ updateCategoryForActionsModal, fileId }) => {
           }
         />
         <FileMenuContainer
-          onClickAddCategory={checkExistenceBroadCategories}
+          onChooseSearchResultCategory={checkExistenceBroadCategories}
+          onChangeInputSearchQuery={(searchQuery) =>
+            send('INPUT_SEARCH_QUERY_CHANGED', { searchQuery })
+          }
           onClickOpenFile={openFile}
           onClickCategory={openCategoryActionsModal}
           onClickDeleteFile={(file) =>

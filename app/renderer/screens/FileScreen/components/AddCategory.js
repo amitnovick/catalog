@@ -1,38 +1,39 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, Header } from 'semantic-ui-react';
+import { Search } from 'semantic-ui-react';
 
 const AddCategory = ({
-  file,
-  parentCategoryName,
-  onChangeParentCategoryName,
-  onClickAddCategory,
+  inputSearchQuery,
+  searchResultCategories,
+  onChooseSearchResultCategory: onChangeValue,
+  onChangeInputSearchQuery: onSearchQueryChange,
 }) => {
+  const handleChange = (e, { result }) => {
+    onChangeValue(result.id);
+  };
+
+  const handleSearchChange = (e, { value }) => {
+    onSearchQueryChange(value);
+  };
+
   return (
-    <div>
-      <Header as="h2">Assign Category</Header>
-      <Input
-        label={{ content: 'Category name', icon: 'folder' }}
-        action={{
-          icon: 'add',
-          color: 'blue',
-          size: 'massive',
-          content: 'Assign',
-          onClick: () => onClickAddCategory(file, parentCategoryName),
-        }}
-        size="massive"
-        value={parentCategoryName}
-        onChange={(event) => onChangeParentCategoryName(event.target.value)}
-      />
-    </div>
+    <Search
+      onResultSelect={handleChange}
+      onSearchChange={handleSearchChange}
+      results={searchResultCategories.map((searchResultCategory) => ({
+        id: searchResultCategory.id,
+        title: searchResultCategory.name,
+      }))}
+      value={inputSearchQuery}
+    />
   );
 };
 
 AddCategory.propTypes = {
-  file: PropTypes.object.isRequired,
-  parentCategoryName: PropTypes.string.isRequired,
-  onChangeParentCategoryName: PropTypes.func.isRequired,
-  onClickAddCategory: PropTypes.func.isRequired,
+  searchResultCategories: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  inputSearchQuery: PropTypes.string.isRequired,
+  onChangeInputSearchQuery: PropTypes.func.isRequired,
+  onChooseSearchResultCategory: PropTypes.func.isRequired,
 };
 
 export default AddCategory;
