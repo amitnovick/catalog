@@ -11,16 +11,23 @@ const machine = Machine({
         idle: {},
         failure: {},
         highlightNarrowerCategories: {},
+        highlightExistingCategory: {},
       },
       on: {
         INPUT_SEARCH_QUERY_CHANGED: {
           target: 'fetchingSearchResultCategories',
           actions: 'updateInputSearchQuery',
         },
-        CHOOSE_CATEGORY_TO_ASSIGN: {
-          target: 'fetchingNarrowerCategoriesOfFile',
-          actions: 'updateChosenSearchResultCategory',
-        },
+        CHOOSE_CATEGORY_TO_ASSIGN: [
+          {
+            target: 'fetchingNarrowerCategoriesOfFile',
+            cond: 'categoryIsntAlreadyAssigned',
+            actions: 'updateChosenSearchResultCategory',
+          },
+          {
+            target: 'idle.highlightExistingCategory',
+          },
+        ],
       },
     },
     broadCategoriesModal: {
@@ -65,15 +72,12 @@ const machine = Machine({
           },
           {
             target: '#add-category.idle.highlightNarrowerCategories',
-            actions: [
-              'updateNarrowerCategoriesOfFile',
-              'updateNarrowerCategoriesOfFileExistErrorMessage',
-            ],
+            actions: ['updateNarrowerCategoriesOfFile'],
           },
         ],
         onError: {
           target: '#add-category.idle.failure',
-          actions: 'updateNarrowerCategoriesOfFileExistErrorMessage',
+          actions: 'updateGenericErrorAddCategoryWidget',
         },
       },
     },

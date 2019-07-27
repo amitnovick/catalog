@@ -9,7 +9,7 @@ const initialState = {
   searchResultCategories: [],
   inputSearchQuery: '',
   chosenSearchResultCategory: {},
-  errorMessageCreatingRelationship: '',
+  genericErrorAddCategoryWidget: '',
   narrowerCategoriesOfFile: [],
 };
 

@@ -145,14 +145,11 @@ const fetchNarrowerCategoriesOfFile = async () => {
   return fetchNarrowerCategoriesOfFileInDb(chosenSearchResultCategory);
 };
 
-const updateErrorMessage = () => {
-  const chosenSearchResultCategory = getChosenSearchResultCategory(store.getState());
-  const errorMessage = `Category ${chosenSearchResultCategory.name} is already an ancestor of an existing category!`;
-
+const updateErrorMessageFetchingNarrowerCategoriesFailed = (error) => {
   store.dispatch({
     type: RECEIVE_ENTITIES,
     payload: {
-      errorMessageCreatingRelationship: errorMessage,
+      genericErrorAddCategoryWidget: error.message,
     },
   });
 };
@@ -228,6 +225,12 @@ const updateBroaderFileCategories = (broaderCategoriesOfFile) => {
   });
 };
 
+const categoryIsntAlreadyAssigned = (category) => {
+  const categories = getCategories(store.getState());
+  const categoriesIds = categories.map((category) => category.id);
+  return categoriesIds.includes(category.id) === false;
+};
+
 const machineWithConfig = machine.withConfig({
   services: {
     fetchSearchResultCategories: (_, event) => fetchSearchResultCategories(event.searchQuery),
@@ -243,7 +246,8 @@ const machineWithConfig = machine.withConfig({
       updateChosenSearchResultCategory(event.category),
     updateSearchResultCategories: (_, event) => updateSearchResultCategories(event.data),
     resetInputSearchQuery: (_, __) => updateInputSearchQuery(''),
-    updateErrorMessage: (_, event) => updateErrorMessage(event.data),
+    updateErrorMessageFetchingNarrowerCategoriesFailed: (_, event) =>
+      updateErrorMessageFetchingNarrowerCategoriesFailed(event.data),
     addCategoryToCategoriesState: (_, __) => addCategoryToCategoriesState(),
     updateNarrowerCategoriesOfFile: (_, event) => updateNarrowerCategoriesOfFile(event.data),
     replaceBroaderCategoriesWithNarrowerCategoryInState: (_, __) =>
@@ -253,6 +257,7 @@ const machineWithConfig = machine.withConfig({
   guards: {
     areNarrowerCategoriesOfFileEmpty: (_, event) => areNarrowerCategoriesOfFileEmpty(event.data),
     areBroaderCategoriesOfFileEmpty: (_, event) => areBroaderCategoriesOfFileEmpty(event.data),
+    categoryIsntAlreadyAssigned: (_, event) => categoryIsntAlreadyAssigned(event.category),
   },
 });
 
@@ -263,15 +268,25 @@ const AddCategoryWidget = ({ errorMessage, narrowerCategoriesOfFile }) => {
 
   return (
     <>
+      {current.matches('idle.failure') ? (
+        <Message error compact header="Error" content={errorMessage} />
+      ) : null}
+      {current.matches('idle.highlightExistingCategory') ? (
+        <Message info compact header="Category already exists" />
+      ) : null}
       {current.matches('idle.highlightNarrowerCategories') ? (
-        <>
-          <Header>{`Following categories are narrower: `}</Header>
-          <div>
-            {narrowerCategoriesOfFile.map((narrowerCategoryOfFile) => (
-              <Label key={narrowerCategoryOfFile.id}>{narrowerCategoryOfFile.name}</Label>
-            ))}
-          </div>
-        </>
+        <Message
+          info
+          compact
+          header="Following existing categories are narrower"
+          content={
+            <Label.Group tag color="orange">
+              {narrowerCategoriesOfFile.map((narrowerCategoryOfFile) => (
+                <Label key={narrowerCategoryOfFile.id}>{narrowerCategoryOfFile.name}</Label>
+              ))}
+            </Label.Group>
+          }
+        />
       ) : null}
       <BroaderCategoriesModalContainer
         isOpen={current.matches('broadCategoriesModal')}
@@ -289,20 +304,17 @@ const AddCategoryWidget = ({ errorMessage, narrowerCategoriesOfFile }) => {
           send('INPUT_SEARCH_QUERY_CHANGED', { searchQuery })
         }
       />
-      {current.matches('idle.failure') ? (
-        <Message error compact header="Error" content={errorMessage} />
-      ) : null}
     </>
   );
 };
 
-const getErrorMessageCreatingRelationship = (store) =>
-  store && store.specificTagScreen ? store.specificTagScreen.errorMessageCreatingRelationship : '';
+const getGenericErrorAddCategoryWidget = (store) =>
+  store && store.specificTagScreen ? store.specificTagScreen.genericErrorAddCategoryWidget : '';
 
-const getNarrowerCategoriesOfFIle = (store) =>
+const getNarrowerCategoriesOfFile = (store) =>
   store && store.specificTagScreen ? store.specificTagScreen.narrowerCategoriesOfFile : [];
 
 export default connect((state) => ({
-  errorMessage: getErrorMessageCreatingRelationship(state),
-  narrowerCategoriesOfFile: getNarrowerCategoriesOfFIle(state),
+  errorMessage: getGenericErrorAddCategoryWidget(state),
+  narrowerCategoriesOfFile: getNarrowerCategoriesOfFile(state),
 }))(AddCategoryWidget);
