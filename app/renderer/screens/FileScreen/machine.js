@@ -22,7 +22,6 @@ const machine = Machine({
       on: {
         CLICK_DELETE_FILE: 'loading.deletingFile',
         CLICK_RENAME_FILE: 'loading.attemptingToRenameFile',
-        REFETCH_FILE_DATA: 'loading.fetchingFileData',
       },
     },
     loading: {

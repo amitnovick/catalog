@@ -235,8 +235,10 @@ const FileScreen = ({ fileId }) => {
           onClickYes={() => send('CLICK_ACCEPT_BROAD_CATEGORIES_MODAL')}
         />
         <FileNameWidgetContainer />
-        <CategoriesWidget />
-        <AddCategoryWidget fetchFileData={() => send('REFETCH_FILE_DATA')} />
+        <div style={{ border: '1px solid black' }}>
+          <CategoriesWidget />
+          <AddCategoryWidget />
+        </div>
         <FileMenuContainer
           onChooseSearchResultCategory={checkExistenceBroadCategories}
           onChangeInputSearchQuery={(searchQuery) =>

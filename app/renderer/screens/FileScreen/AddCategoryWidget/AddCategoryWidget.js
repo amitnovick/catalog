@@ -2,7 +2,7 @@ import React from 'react';
 import { useMachine } from '@xstate/react';
 import { connect } from 'react-redux';
 
-import machine from './addCategoryMachine';
+import machine from './machine';
 import AddCategoryContainer from './AddCategoryContainer';
 import store from '../../../redux/store';
 import { RECEIVE_ENTITIES } from '../actionTypes';
@@ -170,6 +170,18 @@ const updateErrorMessage = (error) => {
   });
 };
 
+const addChosenCategoryToState = () => {
+  const chosenSearchResultCategory = getChosenSearchResultCategory(store.getState());
+  const previousCategories = getCategories(store.getState());
+  const newCategories = [...previousCategories, chosenSearchResultCategory];
+  store.dispatch({
+    type: RECEIVE_ENTITIES,
+    payload: {
+      categories: newCategories,
+    },
+  });
+};
+
 const machineWithConfig = machine.withConfig({
   services: {
     fetchSearchResultCategories: (_, event) => fetchSearchResultCategories(event.searchQuery),
@@ -183,18 +195,12 @@ const machineWithConfig = machine.withConfig({
     updateSearchResultCategories: (_, event) => updateSearchResultCategories(event.data),
     resetInputSearchQuery: (_, __) => updateInputSearchQuery(''),
     updateErrorMessage: (_, event) => updateErrorMessage(event.data),
+    addChosenCategoryToState: (_, __) => addChosenCategoryToState(),
   },
 });
 
-const AddCategoryWidget = ({ fetchFileData, errorMessage }) => {
-  const [current, send] = useMachine(
-    machineWithConfig.withConfig({
-      actions: {
-        fetchFileData: (_, __) => fetchFileData(),
-      },
-    }),
-    { devTools: true },
-  );
+const AddCategoryWidget = ({ errorMessage }) => {
+  const [current, send] = useMachine(machineWithConfig);
 
   const checkExistenceBroadCategories = (category) =>
     send('CHECK_BROAD_CATEGORIES', {

@@ -50,7 +50,7 @@ const machine = Machine({
         src: 'attemptCreatingRelationship',
         onDone: {
           target: 'idle',
-          actions: ['fetchFileData', 'resetInputSearchQuery'],
+          actions: ['addChosenCategoryToState', 'resetInputSearchQuery'],
         },
         onError: {
           target: '#add-category.idle.failure',
