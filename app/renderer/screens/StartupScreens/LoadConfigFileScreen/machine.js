@@ -3,22 +3,19 @@ import { Machine } from 'xstate';
 
 const machine = Machine({
   id: 'config-file',
-  initial: 'fetchingAppDataPath',
+  initial: 'attemptingToReadConfigFile',
   states: {
-    fetchingAppDataPath: {
-      onEntry: ['sendEventToMainProcess'],
-      on: {
-        RECEIVE_APP_DATA_PATH: 'attemptingToReadConfigFile',
-      },
-    },
     attemptingToReadConfigFile: {
       invoke: {
         src: 'attemptToReadConfigFile',
         onDone: {
           target: '#config-file.finished',
-          actions: 'updateInstancesPaths',
+          actions: ['updateConfigDirectoryPath', 'updateInstancesPaths'],
         },
-        onError: 'writingDefaultConfigFile',
+        onError: {
+          target: 'writingDefaultConfigFile',
+          actions: 'updateConfigDirectoryPath',
+        },
       },
     },
     writingDefaultConfigFile: {

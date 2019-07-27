@@ -1,48 +1,39 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { interpret } from 'xstate';
-import { useService } from '@xstate/react';
+import { useMachine } from '@xstate/react';
 
 import machine from './machine';
 import store from '../../../redux/store';
 import { RECEIVE_ENTITIES } from '../actionTypes';
 import { Header } from 'semantic-ui-react';
-const fs = require('fs');
-const path = require('path');
-import { ipcRenderer } from 'electron';
-import {
-  EVENT_FROM_RENDERER,
-  EVENT_FROM_MAIN,
-  ARG_CONFIG_DIRECTORY_PATH,
-} from '../../../../shared/ipcChannelNames';
+import { remote } from 'electron';
 import InstancesMenuScreen from '../InstancesMenuScreen/InstancesMenuScreen';
 import { CONFIG_FILE_KEY, CONFIG_FILE_NAME } from '../configConstants';
-
-ipcRenderer.on(EVENT_FROM_MAIN, (_, arg) => {
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      configDirectoryPath: arg[ARG_CONFIG_DIRECTORY_PATH],
-    },
-  });
-  service.send('RECEIVE_APP_DATA_PATH');
-});
+const fs = require('fs');
+const path = require('path');
 
 const getConfigDirectoryPath = (store) =>
   store && store.startupScreen ? store.startupScreen.configDirectoryPath : '';
 
 const attemptToReadConfigFile = () => {
   return new Promise((resolve, reject) => {
-    const configDirectoryPath = getConfigDirectoryPath(store.getState());
+    const configDirectoryPath = remote.app.getPath('userData');
+    // const configDirectoryPath = getConfigDirectoryPath(store.getState());
     const configFilePath = path.join(configDirectoryPath, CONFIG_FILE_NAME);
     fs.readFile(configFilePath, 'utf8', (err, data) => {
       if (err) {
-        reject();
+        const rejectedValue = {
+          configDirectoryPath,
+        };
+        reject(rejectedValue);
       } else {
         const parsedData = JSON.parse(data);
         const { [CONFIG_FILE_KEY]: instancesPaths } = parsedData;
-        updateInstancesPaths(instancesPaths);
-        resolve(instancesPaths);
+        const resolvedValue = {
+          instancesPaths,
+          configDirectoryPath,
+        };
+        resolve(resolvedValue);
       }
     });
   });
@@ -85,11 +76,21 @@ const updateErrorMessage = (errorMessage) => {
   });
 };
 
+const updateConfigDirectoryPath = (configDirectoryPath) => {
+  store.dispatch({
+    type: RECEIVE_ENTITIES,
+    payload: {
+      configDirectoryPath: configDirectoryPath,
+    },
+  });
+};
+
 const configFileMachineConfigured = machine.withConfig({
   actions: {
-    sendEventToMainProcess: (_, __) => ipcRenderer.send(EVENT_FROM_RENDERER),
-    updateInstancesPaths: (_, event) => updateInstancesPaths(event.data),
+    updateInstancesPaths: (_, event) => updateInstancesPaths(event.data.instancesPaths),
     updateErrorMessage: (_, event) => updateErrorMessage(event.data),
+    updateConfigDirectoryPath: (_, event) =>
+      updateConfigDirectoryPath(event.data.configDirectoryPath),
   },
   services: {
     attemptToReadConfigFile: (_, __) => attemptToReadConfigFile(),
@@ -97,12 +98,9 @@ const configFileMachineConfigured = machine.withConfig({
   },
 });
 
-const service = interpret(configFileMachineConfigured).start();
-
 const LoadConfigFileScreen = ({ configScreenErrorMessage }) => {
-  const [current] = useService(service);
+  const [current] = useMachine(configFileMachineConfigured);
   if (
-    current.matches('fetchingAppDataPath') ||
     current.matches('attemptingToReadConfigFile') ||
     current.matches('writingDefaultConfigFile')
   ) {
