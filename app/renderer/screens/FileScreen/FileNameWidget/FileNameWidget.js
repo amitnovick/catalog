@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Header } from 'semantic-ui-react';
+import { Header, Label } from 'semantic-ui-react';
 
 const FileNameWidget = ({ file }) => {
   return (
     <>
       <Header as="h1">File Screen</Header>
-      <Header as="h2">{file.name}</Header>
+      <Label size="massive">{file.name}</Label>
     </>
   );
 };
