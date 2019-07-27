@@ -86,12 +86,6 @@ INSERT INTO categories_files
 VALUES ($category_id, $file_id)
 `;
 
-export const selectCategoryByName = `
-SELECT categories.id
-FROM categories
-WHERE categories.name = $category_name
-`;
-
 export const selectCategoryAncestors = `
 WITH RECURSIVE tc( i )  AS (
   SELECT categories.parent_id

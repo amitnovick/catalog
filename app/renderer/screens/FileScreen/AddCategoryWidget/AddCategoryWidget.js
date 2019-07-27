@@ -10,8 +10,10 @@ import querySelectCategoriesWithMatchingName from '../../../query-functions/quer
 import getSqlDriver from '../../../sqlDriver';
 import { selectCategoryAncestors, insertCategoryOfFile } from '../../../sql_queries';
 import queryDeleteFileCategory from '../../../query-functions/queryDeleteFileCategory';
-import { Message, Header, Label } from 'semantic-ui-react';
+import { Message, Label, Button } from 'semantic-ui-react';
 import BroaderCategoriesModalContainer from './Modal/BroaderCategoriesModalContainer';
+import addNewCategory from '../../../query-functions/addNewCategory';
+import queryGetCategoryByName from '../../../query-functions/queryGetCategoryByName';
 
 const fetchSearchResultCategories = (searchQuery) => {
   return querySelectCategoriesWithMatchingName(searchQuery);
@@ -145,45 +147,13 @@ const fetchNarrowerCategoriesOfFile = async () => {
   return fetchNarrowerCategoriesOfFileInDb(chosenSearchResultCategory);
 };
 
-const updateErrorMessageFetchingNarrowerCategoriesFailed = (error) => {
+const updateErrorMessage = (error) => {
   store.dispatch({
     type: RECEIVE_ENTITIES,
     payload: {
       genericErrorAddCategoryWidget: error.message,
     },
   });
-};
-
-const updateCategories = (newCategories) => {
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      categories: newCategories,
-    },
-  });
-};
-
-const getBroaderCategoriesFromState = (store) =>
-  store && store.specificTagScreen ? store.specificTagScreen.broaderFileCategories : [];
-
-const replaceBroaderCategoriesWithNarrowerCategoryInState = () => {
-  const chosenSearchResultCategory = getChosenSearchResultCategory(store.getState());
-  const broaderCategories = getBroaderCategoriesFromState(store.getState());
-  const previousCategories = getCategories(store.getState());
-  const broaderCategoriesIds = broaderCategories.map((broaderCategory) => broaderCategory.id);
-  const filteredPreviousCategories = previousCategories.filter(
-    (previousCategory) => broaderCategoriesIds.includes(previousCategory.id) === false,
-  );
-
-  const newCategories = [...filteredPreviousCategories, chosenSearchResultCategory];
-  updateCategories(newCategories);
-};
-
-const addCategoryToCategoriesState = () => {
-  const chosenSearchResultCategory = getChosenSearchResultCategory(store.getState());
-  const previousCategories = getCategories(store.getState());
-  const newCategories = [...previousCategories, chosenSearchResultCategory];
-  updateCategories(newCategories);
 };
 
 const replaceBroaderCategoriesWithNarrowerCategoryInDb = async () => {
@@ -210,7 +180,7 @@ const areBroaderCategoriesOfFileEmpty = (broaderCategoriesOfFile) => {
   return broaderCategoriesOfFile.length === 0;
 };
 
-const attemptToAddCategoryToDb = () => {
+const attemptToAddChosenSearchResultCategory = () => {
   const file = getFile(store.getState());
   const chosenSearchResultCategory = getChosenSearchResultCategory(store.getState());
   return queryAddCategoryToFile(file.id, chosenSearchResultCategory);
@@ -231,6 +201,36 @@ const categoryIsntAlreadyAssigned = (category) => {
   return categoriesIds.includes(category.id) === false;
 };
 
+const getInputSearchQuery = (store) =>
+  store && store.specificTagScreen ? store.specificTagScreen.inputSearchQuery : '';
+
+const isInputCategoryNameWhitespace = () => {
+  const inputSearchQuery = getInputSearchQuery(store.getState());
+  return inputSearchQuery.trim() !== '';
+};
+
+const createNewCategory = async () => {
+  const newCategoryName = getInputSearchQuery(store.getState());
+  await addNewCategory(newCategoryName);
+  const newCategoryId = await queryGetCategoryByName(newCategoryName);
+  const newCategory = {
+    name: newCategoryName,
+    id: newCategoryId,
+  };
+  return Promise.resolve(newCategory);
+};
+
+const fetchExistingCategoryAndAssign = async () => {
+  const categoryName = getInputSearchQuery(store.getState());
+
+  const categoryId = await queryGetCategoryByName(categoryName);
+  const newCategory = {
+    name: categoryName,
+    id: categoryId,
+  };
+  return Promise.resolve(newCategory);
+};
+
 const machineWithConfig = machine.withConfig({
   services: {
     fetchSearchResultCategories: (_, event) => fetchSearchResultCategories(event.searchQuery),
@@ -238,31 +238,35 @@ const machineWithConfig = machine.withConfig({
     replaceBroaderCategoriesWithNarrowerCategoryInDb: (_, __) =>
       replaceBroaderCategoriesWithNarrowerCategoryInDb(),
     fetchNarrowerCategoriesOfFile: (_, __) => fetchNarrowerCategoriesOfFile(),
-    attemptToAddCategoryToDb: (_, __) => attemptToAddCategoryToDb(),
+    attemptToAddChosenSearchResultCategory: (_, __) => attemptToAddChosenSearchResultCategory(),
+    createNewCategory: (_, __) => createNewCategory(),
+    fetchExistingCategoryAndAssign: (_, __) => fetchExistingCategoryAndAssign(),
   },
   actions: {
     updateInputSearchQuery: (_, event) => updateInputSearchQuery(event.searchQuery),
     updateChosenSearchResultCategory: (_, event) =>
       updateChosenSearchResultCategory(event.category),
+    updateSyntheticallyChosenSearchResultCategory: (_, event) =>
+      updateChosenSearchResultCategory(event.data),
     updateSearchResultCategories: (_, event) => updateSearchResultCategories(event.data),
     resetInputSearchQuery: (_, __) => updateInputSearchQuery(''),
-    updateErrorMessageFetchingNarrowerCategoriesFailed: (_, event) =>
-      updateErrorMessageFetchingNarrowerCategoriesFailed(event.data),
-    addCategoryToCategoriesState: (_, __) => addCategoryToCategoriesState(),
+    updateErrorMessage: (_, event) => updateErrorMessage(event.data),
     updateNarrowerCategoriesOfFile: (_, event) => updateNarrowerCategoriesOfFile(event.data),
-    replaceBroaderCategoriesWithNarrowerCategoryInState: (_, __) =>
-      replaceBroaderCategoriesWithNarrowerCategoryInState(),
     updateBroaderFileCategories: (_, event) => updateBroaderFileCategories(event.data),
   },
   guards: {
     areNarrowerCategoriesOfFileEmpty: (_, event) => areNarrowerCategoriesOfFileEmpty(event.data),
     areBroaderCategoriesOfFileEmpty: (_, event) => areBroaderCategoriesOfFileEmpty(event.data),
     categoryIsntAlreadyAssigned: (_, event) => categoryIsntAlreadyAssigned(event.category),
+    isCategoryNameWhitespace: (_, __) => isInputCategoryNameWhitespace(),
   },
 });
 
-const AddCategoryWidget = ({ errorMessage, narrowerCategoriesOfFile }) => {
+const AddCategoryWidget = ({ errorMessage, narrowerCategoriesOfFile, refetchFileData }) => {
   const [current, send] = useMachine(machineWithConfig, {
+    actions: {
+      refetchFileData: (_, __) => refetchFileData(),
+    },
     devTools: true,
   });
 
@@ -284,6 +288,9 @@ const AddCategoryWidget = ({ errorMessage, narrowerCategoriesOfFile }) => {
           send('INPUT_SEARCH_QUERY_CHANGED', { searchQuery })
         }
       />
+      <Button inverted color="blue" size="big" onClick={() => send('CLICK_CREATE_NEW_CATEGORY')}>
+        add
+      </Button>
       {current.matches('idle.failure') ? (
         <Message error compact header="Error" content={errorMessage} />
       ) : null}

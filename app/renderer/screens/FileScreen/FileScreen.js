@@ -231,7 +231,7 @@ const FileScreen = ({ fileId }) => {
         <FileNameWidgetContainer />
         <div style={{ border: '1px solid black', borderRadius: 6, padding: 5 }}>
           <CategoriesWidget />
-          <AddCategoryWidget />
+          <AddCategoryWidget refetchFileData={() => send('REFETCH_FILE_DATA')} />
         </div>
         <FileMenuContainer
           onChooseSearchResultCategory={checkExistenceBroadCategories}

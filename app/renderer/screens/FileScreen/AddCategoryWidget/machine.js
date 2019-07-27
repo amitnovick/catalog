@@ -28,12 +28,38 @@ const machine = Machine({
             target: 'idle.highlightExistingCategory',
           },
         ],
+        CLICK_CREATE_NEW_CATEGORY: {
+          target: 'creatingNewCategoryAndAssigningFile',
+          cond: 'isCategoryNameWhitespace',
+        },
       },
     },
     broadCategoriesModal: {
       on: {
         CLICK_ACCEPT_BROAD_CATEGORIES_MODAL: 'replacingBroaderCategoriesWithNarrowerCategoryInDb',
         CLOSE_BROAD_CATEGORIES_MODAL_REJECT: 'idle',
+      },
+    },
+    creatingNewCategoryAndAssigningFile: {
+      invoke: {
+        src: 'createNewCategory',
+        onDone: {
+          target: 'fetchingNarrowerCategoriesOfFile',
+          actions: 'updateSyntheticallyChosenSearchResultCategory',
+        },
+        onError: {
+          target: 'fetchingExistingCategoryAndAssign',
+        },
+      },
+    },
+    fetchingExistingCategoryAndAssign: {
+      invoke: {
+        src: 'fetchExistingCategoryAndAssign',
+        onDone: {
+          target: 'fetchingNarrowerCategoriesOfFile',
+          actions: 'updateSyntheticallyChosenSearchResultCategory',
+        },
+        onError: 'idle.failure',
       },
     },
     fetchingSearchResultCategories: {
@@ -51,7 +77,7 @@ const machine = Machine({
         src: 'fetchBroaderCategoriesOfFile',
         onDone: [
           {
-            target: 'attemptingToAddCategogoryToDb',
+            target: 'attemptingToAddChosenSearchResultCategory',
             cond: 'areBroaderCategoriesOfFileEmpty',
           },
           {
@@ -59,7 +85,7 @@ const machine = Machine({
             actions: 'updateBroaderFileCategories',
           },
         ],
-        onError: 'fetchingNarrowerCategoriesOfFile',
+        onError: 'idle.failure',
       },
     },
     fetchingNarrowerCategoriesOfFile: {
@@ -77,16 +103,16 @@ const machine = Machine({
         ],
         onError: {
           target: '#add-category.idle.failure',
-          actions: 'updateGenericErrorAddCategoryWidget',
+          actions: 'updateErrorMessage',
         },
       },
     },
-    attemptingToAddCategogoryToDb: {
+    attemptingToAddChosenSearchResultCategory: {
       invoke: {
-        src: 'attemptToAddCategoryToDb',
+        src: 'attemptToAddChosenSearchResultCategory',
         onDone: {
           target: 'idle',
-          actions: ['addCategoryToCategoriesState', 'resetInputSearchQuery'],
+          actions: ['refetchFileData', 'resetInputSearchQuery'],
         },
         onError: 'idle.failure',
       },
@@ -102,7 +128,7 @@ const machine = Machine({
         src: 'replaceBroaderCategoriesWithNarrowerCategoryInDb',
         onDone: {
           target: 'idle',
-          actions: ['replaceBroaderCategoriesWithNarrowerCategoryInState', 'resetInputSearchQuery'],
+          actions: ['refetchFileData', 'resetInputSearchQuery'],
         },
         onError: 'idle.failure',
       },
