@@ -6,7 +6,6 @@ import { RECEIVE_ENTITIES } from './actionTypes';
 import machine from './machine';
 import {
   selectCategoriesOfFile,
-  updateFileName,
   selectFileName,
   deleteFileFromFiles,
   deleteFileFromCategoriesFiles,
@@ -17,25 +16,9 @@ import FileMenuContainer from './containers/FileMenuContainer';
 import openFileByName from '../../utils/openFileByName';
 import formatFilePath from '../../utils/formatFilePath';
 import AddCategoryWidget from './AddCategoryWidget/AddCategoryWidget';
-import FileNameWidgetContainer from './FileNameWidget/FileNameWidgetContainer';
+import FileNameWidget from './FileNameWidget/FileNameWidget';
 import CategoriesWidget from './CategoriesWidget/CategoriesWidget';
 const fs = require('fs');
-const isValidFilename = require('valid-filename');
-
-const renameFileToFs = (oldFileName, newFileName) =>
-  new Promise((resolve, reject) => {
-    const oldFilePath = formatFilePath(oldFileName);
-    const newFilePath = formatFilePath(newFileName);
-    fs.rename(oldFilePath, newFilePath, (err) => {
-      if (err) {
-        console.log('unknown error occurred:', err);
-        reject();
-      } else {
-        console.log('The file has been renamed!');
-        resolve();
-      }
-    });
-  });
 
 const deleteFileFromFs = (fileName) =>
   new Promise((resolve, reject) => {
@@ -102,48 +85,6 @@ const fetchFileData = async (fileId) => {
     },
   };
   return Promise.resolve(resolvedValue);
-};
-
-const fileNameAlreadyExistsErrorMessage = `SQLITE_CONSTRAINT: UNIQUE constraint failed: files.name`;
-
-const queryRenameFileInDb = (fileId, newFileName) => {
-  return new Promise((resolve, reject) => {
-    getSqlDriver().run(
-      updateFileName,
-      {
-        $file_name: newFileName,
-        $file_id: fileId,
-      },
-      function(err) {
-        if (err) {
-          if (err.message === fileNameAlreadyExistsErrorMessage) {
-            console.log('Error: file name already exists in db');
-          } else {
-            console.log('unknown error:', err);
-          }
-          reject();
-        } else {
-          const { changes: affectedRowsCount } = this;
-          if (affectedRowsCount !== 1) {
-            console.log('No affected rows error');
-            reject();
-          } else {
-            resolve();
-          }
-        }
-      },
-    );
-  });
-};
-
-const attemptToRenameFile = async (file, newFileName) => {
-  await queryRenameFileInDb(file.id, newFileName);
-  try {
-    return await renameFileToFs(file.name, newFileName);
-  } catch (error) {
-    await queryRenameFileInDb(file.id, file.name); // Revert rename
-    throw error;
-  }
 };
 
 const queryRemoveFileFromFilesTable = (fileId) => {
@@ -227,36 +168,15 @@ const updateNewFileName = (file) => {
   });
 };
 
-const isNewFileNameValidFileName = (newFileName) => {
-  return isValidFilename(newFileName) && newFileName.trim() !== '';
-};
-
-const getFile = (store) => (store && store.specificTagScreen ? store.specificTagScreen.file : '');
-
-const resetNewFileNameToFileName = () => {
-  const file = getFile(store.getState());
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      newFileName: file.name,
-    },
-  });
-};
-
 const machineWithConfig = machine.withConfig({
   services: {
     fetchFileData: (context, _) => fetchFileData(context.fileId),
-    attemptToRenameFile: (_, event) => attemptToRenameFile(event.file, event.newFileName),
     deleteFile: (_, event) => deleteFile(event.file),
   },
   actions: {
     updateCategories: (_, event) => updateCategories(event.data.categories),
     updateFile: (_, event) => updateFile(event.data.file),
     updateNewFileName: (_, event) => updateNewFileName(event.data.file),
-    resetNewFileNameToFileName: (_, __) => resetNewFileNameToFileName(),
-  },
-  guards: {
-    isNewFileNameValidFileName: (_, event) => isNewFileNameValidFileName(event.newFileName),
   },
 });
 
@@ -270,17 +190,10 @@ const FileScreen = ({ fileId }) => {
       fileId: fileId,
     }),
   );
-  if (current.matches('idle')) {
+  if (current.matches('idle') || current.matches('loading')) {
     return (
       <>
-        <FileNameWidgetContainer
-          onClickRenameFile={(file, newFileName) =>
-            send('CLICK_RENAME_FILE', {
-              file: file,
-              newFileName: newFileName,
-            })
-          }
-        />
+        <FileNameWidget refetchFileData={() => send('REFETCH_FILE_DATA')} />
         <div style={{ border: '1px solid black', borderRadius: 6, padding: 5 }}>
           <CategoriesWidget />
           <AddCategoryWidget refetchFileData={() => send('REFETCH_FILE_DATA')} />
@@ -295,10 +208,9 @@ const FileScreen = ({ fileId }) => {
         />
         {current.matches('idle.success') ? <h2 style={{ color: 'green' }}>Succeeded</h2> : null}
         {current.matches('idle.failure') ? <h2 style={{ color: 'red' }}>Failed</h2> : null}
+        {current.matches('loading') ? <h2>Loading...</h2> : null}
       </>
     );
-  } else if (current.matches('loading')) {
-    return <h2>Loading...</h2>;
   } else if (current.matches('deletedFile')) {
     return <h2 style={{ color: 'green' }}>File has been deleted successfully</h2>;
   } else {

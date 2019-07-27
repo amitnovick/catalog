@@ -1,14 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Label, Icon } from 'semantic-ui-react';
+import { Label } from 'semantic-ui-react';
 
 const Categories = ({ categories, onClickCategory }) => {
   return (
     <Label.Group tag color="blue" size="big">
       {categories.map((category) => (
-        <Label key={category.id}>
+        <Label
+          key={category.id}
+          style={{ cursor: 'pointer' }}
+          onClick={() => onClickCategory(category)}>
           {category.name}
-          <Icon name="question" onClick={() => onClickCategory(category)} />
         </Label>
       ))}
     </Label.Group>

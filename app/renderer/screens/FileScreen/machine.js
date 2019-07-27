@@ -21,10 +21,6 @@ const machine = Machine({
       ...idleStates,
       on: {
         CLICK_DELETE_FILE: 'loading.deletingFile',
-        CLICK_RENAME_FILE: {
-          target: 'loading.attemptingToRenameFile',
-          cond: 'isNewFileNameValidFileName',
-        },
         REFETCH_FILE_DATA: 'loading.fetchingFileData',
       },
     },
@@ -39,16 +35,6 @@ const machine = Machine({
               actions: ['updateCategories', 'updateFile', 'updateNewFileName'],
             },
             onError: '#file-screen.failedFetching',
-          },
-        },
-        attemptingToRenameFile: {
-          invoke: {
-            src: 'attemptToRenameFile',
-            onDone: 'fetchingFileData',
-            onError: {
-              target:'#file-screen.idle.failure',
-              actions: 'resetNewFileNameToFileName'
-            },
           },
         },
         deletingFile: {
