@@ -15,7 +15,6 @@ import getSqlDriver from '../../sqlDriver';
 import store from '../../redux/store';
 import FileMenuContainer from './containers/FileMenuContainer';
 import openFileByName from '../../utils/openFileByName';
-import BroaderCategoriesModalContainer from './containers/BroaderCategoriesModalContainer';
 import formatFilePath from '../../utils/formatFilePath';
 import AddCategoryWidget from './AddCategoryWidget/AddCategoryWidget';
 import FileNameWidgetContainer from './FileNameWidget/FileNameWidgetContainer';
@@ -229,11 +228,6 @@ const FileScreen = ({ fileId }) => {
   if (current.matches('idle')) {
     return (
       <>
-        <BroaderCategoriesModalContainer
-          isOpen={current.matches('idle.broadCategoriesModal')}
-          onClose={() => send('CLOSE_BROAD_CATEGORIES_MODAL_REJECT')}
-          onClickYes={() => send('CLICK_ACCEPT_BROAD_CATEGORIES_MODAL')}
-        />
         <FileNameWidgetContainer />
         <div style={{ border: '1px solid black', borderRadius: 6, padding: 5 }}>
           <CategoriesWidget />

@@ -10,6 +10,7 @@ const initialState = {
   inputSearchQuery: '',
   chosenSearchResultCategory: {},
   errorMessageCreatingRelationship: '',
+  narrowerCategoriesOfFile: [],
 };
 
 export default function(state = initialState, action) {

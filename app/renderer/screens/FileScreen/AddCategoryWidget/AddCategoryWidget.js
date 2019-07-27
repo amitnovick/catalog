@@ -10,7 +10,8 @@ import querySelectCategoriesWithMatchingName from '../../../query-functions/quer
 import getSqlDriver from '../../../sqlDriver';
 import { selectCategoryAncestors, insertCategoryOfFile } from '../../../sql_queries';
 import queryDeleteFileCategory from '../../../query-functions/queryDeleteFileCategory';
-import { Message } from 'semantic-ui-react';
+import { Message, Header, Label } from 'semantic-ui-react';
+import BroaderCategoriesModalContainer from './Modal/BroaderCategoriesModalContainer';
 
 const fetchSearchResultCategories = (searchQuery) => {
   return querySelectCategoriesWithMatchingName(searchQuery);
@@ -64,7 +65,7 @@ const queryCategoryAncestors = (categoryId) => {
 const getCategories = (store) =>
   store && store.specificTagScreen ? store.specificTagScreen.categories : [];
 
-const getBroaderFileCategories = async (categoryId) => {
+const getBroaderFileCategoriesFromDb = async (categoryId) => {
   const categoryAncestors = await queryCategoryAncestors(categoryId);
   const categoryAncestorIds = categoryAncestors.map(({ id }) => id);
   const fileCategories = getCategories(store.getState());
@@ -74,23 +75,13 @@ const getBroaderFileCategories = async (categoryId) => {
   return Promise.resolve(broaderFileCategories);
 };
 
-const checkExistenceBroadCategories = async (categoryId) => {
-  const broaderFileCategories = await getBroaderFileCategories(categoryId); // TODO: Think of more elaborate way to handle an error here, it should not cause transition to `attemptingToCreateRelationshipLoading` but to some other state that shows that an error occurred.
-  if (broaderFileCategories.length > 0) {
-    store.dispatch({
-      type: RECEIVE_ENTITIES,
-      payload: {
-        broaderFileCategories: broaderFileCategories,
-      },
-    });
-    return Promise.resolve();
-  } else {
-    return Promise.reject();
-  }
+const fetchBroaderCategoriesOfFile = async () => {
+  const chosenSearchResultCategory = getChosenSearchResultCategory(store.getState());
+  return getBroaderFileCategoriesFromDb(chosenSearchResultCategory.id); // TODO: Think of more elaborate way to handle an error here, it should not cause transition to `attemptingToCreateRelationshipLoading` but to some other state that shows that an error occurred.
 };
 
 const removeBroaderFileCategoriesIfExist = async (categoryId, fileId) => {
-  const broaderFileCategories = await getBroaderFileCategories(categoryId);
+  const broaderFileCategories = await getBroaderFileCategoriesFromDb(categoryId);
   for (let i = 0; i < broaderFileCategories.length; i++) {
     const broaderFileCategory = broaderFileCategories[i];
     await queryDeleteFileCategory(broaderFileCategory.id, fileId);
@@ -102,17 +93,18 @@ const getFile = (store) => (store && store.specificTagScreen ? store.specificTag
 const getChosenSearchResultCategory = (store) =>
   store && store.specificTagScreen ? store.specificTagScreen.chosenSearchResultCategory : {};
 
-const checkIfCategoryIsInNacestors = async (category) => {
+const fetchNarrowerCategoriesOfFileInDb = async (category) => {
   const fileCategories = getCategories(store.getState());
+  let narrowerCategoriesOfFile = [];
   for (let i = 0; i < fileCategories.length; i++) {
     const fileCategory = fileCategories[i];
     const fileCategoryAncestors = await queryCategoryAncestors(fileCategory.id);
     const fileCategoryAncestorIds = fileCategoryAncestors.map(({ id }) => id);
     if (fileCategoryAncestorIds.includes(category.id)) {
-      return true;
+      narrowerCategoriesOfFile.push(fileCategory);
     }
   }
-  return false;
+  return Promise.resolve(narrowerCategoriesOfFile);
 };
 
 const categoryAlreadyExistsErrorMessage = `SQLITE_CONSTRAINT: UNIQUE constraint failed: categories_files.category_id, categories_files.file_id`;
@@ -147,33 +139,25 @@ const queryAddCategoryToFile = (fileId, category) => {
   });
 };
 
-const attemptCreatingRelationship = async () => {
-  const file = getFile(store.getState());
+const fetchNarrowerCategoriesOfFile = async () => {
   const chosenSearchResultCategory = getChosenSearchResultCategory(store.getState());
 
-  const isCategoryInAncestors = await checkIfCategoryIsInNacestors(chosenSearchResultCategory);
-  if (isCategoryInAncestors) {
-    const errorMessage = `Category ${chosenSearchResultCategory.name} is already an ancestor of an existing category!`;
-    return Promise.reject(new Error(errorMessage));
-  } else {
-    await removeBroaderFileCategoriesIfExist(chosenSearchResultCategory.id, file.id);
-    return await queryAddCategoryToFile(file.id, chosenSearchResultCategory);
-  }
+  return fetchNarrowerCategoriesOfFileInDb(chosenSearchResultCategory);
 };
 
-const updateErrorMessage = (error) => {
+const updateErrorMessage = () => {
+  const chosenSearchResultCategory = getChosenSearchResultCategory(store.getState());
+  const errorMessage = `Category ${chosenSearchResultCategory.name} is already an ancestor of an existing category!`;
+
   store.dispatch({
     type: RECEIVE_ENTITIES,
     payload: {
-      errorMessageCreatingRelationship: error.message,
+      errorMessageCreatingRelationship: errorMessage,
     },
   });
 };
 
-const addChosenCategoryToState = () => {
-  const chosenSearchResultCategory = getChosenSearchResultCategory(store.getState());
-  const previousCategories = getCategories(store.getState());
-  const newCategories = [...previousCategories, chosenSearchResultCategory];
+const updateCategories = (newCategories) => {
   store.dispatch({
     type: RECEIVE_ENTITIES,
     payload: {
@@ -182,11 +166,76 @@ const addChosenCategoryToState = () => {
   });
 };
 
+const getBroaderCategoriesFromState = (store) =>
+  store && store.specificTagScreen ? store.specificTagScreen.broaderFileCategories : [];
+
+const replaceBroaderCategoriesWithNarrowerCategoryInState = () => {
+  const chosenSearchResultCategory = getChosenSearchResultCategory(store.getState());
+  const broaderCategories = getBroaderCategoriesFromState(store.getState());
+  const previousCategories = getCategories(store.getState());
+  const broaderCategoriesIds = broaderCategories.map((broaderCategory) => broaderCategory.id);
+  const filteredPreviousCategories = previousCategories.filter(
+    (previousCategory) => broaderCategoriesIds.includes(previousCategory.id) === false,
+  );
+
+  const newCategories = [...filteredPreviousCategories, chosenSearchResultCategory];
+  updateCategories(newCategories);
+};
+
+const addCategoryToCategoriesState = () => {
+  const chosenSearchResultCategory = getChosenSearchResultCategory(store.getState());
+  const previousCategories = getCategories(store.getState());
+  const newCategories = [...previousCategories, chosenSearchResultCategory];
+  updateCategories(newCategories);
+};
+
+const replaceBroaderCategoriesWithNarrowerCategoryInDb = async () => {
+  const file = getFile(store.getState());
+  const chosenSearchResultCategory = getChosenSearchResultCategory(store.getState());
+  await removeBroaderFileCategoriesIfExist(chosenSearchResultCategory.id, file.id);
+  return queryAddCategoryToFile(file.id, chosenSearchResultCategory);
+};
+
+const updateNarrowerCategoriesOfFile = (narrowerCategoriesOfFile) => {
+  store.dispatch({
+    type: RECEIVE_ENTITIES,
+    payload: {
+      narrowerCategoriesOfFile,
+    },
+  });
+};
+
+const areNarrowerCategoriesOfFileEmpty = (narrowerCategoriesOfFile) => {
+  return narrowerCategoriesOfFile.length === 0;
+};
+
+const areBroaderCategoriesOfFileEmpty = (broaderCategoriesOfFile) => {
+  return broaderCategoriesOfFile.length === 0;
+};
+
+const attemptToAddCategoryToDb = () => {
+  const file = getFile(store.getState());
+  const chosenSearchResultCategory = getChosenSearchResultCategory(store.getState());
+  return queryAddCategoryToFile(file.id, chosenSearchResultCategory);
+};
+
+const updateBroaderFileCategories = (broaderCategoriesOfFile) => {
+  store.dispatch({
+    type: RECEIVE_ENTITIES,
+    payload: {
+      broaderFileCategories: broaderCategoriesOfFile,
+    },
+  });
+};
+
 const machineWithConfig = machine.withConfig({
   services: {
     fetchSearchResultCategories: (_, event) => fetchSearchResultCategories(event.searchQuery),
-    checkExistenceBroadCategories: (_, event) => checkExistenceBroadCategories(event.categoryId),
-    attemptCreatingRelationship: (_, __) => attemptCreatingRelationship(),
+    fetchBroaderCategoriesOfFile: (_, __) => fetchBroaderCategoriesOfFile(),
+    replaceBroaderCategoriesWithNarrowerCategoryInDb: (_, __) =>
+      replaceBroaderCategoriesWithNarrowerCategoryInDb(),
+    fetchNarrowerCategoriesOfFile: (_, __) => fetchNarrowerCategoriesOfFile(),
+    attemptToAddCategoryToDb: (_, __) => attemptToAddCategoryToDb(),
   },
   actions: {
     updateInputSearchQuery: (_, event) => updateInputSearchQuery(event.searchQuery),
@@ -195,22 +244,47 @@ const machineWithConfig = machine.withConfig({
     updateSearchResultCategories: (_, event) => updateSearchResultCategories(event.data),
     resetInputSearchQuery: (_, __) => updateInputSearchQuery(''),
     updateErrorMessage: (_, event) => updateErrorMessage(event.data),
-    addChosenCategoryToState: (_, __) => addChosenCategoryToState(),
+    addCategoryToCategoriesState: (_, __) => addCategoryToCategoriesState(),
+    updateNarrowerCategoriesOfFile: (_, event) => updateNarrowerCategoriesOfFile(event.data),
+    replaceBroaderCategoriesWithNarrowerCategoryInState: (_, __) =>
+      replaceBroaderCategoriesWithNarrowerCategoryInState(),
+    updateBroaderFileCategories: (_, event) => updateBroaderFileCategories(event.data),
+  },
+  guards: {
+    areNarrowerCategoriesOfFileEmpty: (_, event) => areNarrowerCategoriesOfFileEmpty(event.data),
+    areBroaderCategoriesOfFileEmpty: (_, event) => areBroaderCategoriesOfFileEmpty(event.data),
   },
 });
 
-const AddCategoryWidget = ({ errorMessage }) => {
-  const [current, send] = useMachine(machineWithConfig);
-
-  const checkExistenceBroadCategories = (category) =>
-    send('CHECK_BROAD_CATEGORIES', {
-      category: category,
-    });
+const AddCategoryWidget = ({ errorMessage, narrowerCategoriesOfFile }) => {
+  const [current, send] = useMachine(machineWithConfig, {
+    devTools: true,
+  });
 
   return (
     <>
+      {current.matches('idle.highlightNarrowerCategories') ? (
+        <>
+          <Header>{`Following categories are narrower: `}</Header>
+          <div>
+            {narrowerCategoriesOfFile.map((narrowerCategoryOfFile) => (
+              <Label key={narrowerCategoryOfFile.id}>{narrowerCategoryOfFile.name}</Label>
+            ))}
+          </div>
+        </>
+      ) : null}
+      <BroaderCategoriesModalContainer
+        isOpen={current.matches('broadCategoriesModal')}
+        onClose={() => send('CLOSE_BROAD_CATEGORIES_MODAL_REJECT')}
+        onClickYes={() => send('CLICK_ACCEPT_BROAD_CATEGORIES_MODAL')}
+      />
+
       <AddCategoryContainer
-        onChooseSearchResultCategory={checkExistenceBroadCategories}
+        onChooseSearchResultCategory={(category) =>
+          send('CHOOSE_CATEGORY_TO_ASSIGN', {
+            category: category,
+          })
+        }
         onChangeInputSearchQuery={(searchQuery) =>
           send('INPUT_SEARCH_QUERY_CHANGED', { searchQuery })
         }
@@ -225,6 +299,10 @@ const AddCategoryWidget = ({ errorMessage }) => {
 const getErrorMessageCreatingRelationship = (store) =>
   store && store.specificTagScreen ? store.specificTagScreen.errorMessageCreatingRelationship : '';
 
+const getNarrowerCategoriesOfFIle = (store) =>
+  store && store.specificTagScreen ? store.specificTagScreen.narrowerCategoriesOfFile : [];
+
 export default connect((state) => ({
   errorMessage: getErrorMessageCreatingRelationship(state),
+  narrowerCategoriesOfFile: getNarrowerCategoriesOfFIle(state),
 }))(AddCategoryWidget);
