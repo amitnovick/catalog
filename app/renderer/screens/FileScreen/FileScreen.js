@@ -235,7 +235,7 @@ const FileScreen = ({ fileId }) => {
           onClickYes={() => send('CLICK_ACCEPT_BROAD_CATEGORIES_MODAL')}
         />
         <FileNameWidgetContainer />
-        <div style={{ border: '1px solid black' }}>
+        <div style={{ border: '1px solid black', borderRadius: 6, padding: 5 }}>
           <CategoriesWidget />
           <AddCategoryWidget />
         </div>
