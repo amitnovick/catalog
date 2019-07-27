@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useMachine } from '@xstate/react';
-import { connect } from 'react-redux';
 
 import { RECEIVE_ENTITIES } from './actionTypes';
 import machine from './machine';
@@ -17,12 +16,10 @@ import store from '../../redux/store';
 import FileMenuContainer from './containers/FileMenuContainer';
 import openFileByName from '../../utils/openFileByName';
 import BroaderCategoriesModalContainer from './containers/BroaderCategoriesModalContainer';
-import CategoryActionsModalContainer from './containers/CategoryActionsModalContainer';
 import formatFilePath from '../../utils/formatFilePath';
 import AddCategoryWidget from './AddCategoryWidget/AddCategoryWidget';
-import queryDeleteFileCategory from '../../query-functions/queryDeleteFileCategory';
-import CategoriesContainer from './containers/CategoriesContainer';
 import FileNameWidgetContainer from './FileNameWidget/FileNameWidgetContainer';
+import CategoriesWidget from './CategoriesWidget/CategoriesWidget';
 const fs = require('fs');
 
 const renameFileToFs = (oldFileName, newFileName) =>
@@ -73,8 +70,6 @@ const queryCategoriesOfFile = (fileId) => {
   });
 };
 
-const getFile = (store) => (store && store.specificTagScreen ? store.specificTagScreen.file : '');
-
 const queryFileName = (fileId) => {
   return new Promise((resolve, reject) => {
     getSqlDriver().all(
@@ -109,11 +104,6 @@ const fetchFileData = async (fileId) => {
       categories: categories,
     },
   });
-};
-
-const removeCategoryOfFile = async (category) => {
-  const file = getFile(store.getState());
-  return await queryDeleteFileCategory(category.id, file.id);
 };
 
 const fileNameAlreadyExistsErrorMessage = `SQLITE_CONSTRAINT: UNIQUE constraint failed: files.name`;
@@ -215,7 +205,6 @@ const deleteFile = async (file) => {
 const machineWithConfig = machine.withConfig({
   services: {
     fetchFileData: (context, _) => fetchFileData(context.fileId),
-    removeCategoryOfFile: (_, event) => removeCategoryOfFile(event.category),
     attemptToRenameFile: (_, event) => attemptToRenameFile(event.file, event.newFileName),
     deleteFile: (_, event) => deleteFile(event.file),
   },
@@ -225,7 +214,7 @@ const openFile = (file) => {
   openFileByName(file.name);
 };
 
-const FileScreen = ({ updateCategoryForActionsModal, fileId }) => {
+const FileScreen = ({ fileId }) => {
   const [current, send] = useMachine(
     machineWithConfig.withContext({
       fileId: fileId,
@@ -237,11 +226,6 @@ const FileScreen = ({ updateCategoryForActionsModal, fileId }) => {
       categoryId: categoryId,
     });
 
-  const openCategoryActionsModal = (category) => {
-    updateCategoryForActionsModal(category);
-    send('OPEN_FILE_CATEGORY_ACTIONS_MODAL');
-  };
-
   if (current.matches('idle')) {
     return (
       <>
@@ -250,15 +234,8 @@ const FileScreen = ({ updateCategoryForActionsModal, fileId }) => {
           onClose={() => send('CLOSE_BROAD_CATEGORIES_MODAL_REJECT')}
           onClickYes={() => send('CLICK_ACCEPT_BROAD_CATEGORIES_MODAL')}
         />
-        <CategoryActionsModalContainer
-          isOpen={current.matches('idle.fileCategoryActionsModal')}
-          onClose={() => send('CLOSE_FILE_CATEGORY_ACTIONS_MODAL')}
-          onClickRemoveCategory={(category) =>
-            send('CLICK_REMOVE_CATEGORY_ACTIONS_MODAL', { category: category })
-          }
-        />
         <FileNameWidgetContainer />
-        <CategoriesContainer onClickCategory={openCategoryActionsModal} />
+        <CategoriesWidget />
         <AddCategoryWidget fetchFileData={() => send('REFETCH_FILE_DATA')} />
         <FileMenuContainer
           onChooseSearchResultCategory={checkExistenceBroadCategories}
@@ -291,22 +268,8 @@ const FileScreen = ({ updateCategoryForActionsModal, fileId }) => {
   }
 };
 
-const updateCategoryForActionsModal = (category) => ({
-  type: RECEIVE_ENTITIES,
-  payload: {
-    chosenCategoryForActionsModal: category,
-  },
-});
-
-const FileScreenContainer = connect(
-  null,
-  {
-    updateCategoryForActionsModal: updateCategoryForActionsModal,
-  },
-)(FileScreen);
-
-FileScreenContainer.propTypes = {
+FileScreen.propTypes = {
   fileId: PropTypes.number.isRequired,
 };
 
-export default FileScreenContainer;
+export default FileScreen;

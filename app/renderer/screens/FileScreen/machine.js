@@ -7,12 +7,6 @@ const idleStates = {
     idle: {},
     success: {},
     failure: {},
-    fileCategoryActionsModal: {
-      on: {
-        CLOSE_FILE_CATEGORY_ACTIONS_MODAL: 'idle',
-        CLICK_REMOVE_CATEGORY_ACTIONS_MODAL: '#file-screen.loading.removingCategoryOfFile',
-      },
-    },
   },
 };
 
@@ -26,7 +20,6 @@ const machine = Machine({
     idle: {
       ...idleStates,
       on: {
-        OPEN_FILE_CATEGORY_ACTIONS_MODAL: 'idle.fileCategoryActionsModal',
         CLICK_DELETE_FILE: 'loading.deletingFile',
         CLICK_RENAME_FILE: 'loading.attemptingToRenameFile',
         REFETCH_FILE_DATA: 'loading.fetchingFileData',
@@ -40,13 +33,6 @@ const machine = Machine({
             src: 'fetchFileData',
             onDone: '#file-screen.idle.idle',
             onError: '#file-screen.failedFetching',
-          },
-        },
-        removingCategoryOfFile: {
-          invoke: {
-            src: 'removeCategoryOfFile',
-            onDone: 'fetchingFileData',
-            onError: '#file-screen.idle.failure',
           },
         },
         attemptingToRenameFile: {

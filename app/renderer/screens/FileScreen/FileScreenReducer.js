@@ -4,7 +4,7 @@ const initialState = {
   file: {},
   categories: [],
   broaderFileCategories: [],
-  chosenCategoryForActionsModal: {},
+  chosenCategoryForActionsModal: null,
   newFileName: '',
   searchResultCategories: [],
   inputSearchQuery: '',
