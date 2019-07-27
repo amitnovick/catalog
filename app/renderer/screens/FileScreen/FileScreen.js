@@ -20,6 +20,7 @@ import AddCategoryWidget from './AddCategoryWidget/AddCategoryWidget';
 import FileNameWidgetContainer from './FileNameWidget/FileNameWidgetContainer';
 import CategoriesWidget from './CategoriesWidget/CategoriesWidget';
 const fs = require('fs');
+const isValidFilename = require('valid-filename');
 
 const renameFileToFs = (oldFileName, newFileName) =>
   new Promise((resolve, reject) => {
@@ -93,16 +94,14 @@ const queryFileName = (fileId) => {
 const fetchFileData = async (fileId) => {
   const fileName = await queryFileName(fileId);
   const categories = await queryCategoriesOfFile(fileId);
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      file: {
-        id: fileId,
-        name: fileName,
-      },
-      categories: categories,
+  const resolvedValue = {
+    categories,
+    file: {
+      id: fileId,
+      name: fileName,
     },
-  });
+  };
+  return Promise.resolve(resolvedValue);
 };
 
 const fileNameAlreadyExistsErrorMessage = `SQLITE_CONSTRAINT: UNIQUE constraint failed: files.name`;
@@ -201,11 +200,63 @@ const deleteFile = async (file) => {
   }
 };
 
+const updateCategories = (categories) => {
+  store.dispatch({
+    type: RECEIVE_ENTITIES,
+    payload: {
+      categories: categories,
+    },
+  });
+};
+
+const updateFile = (file) => {
+  store.dispatch({
+    type: RECEIVE_ENTITIES,
+    payload: {
+      file: file,
+    },
+  });
+};
+
+const updateNewFileName = (file) => {
+  store.dispatch({
+    type: RECEIVE_ENTITIES,
+    payload: {
+      newFileName: file.name,
+    },
+  });
+};
+
+const isNewFileNameValidFileName = (newFileName) => {
+  return isValidFilename(newFileName) && newFileName.trim() !== '';
+};
+
+const getFile = (store) => (store && store.specificTagScreen ? store.specificTagScreen.file : '');
+
+const resetNewFileNameToFileName = () => {
+  const file = getFile(store.getState());
+  store.dispatch({
+    type: RECEIVE_ENTITIES,
+    payload: {
+      newFileName: file.name,
+    },
+  });
+};
+
 const machineWithConfig = machine.withConfig({
   services: {
     fetchFileData: (context, _) => fetchFileData(context.fileId),
     attemptToRenameFile: (_, event) => attemptToRenameFile(event.file, event.newFileName),
     deleteFile: (_, event) => deleteFile(event.file),
+  },
+  actions: {
+    updateCategories: (_, event) => updateCategories(event.data.categories),
+    updateFile: (_, event) => updateFile(event.data.file),
+    updateNewFileName: (_, event) => updateNewFileName(event.data.file),
+    resetNewFileNameToFileName: (_, __) => resetNewFileNameToFileName(),
+  },
+  guards: {
+    isNewFileNameValidFileName: (_, event) => isNewFileNameValidFileName(event.newFileName),
   },
 });
 
@@ -219,35 +270,26 @@ const FileScreen = ({ fileId }) => {
       fileId: fileId,
     }),
   );
-
-  const checkExistenceBroadCategories = (categoryId) =>
-    send('CHECK_BROAD_CATEGORIES', {
-      categoryId: categoryId,
-    });
-
   if (current.matches('idle')) {
     return (
       <>
-        <FileNameWidgetContainer />
+        <FileNameWidgetContainer
+          onClickRenameFile={(file, newFileName) =>
+            send('CLICK_RENAME_FILE', {
+              file: file,
+              newFileName: newFileName,
+            })
+          }
+        />
         <div style={{ border: '1px solid black', borderRadius: 6, padding: 5 }}>
           <CategoriesWidget />
           <AddCategoryWidget refetchFileData={() => send('REFETCH_FILE_DATA')} />
         </div>
         <FileMenuContainer
-          onChooseSearchResultCategory={checkExistenceBroadCategories}
-          onChangeInputSearchQuery={(searchQuery) =>
-            send('INPUT_SEARCH_QUERY_CHANGED', { searchQuery })
-          }
           onClickOpenFile={openFile}
           onClickDeleteFile={(file) =>
             send('CLICK_DELETE_FILE', {
               file: file,
-            })
-          }
-          onClickRenameFile={(file, newFileName) =>
-            send('CLICK_RENAME_FILE', {
-              file: file,
-              newFileName: newFileName,
             })
           }
         />

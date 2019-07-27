@@ -16,7 +16,10 @@ const machine = Machine({
     idle: {
       ...idleStates,
       on: {
-        ADD_NEW_FILE: 'loading'
+        ADD_NEW_FILE: {
+          target: 'loading',
+          cond: 'isValidFileName'
+        }
       }
     },
     loading: {

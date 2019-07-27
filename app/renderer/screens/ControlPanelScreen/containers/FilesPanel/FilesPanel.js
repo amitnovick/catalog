@@ -8,16 +8,15 @@ import { insertFile, deleteFileByName } from '../../../../sql_queries';
 import openFileByName from '../../../../utils/openFileByName';
 import formatFilePath from '../../../../utils/formatFilePath';
 const fs = require('fs');
+const isValidFileName = require('valid-filename');
 
-const writeFileToFs = fileName =>
+const writeFileToFs = (fileName) =>
   new Promise((resolve, reject) => {
     const filePath = formatFilePath(fileName);
-    fs.writeFile(filePath, '', { flag: 'wx' }, err => {
+    fs.writeFile(filePath, '', { flag: 'wx' }, (err) => {
       if (err) {
         if (err.code === 'EEXIST') {
-          console.log(
-            'Error: file already exists on filesystem, did not overwrite'
-          );
+          console.log('Error: file already exists on filesystem, did not overwrite');
           reject({ type: 'alreadyExists' });
         } else {
           console.log('unknown error occurred:', err);
@@ -30,15 +29,14 @@ const writeFileToFs = fileName =>
     });
   });
 
-const fileNameAlreadyExistsErrorMessage =
-  'SQLITE_CONSTRAINT: UNIQUE constraint failed: files.name';
+const fileNameAlreadyExistsErrorMessage = 'SQLITE_CONSTRAINT: UNIQUE constraint failed: files.name';
 
-const insertFileToDb = async fileName => {
+const insertFileToDb = async (fileName) => {
   return new Promise((resolve, reject) => {
     getSqlDriver().run(
       insertFile,
       {
-        $file_name: fileName
+        $file_name: fileName,
       },
       function(err) {
         /* Must be non-arrow function, since `this` is used*/
@@ -58,17 +56,17 @@ const insertFileToDb = async fileName => {
             resolve();
           }
         }
-      }
+      },
     );
   });
 };
 
-const deleteFileFromDb = async fileName => {
+const deleteFileFromDb = async (fileName) => {
   return new Promise((resolve, reject) => {
     getSqlDriver().run(
       deleteFileByName,
       {
-        $file_name: fileName
+        $file_name: fileName,
       },
       function(err) {
         /* Must be non-arrow function, since `this` is used*/
@@ -85,12 +83,12 @@ const deleteFileFromDb = async fileName => {
             resolve();
           }
         }
-      }
+      },
     );
   });
 };
 
-const addFile = async fileName => {
+const addFile = async (fileName) => {
   await insertFileToDb(fileName);
   try {
     const filePath = await writeFileToFs(fileName);
@@ -101,30 +99,32 @@ const addFile = async fileName => {
   }
 };
 
+const isFileNameValid = (fileName) => {
+  return isValidFileName(fileName) && fileName.trim() !== '';
+};
+
 const machineWithConfig = machine.withConfig({
   services: {
-    addNewFile: (_, event) => addFile(event.fileName)
+    addNewFile: (_, event) => addFile(event.fileName),
   },
   actions: {
-    openFile: (_, event) => openFileByName(event.data)
-  }
+    openFile: (_, event) => openFileByName(event.data),
+  },
+  guards: {
+    isValidFileName: (_, event) => isFileNameValid(event.fileName),
+  },
 });
 
 const FilesPanel = () => {
   const [current, send] = useMachine(machineWithConfig);
-  const addNewFile = fileName =>
-    send({ type: 'ADD_NEW_FILE', fileName: fileName });
+  const addNewFile = (fileName) => send({ type: 'ADD_NEW_FILE', fileName: fileName });
   if (current.matches('idle')) {
     return (
       <>
         <h1>Add file </h1>
         <AddNewFileContainer onClickAddFile={addNewFile} />
-        {current.matches('idle.success') ? (
-          <h2 style={{ color: 'green' }}>Succeeded</h2>
-        ) : null}
-        {current.matches('idle.failure') ? (
-          <h2 style={{ color: 'red' }}>Failed</h2>
-        ) : null}
+        {current.matches('idle.success') ? <h2 style={{ color: 'green' }}>Succeeded</h2> : null}
+        {current.matches('idle.failure') ? <h2 style={{ color: 'red' }}>Failed</h2> : null}
       </>
     );
   } else if (current.matches('loading')) {

@@ -267,7 +267,6 @@ const AddCategoryWidget = ({ errorMessage, narrowerCategoriesOfFile, refetchFile
     actions: {
       refetchFileData: (_, __) => refetchFileData(),
     },
-    devTools: true,
   });
 
   return (
