@@ -30,7 +30,6 @@ FileMenuContainer.propTypes = {
   onChooseSearchResultCategory: PropTypes.func.isRequired,
   onChangeInputSearchQuery: PropTypes.func.isRequired,
   onClickOpenFile: PropTypes.func.isRequired,
-  onClickCategory: PropTypes.func.isRequired,
   onClickDeleteFile: PropTypes.func.isRequired,
   onClickRenameFile: PropTypes.func.isRequired,
 };

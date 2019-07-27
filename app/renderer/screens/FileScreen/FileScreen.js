@@ -21,6 +21,8 @@ import CategoryActionsModalContainer from './containers/CategoryActionsModalCont
 import formatFilePath from '../../utils/formatFilePath';
 import AddCategoryWidget from './AddCategoryWidget/AddCategoryWidget';
 import queryDeleteFileCategory from '../../query-functions/queryDeleteFileCategory';
+import CategoriesContainer from './containers/CategoriesContainer';
+import FileNameWidgetContainer from './FileNameWidget/FileNameWidgetContainer';
 const fs = require('fs');
 
 const renameFileToFs = (oldFileName, newFileName) =>
@@ -255,13 +257,15 @@ const FileScreen = ({ updateCategoryForActionsModal, fileId }) => {
             send('CLICK_REMOVE_CATEGORY_ACTIONS_MODAL', { category: category })
           }
         />
+        <FileNameWidgetContainer />
+        <CategoriesContainer onClickCategory={openCategoryActionsModal} />
+        <AddCategoryWidget fetchFileData={() => send('REFETCH_FILE_DATA')} />
         <FileMenuContainer
           onChooseSearchResultCategory={checkExistenceBroadCategories}
           onChangeInputSearchQuery={(searchQuery) =>
             send('INPUT_SEARCH_QUERY_CHANGED', { searchQuery })
           }
           onClickOpenFile={openFile}
-          onClickCategory={openCategoryActionsModal}
           onClickDeleteFile={(file) =>
             send('CLICK_DELETE_FILE', {
               file: file,
@@ -274,7 +278,6 @@ const FileScreen = ({ updateCategoryForActionsModal, fileId }) => {
             })
           }
         />
-        <AddCategoryWidget fetchFileData={() => send('REFETCH_FILE_DATA')} />
         {current.matches('idle.success') ? <h2 style={{ color: 'green' }}>Succeeded</h2> : null}
         {current.matches('idle.failure') ? <h2 style={{ color: 'red' }}>Failed</h2> : null}
       </>
