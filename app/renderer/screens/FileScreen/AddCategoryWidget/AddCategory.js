@@ -20,8 +20,8 @@ const AddCategory = ({
     <div
       style={{
         margin: '0 auto',
-        width: '9em',
-      }} /* The results width seems to be 18em, so we need half of that */
+        width: '18em',
+      }} /* The results width seems to be 18em */
     >
       <Search
         onResultSelect={handleChange}

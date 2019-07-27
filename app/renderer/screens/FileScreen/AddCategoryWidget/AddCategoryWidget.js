@@ -268,6 +268,22 @@ const AddCategoryWidget = ({ errorMessage, narrowerCategoriesOfFile }) => {
 
   return (
     <>
+      <BroaderCategoriesModalContainer
+        isOpen={current.matches('broadCategoriesModal')}
+        onClose={() => send('CLOSE_BROAD_CATEGORIES_MODAL_REJECT')}
+        onClickYes={() => send('CLICK_ACCEPT_BROAD_CATEGORIES_MODAL')}
+      />
+
+      <AddCategoryContainer
+        onChooseSearchResultCategory={(category) =>
+          send('CHOOSE_CATEGORY_TO_ASSIGN', {
+            category: category,
+          })
+        }
+        onChangeInputSearchQuery={(searchQuery) =>
+          send('INPUT_SEARCH_QUERY_CHANGED', { searchQuery })
+        }
+      />
       {current.matches('idle.failure') ? (
         <Message error compact header="Error" content={errorMessage} />
       ) : null}
@@ -288,22 +304,6 @@ const AddCategoryWidget = ({ errorMessage, narrowerCategoriesOfFile }) => {
           }
         />
       ) : null}
-      <BroaderCategoriesModalContainer
-        isOpen={current.matches('broadCategoriesModal')}
-        onClose={() => send('CLOSE_BROAD_CATEGORIES_MODAL_REJECT')}
-        onClickYes={() => send('CLICK_ACCEPT_BROAD_CATEGORIES_MODAL')}
-      />
-
-      <AddCategoryContainer
-        onChooseSearchResultCategory={(category) =>
-          send('CHOOSE_CATEGORY_TO_ASSIGN', {
-            category: category,
-          })
-        }
-        onChangeInputSearchQuery={(searchQuery) =>
-          send('INPUT_SEARCH_QUERY_CHANGED', { searchQuery })
-        }
-      />
     </>
   );
 };
