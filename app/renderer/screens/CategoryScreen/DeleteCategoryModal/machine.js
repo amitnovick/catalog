@@ -14,10 +14,10 @@ const machine = Machine({
             onDone: [
               {
                 target: 'fetchingCategorizedFiles',
-                actions: 'updateSubcategories',
                 cond: 'isSubcategoriesEmpty',
               },
               {
+                actions: 'updateSubcategories',
                 target: '#delete-category-modal.idle.subcategories',
               },
             ],
@@ -34,6 +34,7 @@ const machine = Machine({
               },
               {
                 target: '#delete-category-modal.idle.categorized_files',
+                actions: 'updateCategorizedFiles',
               },
             ],
             onError: '#delete-category-modal.failure',

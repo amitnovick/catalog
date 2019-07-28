@@ -39,30 +39,16 @@ const fetchSubcategories = async () => {
   return queryChildCategories(category.id);
 };
 
-const getSubcategories = (store) =>
-  store && store.categoryScreen ? store.categoryScreen.subcategories : [];
-
-const getCategorizedFiles = (store) =>
-  store && store.categoryScreen ? store.categoryScreen.categorizedFiles : [];
-
-const isSubcategoriesEmpty = () => {
-  const subcategories = getSubcategories(store.getState());
+const isSubcategoriesEmpty = (subcategories) => {
   return subcategories.length === 0;
 };
 
 const fetchCategorizedFiles = async () => {
   const category = getCategory(store.getState());
-  const categorizedFiles = await queryCategorizedFiles(category.id);
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      categorizedFiles: categorizedFiles,
-    },
-  });
+  return queryCategorizedFiles(category.id);
 };
 
-const isCategorizedFilesEmpty = () => {
-  const categorizedFiles = getCategorizedFiles(store.getState());
+const isCategorizedFilesEmpty = (categorizedFiles) => {
   return categorizedFiles.length === 0;
 };
 
@@ -105,6 +91,15 @@ const updateSubcategories = (subcategories) => {
   });
 };
 
+const updateCategorizedFiles = (categorizedFiles) => {
+  store.dispatch({
+    type: RECEIVE_ENTITIES,
+    payload: {
+      categorizedFiles: categorizedFiles,
+    },
+  });
+};
+
 const machineWithConfig = machine.withConfig({
   services: {
     fetchSubcategories: (_, __) => fetchSubcategories(),
@@ -113,10 +108,11 @@ const machineWithConfig = machine.withConfig({
   },
   actions: {
     updateSubcategories: (_, event) => updateSubcategories(event.data),
+    updateCategorizedFiles: (_, event) => updateCategorizedFiles(event.data),
   },
   guards: {
-    isSubcategoriesEmpty: (_, __) => isSubcategoriesEmpty(),
-    isCategorizedFilesEmpty: (_, __) => isCategorizedFilesEmpty(),
+    isSubcategoriesEmpty: (_, event) => isSubcategoriesEmpty(event.data),
+    isCategorizedFilesEmpty: (_, event) => isCategorizedFilesEmpty(event.data),
   },
 });
 
