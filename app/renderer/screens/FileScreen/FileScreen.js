@@ -18,6 +18,7 @@ import formatFilePath from '../../utils/formatFilePath';
 import AddCategoryWidget from './AddCategoryWidget/AddCategoryWidget';
 import FileNameWidget from './FileNameWidget/FileNameWidget';
 import CategoriesWidget from './CategoriesWidget/CategoriesWidget';
+import { Grid } from 'semantic-ui-react';
 const fs = require('fs');
 
 const deleteFileFromFs = (fileName) =>
@@ -192,24 +193,28 @@ const FileScreen = ({ fileId }) => {
   );
   if (current.matches('idle') || current.matches('loading')) {
     return (
-      <>
-        <FileNameWidget refetchFileData={() => send('REFETCH_FILE_DATA')} />
-        <div style={{ border: '1px solid black', borderRadius: 6, padding: 5 }}>
-          <CategoriesWidget />
-          <AddCategoryWidget refetchFileData={() => send('REFETCH_FILE_DATA')} />
-        </div>
-        <FileMenuContainer
-          onClickOpenFile={openFile}
-          onClickDeleteFile={(file) =>
-            send('CLICK_DELETE_FILE', {
-              file: file,
-            })
-          }
-        />
-        {current.matches('idle.success') ? <h2 style={{ color: 'green' }}>Succeeded</h2> : null}
-        {current.matches('idle.failure') ? <h2 style={{ color: 'red' }}>Failed</h2> : null}
-        {current.matches('loading') ? <h2>Loading...</h2> : null}
-      </>
+      <Grid>
+        <Grid.Column width="3" />
+        <Grid.Column width="10">
+          <FileNameWidget refetchFileData={() => send('REFETCH_FILE_DATA')} />
+          <div style={{ border: '1px solid black', borderRadius: 6, padding: 5 }}>
+            <CategoriesWidget />
+            <AddCategoryWidget refetchFileData={() => send('REFETCH_FILE_DATA')} />
+          </div>
+          <FileMenuContainer
+            onClickOpenFile={openFile}
+            onClickDeleteFile={(file) =>
+              send('CLICK_DELETE_FILE', {
+                file: file,
+              })
+            }
+          />
+          {current.matches('idle.success') ? <h2 style={{ color: 'green' }}>Succeeded</h2> : null}
+          {current.matches('idle.failure') ? <h2 style={{ color: 'red' }}>Failed</h2> : null}
+          {current.matches('loading') ? <h2>Loading...</h2> : null}
+        </Grid.Column>
+        <Grid.Column width="3" />
+      </Grid>
     );
   } else if (current.matches('deletedFile')) {
     return <h2 style={{ color: 'green' }}>File has been deleted successfully</h2>;
