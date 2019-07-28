@@ -7,7 +7,12 @@ const SearchBox = ({ searchText, onChangeSearchText }) => {
     <Input
       type="text"
       icon="search"
-      label={<Label icon={<Icon name="file" style={{ color: '#101010' }} />} color="yellow" />}
+      label={
+        <Label>
+          <Icon name="file" style={{ color: '#101010' }} />
+          File name
+        </Label>
+      }
       size="massive"
       value={searchText}
       onChange={({ target }) => onChangeSearchText(target.value)}

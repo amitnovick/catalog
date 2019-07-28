@@ -113,7 +113,6 @@ const FileNameWidget = ({ refetchFileData }) => {
       refetchFileData: (_, __) => refetchFileData(),
     },
   });
-  console.log('current:', current.value, 'matches?', current.matches('idle.success'));
   return (
     <>
       <FileNameContainer

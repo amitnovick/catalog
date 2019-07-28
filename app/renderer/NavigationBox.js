@@ -1,30 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { css } from 'emotion';
 import { Link } from 'react-router-dom';
 import routes from './routes';
 import { Menu } from 'semantic-ui-react';
 
-const linkClass = css({
-  fontSize: 20,
-  fontFamily: 'helvetica',
-  textDecoration: 'none',
-  color: 'black',
-});
-
-const listItemClass = css({
-  margin: 5,
-  border: '1px solid black',
-  borderRadius: 5,
-  padding: '2px 6px',
-  ':hover': {
-    backgroundColor: '#f0f0f0',
-  },
-});
-
 const NavigationBox = ({ path }) => {
   return (
-    <Menu size="massive">
+    <Menu size="massive" inverted style={{ backgroundColor: '#073642' /* Solarized base03 */ }}>
       <Menu.Item active={path === routes.HOME} as={Link} to={routes.HOME}>
         Home
       </Menu.Item>
