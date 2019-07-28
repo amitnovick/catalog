@@ -9,6 +9,7 @@ import AllFilesTab from './components/AllFilesTab';
 import FilesUnderCategoryTabContainer from './containers/FilesUnderCategoryTabContainer';
 import getSqlDriver from '../../sqlDriver';
 import { selectFilesByName, selectFilesUnderCategoryByName } from './sqlQueries';
+import { connect } from 'react-redux';
 
 const queryFilesByName = async (fileName) => {
   return new Promise((resolve, reject) => {
@@ -80,6 +81,15 @@ const fetchFilesUnderCategory = async () => {
   });
 };
 
+const updateSearchText = (searchText) => {
+  store.dispatch({
+    type: RECEIVE_ENTITIES,
+    payload: {
+      searchText: searchText,
+    },
+  });
+};
+
 const machineWithConfig = machine.withConfig({
   // actions: {
   //   queryTagsNotFromRoot: () =>
@@ -89,12 +99,19 @@ const machineWithConfig = machine.withConfig({
     fetchAllFiles: (_, __) => fetchAllFiles(),
     fetchFilesUnderCategory: (_, __) => fetchFilesUnderCategory(),
   },
+  actions: {
+    updateSearchText: (_, event) => updateSearchText(event.searchText),
+  },
 });
 
-const SearchScreen = () => {
+const SearchScreen = ({ resetFormStates }) => {
   const [current, send] = useMachine(machineWithConfig);
 
-  const onSearchButtonClick = () => send('CLICK_SEARCH_BUTTON');
+  React.useEffect(() => {
+    return () => resetFormStates();
+  }, []);
+
+  const onChangeSearchText = (searchText) => send('SEARCH_TEXT_CHANGED', { searchText });
   if (current.matches('allFiles')) {
     return (
       <>
@@ -105,7 +122,7 @@ const SearchScreen = () => {
           Files under Category{' '}
         </Button>
         <Divider horizontal />
-        <AllFilesTab onSearchButtonClick={onSearchButtonClick} />
+        <AllFilesTab onChangeSearchText={onChangeSearchText} />
       </>
     );
   } else if (current.matches('filesUnderCategory')) {
@@ -118,7 +135,7 @@ const SearchScreen = () => {
           Files under Category{' '}
         </Button>
         <Divider horizontal />
-        <FilesUnderCategoryTabContainer onSearchButtonClick={onSearchButtonClick} />
+        <FilesUnderCategoryTabContainer onChangeSearchText={onChangeSearchText} />
       </>
     );
   } else {
@@ -126,4 +143,18 @@ const SearchScreen = () => {
   }
 };
 
-export default SearchScreen;
+const resetFormStates = () => ({
+  type: RECEIVE_ENTITIES,
+  payload: {
+    files: [],
+    searchText: '',
+    categoryName: '',
+  },
+});
+
+export default connect(
+  null,
+  {
+    resetFormStates: resetFormStates,
+  },
+)(SearchScreen);

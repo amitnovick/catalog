@@ -1,23 +1,16 @@
 import { connect } from 'react-redux';
-import { RECEIVE_ENTITIES } from '../actionTypes';
+import PropTypes from 'prop-types';
+
 import SearchBox from '../components/SearchBox';
 
-const getSearchText = store => {
+const getSearchText = (store) => {
   return store && store.searchScreen ? store.searchScreen.searchText : '';
 };
 
-const updateSearchText = searchText => {
-  return {
-    type: RECEIVE_ENTITIES,
-    payload: {
-      searchText: searchText
-    }
-  };
-};
+const SearchBoxContainer = connect((state) => ({ searchText: getSearchText(state) }))(SearchBox);
 
-const SearchBoxContainer = connect(
-  state => ({ searchText: getSearchText(state) }),
-  { updateSearchText: updateSearchText }
-)(SearchBox);
+SearchBoxContainer.propTypes = {
+  onChangeSearchText: PropTypes.func.isRequired,
+};
 
 export default SearchBoxContainer;

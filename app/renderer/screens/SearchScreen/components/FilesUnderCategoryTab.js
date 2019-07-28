@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Header } from 'semantic-ui-react';
 import SearchBoxContainer from '../containers/SearchBoxContainer';
 import SearchResultsListContainer from '../containers/SearchResultsListContainer';
 import { Input } from 'semantic-ui-react';
 
-const FilesUnderCategoryTab = ({ onSearchButtonClick, onChangeCategoryName, categoryName }) => {
+const FilesUnderCategoryTab = ({ onChangeSearchText, onChangeCategoryName, categoryName }) => {
   return (
     <>
       <Input
@@ -16,14 +15,14 @@ const FilesUnderCategoryTab = ({ onSearchButtonClick, onChangeCategoryName, cate
       />
 
       <br />
-      <SearchBoxContainer onSearchButtonClick={onSearchButtonClick} />
+      <SearchBoxContainer onChangeSearchText={onChangeSearchText} />
       <SearchResultsListContainer />
     </>
   );
 };
 
 FilesUnderCategoryTab.propTypes = {
-  onSearchButtonClick: PropTypes.func.isRequired,
+  onChangeSearchText: PropTypes.func.isRequired,
   onChangeCategoryName: PropTypes.func.isRequired,
   categoryName: PropTypes.string.isRequired,
 };

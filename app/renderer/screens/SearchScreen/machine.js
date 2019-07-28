@@ -11,21 +11,24 @@ const machine = Machine({
       states: {
         idle: {
           on: {
-            CLICK_SEARCH_BUTTON: 'loading'
-          }
+            SEARCH_TEXT_CHANGED: {
+              target: 'loading',
+              actions: 'updateSearchText',
+            },
+          },
         },
         loading: {
           invoke: {
             src: 'fetchAllFiles',
             onDone: '#all-files-tab.idle',
-            onError: '#all-files-tab.failure'
-          }
+            onError: '#all-files-tab.failure',
+          },
         },
-        failure: {}
+        failure: {},
       },
       on: {
-        CLICK_FILES_UNDER_CATEGORY_TAB: 'filesUnderCategory'
-      }
+        CLICK_FILES_UNDER_CATEGORY_TAB: 'filesUnderCategory',
+      },
     },
     filesUnderCategory: {
       id: 'files-under-category-tab',
@@ -33,23 +36,26 @@ const machine = Machine({
       states: {
         idle: {
           on: {
-            CLICK_SEARCH_BUTTON: 'loading'
-          }
+            SEARCH_TEXT_CHANGED: {
+              target: 'loading',
+              actions: 'updateSearchText',
+            },
+          },
         },
         loading: {
           invoke: {
             src: 'fetchFilesUnderCategory',
             onDone: '#files-under-category-tab.idle',
-            onError: '#files-under-category-tab.failure'
-          }
+            onError: '#files-under-category-tab.failure',
+          },
         },
-        failure: {}
+        failure: {},
       },
       on: {
-        CLICK_ALL_FILES_TAB: 'allFiles'
-      }
-    }
-  }
+        CLICK_ALL_FILES_TAB: 'allFiles',
+      },
+    },
+  },
 });
 
 export default machine;

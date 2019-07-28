@@ -1,23 +1,23 @@
 import React from 'react';
-import { Input } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
+import { Input, Label, Icon } from 'semantic-ui-react';
 
-const SearchBox = ({ onSearchButtonClick, updateSearchText, searchText }) => {
+const SearchBox = ({ searchText, onChangeSearchText }) => {
   return (
     <Input
-      label={{ content: 'File name', icon: 'file' }}
-      action={{
-        icon: 'search',
-        color: 'yellow',
-        style: { color: '#101010' },
-        size: 'massive',
-        content: 'Search',
-        onClick: onSearchButtonClick,
-      }}
+      type="text"
+      icon="search"
+      label={<Label icon={<Icon name="file" style={{ color: '#101010' }} />} color="yellow" />}
       size="massive"
       value={searchText}
-      onChange={(event) => updateSearchText(event.target.value)}
+      onChange={({ target }) => onChangeSearchText(target.value)}
     />
   );
+};
+
+SearchBox.propTypes = {
+  searchText: PropTypes.string.isRequired,
+  onChangeSearchText: PropTypes.func.isRequired,
 };
 
 export default SearchBox;

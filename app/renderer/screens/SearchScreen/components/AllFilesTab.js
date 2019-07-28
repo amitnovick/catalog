@@ -1,20 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Header } from 'semantic-ui-react';
 import SearchBoxContainer from '../containers/SearchBoxContainer';
 import SearchResultsListContainer from '../containers/SearchResultsListContainer';
 
-const AllFilesTab = ({ onSearchButtonClick }) => {
+const AllFilesTab = ({ onChangeSearchText }) => {
   return (
     <>
-      <SearchBoxContainer onSearchButtonClick={onSearchButtonClick} />
+      <SearchBoxContainer onChangeSearchText={onChangeSearchText} />
       <SearchResultsListContainer />
     </>
   );
 };
 
 AllFilesTab.propTypes = {
-  onSearchButtonClick: PropTypes.func.isRequired,
+  onChangeSearchText: PropTypes.func.isRequired,
 };
 
 export default AllFilesTab;
