@@ -4,7 +4,9 @@ const initialState = {
   category: {},
   newCategoryName: '',
   subcategories: [],
-  categorizedFiles: []
+  categorizedFiles: [],
+  isRootCategory: null,
+  errorMessageCategoryNameWidget: '',
 };
 
 export default function(state = initialState, action) {

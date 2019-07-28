@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Header, Input, Button } from 'semantic-ui-react';
 
-const FileNameWidget = ({ file, newFileName, onChangeInputText, onClickRenameFile }) => {
+const FileName = ({ file, newFileName, onChangeInputText, onClickRenameFile }) => {
   return (
     <>
       <Header as="h1">File Screen</Header>
@@ -15,11 +15,11 @@ const FileNameWidget = ({ file, newFileName, onChangeInputText, onClickRenameFil
   );
 };
 
-FileNameWidget.propTypes = {
+FileName.propTypes = {
   file: PropTypes.object.isRequired,
   newFileName: PropTypes.string.isRequired,
   onChangeInputText: PropTypes.func.isRequired,
   onClickRenameFile: PropTypes.func.isRequired,
 };
 
-export default FileNameWidget;
+export default FileName;

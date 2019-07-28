@@ -3,29 +3,20 @@ import { Machine } from 'xstate';
 
 const machine = Machine({
   id: 'category-screen',
-  initial: 'loading',
+  initial: 'fetchingCategoryData',
   context: {
-    categoryId: null // Meaningless default value
+    categoryId: null, // Meaningless default value
   },
   states: {
-    loading: {
-      initial: 'fetchingCategoryData',
-      states: {
-        fetchingCategoryData: {
-          invoke: {
-            src: 'fetchCategoryData',
-            onDone: '#category-screen.idle',
-            onError: '#category-screen.fetchingFailed'
-          }
+    fetchingCategoryData: {
+      invoke: {
+        src: 'fetchCategoryData',
+        onDone: {
+          target: 'idle.success',
+          actions: ['updateCategoryData', 'updateNewCategoryName'],
         },
-        attemptingRenameCategory: {
-          invoke: {
-            src: 'attemptRenameCategory',
-            onDone: 'fetchingCategoryData',
-            onError: '#category-screen.idle.failure'
-          }
-        }
-      }
+        onError: '#category-screen.fetchingFailed',
+      },
     },
     idle: {
       initial: 'idle',
@@ -36,23 +27,22 @@ const machine = Machine({
         deleteCategoryStepsModal: {
           on: {
             CLICK_CLOSE_MODAL: '#category-screen.idle',
-            DELETE_CATEGORY_MODAL_CONFIRM_DELETE:
-              '#category-screen.deletedCategory'
-          }
-        }
+            DELETE_CATEGORY_MODAL_CONFIRM_DELETE: '#category-screen.deletedCategory',
+          },
+        },
       },
       on: {
-        CLICK_RENAME_CATEGORY: 'loading.attemptingRenameCategory',
-        CLICK_DELETE_CATEGORY: '#category-screen.idle.deleteCategoryStepsModal'
-      }
+        CLICK_DELETE_CATEGORY: '#category-screen.idle.deleteCategoryStepsModal',
+        REFETCH_CATEGORY_DATA: 'fetchingCategoryData',
+      },
     },
     fetchingFailed: {
-      type: 'final'
+      type: 'final',
     },
     deletedCategory: {
-      type: 'final'
-    }
-  }
+      type: 'final',
+    },
+  },
 });
 
 export default machine;
