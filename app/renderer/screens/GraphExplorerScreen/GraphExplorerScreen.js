@@ -12,10 +12,24 @@ import queryRootCategory from '../../query-functions/queryRootCategory';
 import routes from '../../routes';
 import queryChildCategories from '../../query-functions/queryChildCategories';
 import queryCategoryNameAndParentId from '../../query-functions/queryCategoryName';
-import { Button, Icon, List } from 'semantic-ui-react';
+import { Button, List, Grid, Divider } from 'semantic-ui-react';
 
-//////////////////// <GRAPH COMMUNICATION> ///////////////////
+//////////////////// <STYLING> ///////////////////
 
+const listStyle = {
+  listStyle: 'none',
+  padding: 0,
+};
+
+const threeDotsCss = {
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  display: 'inline-block',
+  width: '100%',
+};
+
+//////////////////// </STYLING> ///////////////////
 const queryParentCategories = (categoryId) => {
   return new Promise((resolve, reject) => {
     getSqlDriver().all(
@@ -53,49 +67,6 @@ const queryFiles = (categoryId) => {
     );
   });
 };
-
-//////////////////// </GRAPH COMMUNICATION> ///////////////////
-
-//////////////////// <STYLING> ///////////////////
-const spaceBetweenStyle = {
-  display: 'flex',
-  justifyContent: 'space-between',
-};
-
-const listStyle = {
-  listStyle: 'none',
-  padding: 0,
-};
-
-const threeDotsCss = {
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  display: 'inline-block',
-  width: '100%',
-};
-
-const paneStyle = ({ width }) => ({
-  width: width,
-  paddingRight: 4,
-  paddingLeft: 4,
-  border: `1px solid black`,
-});
-
-const centeredDivStyle = { width: '75%', margin: '0 auto' };
-
-const buttonStyle = {
-  width: '100%',
-  minWidth: '4em',
-  minHeight: '2em',
-  backgroundColor: '#fdf6e3', // Solarized base3
-  color: '#073642', // Solarized base02
-  borderRadius: '2px',
-  border: '1px solid #002b36', // Solarized base03
-  fontWeight: 700,
-  fontSize: '1.5em',
-};
-//////////////////// </STYLING> ///////////////////
 
 const fetchData = async (initialCategoryId) => {
   const representorCategoryId =
@@ -145,58 +116,67 @@ const GraphExplorerScreen = ({
     case 'loading':
     case 'idle':
       return (
-        <div style={{ ...spaceBetweenStyle, ...centeredDivStyle }}>
-          <div style={paneStyle({ width: 250 })}>
-            <h2 style={{ textAlign: 'center' }}>Higher:</h2>
-            <ul style={listStyle}>
-              {parentCategories.map((parentCategory) => (
-                <li key={parentCategory.id} style={threeDotsCss}>
-                  <Button
-                    color="blue"
-                    as={Link}
-                    to={`${routes.TREE_EXPLORER}/${parentCategory.id}`}>
-                    {parentCategory.name}
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div style={paneStyle({ width: 400 })}>
-            <Button
-              color="blue"
-              as={Link}
-              size="massive"
-              to={`${routes.CATEGORY}/${representorCategory.id}`}>
-              {representorCategory.name}
-            </Button>
-            <ul style={listStyle}>
-              {files.map((file) => (
-                <li key={file.id} style={{ minWidth: '3em', minHeight: '1.5em' }}>
-                  <Button
-                    color="yellow"
-                    style={{ color: 'black' }}
-                    as={Link}
-                    size="big"
-                    to={`${routes.FILE}/${file.id}`}>
-                    {file.name}
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div style={paneStyle({ width: 250 })}>
-            <h2 style={{ textAlign: 'center' }}>Lower:</h2>
-            <List style={listStyle}>
-              {childCategories.map((childCategory) => (
-                <List.Item key={childCategory.id} style={threeDotsCss}>
-                  <Button color="blue" as={Link} to={`${routes.TREE_EXPLORER}/${childCategory.id}`}>
-                    {childCategory.name}
-                  </Button>
-                </List.Item>
-              ))}
-            </List>
-          </div>
-        </div>
+        <>
+          <Divider horizontal />
+          <Grid>
+            <Grid.Column width="3" />
+            <Grid.Column width="3" style={{ border: '1px solid black' }}>
+              <h2 style={{ textAlign: 'center' }}>Higher:</h2>
+              <ul style={listStyle}>
+                {parentCategories.map((parentCategory) => (
+                  <li key={parentCategory.id} style={threeDotsCss}>
+                    <Button
+                      color="blue"
+                      as={Link}
+                      to={`${routes.TREE_EXPLORER}/${parentCategory.id}`}>
+                      {parentCategory.name}
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            </Grid.Column>
+            <Grid.Column width="4" style={{ border: '1px solid black' }}>
+              <Button
+                color="blue"
+                as={Link}
+                size="massive"
+                to={`${routes.CATEGORY}/${representorCategory.id}`}>
+                {representorCategory.name}
+              </Button>
+              <ul style={listStyle}>
+                {files.map((file) => (
+                  <li key={file.id} style={{ minWidth: '3em', minHeight: '1.5em' }}>
+                    <Button
+                      color="yellow"
+                      style={{ color: 'black' }}
+                      as={Link}
+                      size="big"
+                      to={`${routes.FILE}/${file.id}`}>
+                      {file.name}
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            </Grid.Column>
+            <Grid.Column width="3" style={{ border: '1px solid black' }}>
+              <h2 style={{ textAlign: 'center' }}>Lower:</h2>
+              <List style={listStyle}>
+                {childCategories.map((childCategory) => (
+                  <List.Item key={childCategory.id} style={threeDotsCss}>
+                    <Button
+                      color="blue"
+                      as={Link}
+                      to={`${routes.TREE_EXPLORER}/${childCategory.id}`}>
+                      {childCategory.name}
+                    </Button>
+                  </List.Item>
+                ))}
+              </List>
+            </Grid.Column>
+            <Grid.Column width="3" />
+          </Grid>
+          <Divider horizontal />
+        </>
       );
     case 'failure':
       return <h2>Failure</h2>;
