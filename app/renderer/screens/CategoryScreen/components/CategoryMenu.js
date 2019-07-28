@@ -10,17 +10,18 @@ const CategoryMenu = ({
   onChangeNewCategoryName,
   onClickRenameCategory,
   onClickDeleteCategory,
-  shouldDisableDeleteCategoryButton
+  shouldDisableDeleteCategoryButton,
 }) => {
   return (
     <>
       <h2>{`Category: ${category.name}`}</h2>
       <Button
+        color="violet"
         as={Link}
         size="big"
         to={`${routes.TREE_EXPLORER}/${category.id}`}
-      >
-        <Icon name="sign-in alternate" /> Open in Tree Explorer
+        icon>
+        <Icon name="wpexplorer" size="big" />
       </Button>
       <List>
         <List.Item>
@@ -30,12 +31,10 @@ const CategoryMenu = ({
               onChange={({ target }) => onChangeNewCategoryName(target.value)}
             />
             <Button
+              icon="edit"
               size="massive"
               onClick={() => onClickRenameCategory(category, newCategoryName)}
-            >
-              <Icon name="edit" />
-              Rename category
-            </Button>
+            />
           </Input>
         </List.Item>
         <List.Item>
@@ -44,11 +43,7 @@ const CategoryMenu = ({
               <Icon name="remove" /> Delete category
             </Button>
           ) : (
-            <Button
-              size="massive"
-              color="red"
-              onClick={() => onClickDeleteCategory(category)}
-            >
+            <Button size="massive" color="red" onClick={() => onClickDeleteCategory(category)}>
               <Icon name="remove" /> Delete category
             </Button>
           )}
@@ -64,7 +59,7 @@ CategoryMenu.propTypes = {
   onChangeNewCategoryName: PropTypes.func.isRequired,
   onClickRenameCategory: PropTypes.func.isRequired,
   onClickDeleteCategory: PropTypes.func.isRequired,
-  shouldDisableDeleteCategoryButton: PropTypes.bool.isRequired
+  shouldDisableDeleteCategoryButton: PropTypes.bool.isRequired,
 };
 
 export default CategoryMenu;

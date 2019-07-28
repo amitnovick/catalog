@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useMachine } from '@xstate/react';
 import { Link } from 'react-router-dom';
-import { css } from 'emotion';
 
 import { RECEIVE_ENTITIES } from './actionTypes';
 import store from '../../redux/store';
@@ -15,18 +14,14 @@ import queryChildCategories from '../../query-functions/queryChildCategories';
 import queryCategoryNameAndParentId from '../../query-functions/queryCategoryName';
 import { Button, Icon } from 'semantic-ui-react';
 
-/*  TODO:
-  - The idle->loading UI transition should be delayed by 300ms
-*/
-
 //////////////////// <GRAPH COMMUNICATION> ///////////////////
 
-const queryParentCategories = categoryId => {
+const queryParentCategories = (categoryId) => {
   return new Promise((resolve, reject) => {
     getSqlDriver().all(
       selectParentCategories,
       {
-        $category_id: categoryId
+        $category_id: categoryId,
       },
       (err, categoriesRows) => {
         if (err) {
@@ -35,17 +30,17 @@ const queryParentCategories = categoryId => {
         } else {
           resolve(categoriesRows);
         }
-      }
+      },
     );
   });
 };
 
-const queryFiles = categoryId => {
+const queryFiles = (categoryId) => {
   return new Promise((resolve, reject) => {
     getSqlDriver().all(
       selectFiles,
       {
-        $category_id: categoryId
+        $category_id: categoryId,
       },
       (err, rows) => {
         if (err) {
@@ -54,7 +49,7 @@ const queryFiles = categoryId => {
         } else {
           resolve(rows);
         }
-      }
+      },
     );
   });
 };
@@ -64,12 +59,12 @@ const queryFiles = categoryId => {
 //////////////////// <STYLING> ///////////////////
 const spaceBetweenStyle = {
   display: 'flex',
-  justifyContent: 'space-between'
+  justifyContent: 'space-between',
 };
 
 const listStyle = {
   listStyle: 'none',
-  padding: 0
+  padding: 0,
 };
 
 const threeDotsCss = {
@@ -77,14 +72,14 @@ const threeDotsCss = {
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   display: 'inline-block',
-  width: '100%'
+  width: '100%',
 };
 
 const paneStyle = ({ width }) => ({
   width: width,
   paddingRight: 4,
   paddingLeft: 4,
-  border: `1px solid black`
+  border: `1px solid black`,
 });
 
 const centeredDivStyle = { width: '75%', margin: '0 auto' };
@@ -98,17 +93,17 @@ const buttonStyle = {
   borderRadius: '2px',
   border: '1px solid #002b36', // Solarized base03
   fontWeight: 700,
-  fontSize: '1.5em'
+  fontSize: '1.5em',
 };
 //////////////////// </STYLING> ///////////////////
 
-const fetchData = async initialCategoryId => {
+const fetchData = async (initialCategoryId) => {
   const representorCategoryId =
     initialCategoryId === undefined
-      ? await queryRootCategory().then(rootCategory => rootCategory.id)
+      ? await queryRootCategory().then((rootCategory) => rootCategory.id)
       : initialCategoryId;
   const { name: representorCategoryName } = await queryCategoryNameAndParentId(
-    representorCategoryId
+    representorCategoryId,
   );
   const files = await queryFiles(representorCategoryId);
   const parentCategories = await queryParentCategories(representorCategoryId);
@@ -118,19 +113,19 @@ const fetchData = async initialCategoryId => {
     payload: {
       representorCategory: {
         id: representorCategoryId,
-        name: representorCategoryName
+        name: representorCategoryName,
       },
       files: files,
       childCategories: childCategories,
-      parentCategories: parentCategories
-    }
+      parentCategories: parentCategories,
+    },
   });
 };
 
 const machineWithServices = machine.withConfig({
   services: {
-    fetchInitialData: (context, _) => fetchData(context.initialCategoryId)
-  }
+    fetchInitialData: (context, _) => fetchData(context.initialCategoryId),
+  },
 });
 
 const GraphExplorerScreen = ({
@@ -138,29 +133,25 @@ const GraphExplorerScreen = ({
   representorCategory,
   files,
   childCategories,
-  parentCategories
+  parentCategories,
 }) => {
   const [current] = useMachine(
     machineWithServices.withContext({
-      initialCategoryId: initialCategoryId
-    })
+      initialCategoryId: initialCategoryId,
+    }),
   );
   const uiState = current.value;
   switch (uiState) {
     case 'loading':
-      return <h2>Loading...</h2>;
     case 'idle':
       return (
         <div style={{ ...spaceBetweenStyle, ...centeredDivStyle }}>
           <div style={paneStyle({ width: 250 })}>
             <h2 style={{ textAlign: 'center' }}>Higher:</h2>
             <ul style={listStyle}>
-              {parentCategories.map(parentCategory => (
+              {parentCategories.map((parentCategory) => (
                 <li key={parentCategory.id} style={threeDotsCss}>
-                  <Link
-                    to={`${routes.TREE_EXPLORER}/${parentCategory.id}`}
-                    style={buttonStyle}
-                  >
+                  <Link to={`${routes.TREE_EXPLORER}/${parentCategory.id}`} style={buttonStyle}>
                     {parentCategory.name}
                   </Link>
                 </li>
@@ -169,20 +160,22 @@ const GraphExplorerScreen = ({
           </div>
           <div style={paneStyle({ width: 400 })}>
             <Button
+              color="blue"
               as={Link}
               size="massive"
-              to={`${routes.CATEGORY}/${representorCategory.id}`}
-            >
-              <Icon name="sign-in alternate" /> {representorCategory.name}
+              to={`${routes.CATEGORY}/${representorCategory.id}`}>
+              {representorCategory.name}
             </Button>
             <ul style={listStyle}>
-              {files.map(file => (
-                <li
-                  key={file.id}
-                  style={{ minWidth: '3em', minHeight: '1.5em' }}
-                >
-                  <Button as={Link} size="big" to={`${routes.FILE}/${file.id}`}>
-                    <Icon name="sign-in alternate" /> {file.name}
+              {files.map((file) => (
+                <li key={file.id} style={{ minWidth: '3em', minHeight: '1.5em' }}>
+                  <Button
+                    color="yellow"
+                    style={{ color: 'black' }}
+                    as={Link}
+                    size="big"
+                    to={`${routes.FILE}/${file.id}`}>
+                    {file.name}
                   </Button>
                 </li>
               ))}
@@ -191,12 +184,9 @@ const GraphExplorerScreen = ({
           <div style={paneStyle({ width: 250 })}>
             <h2 style={{ textAlign: 'center' }}>Lower:</h2>
             <ul style={listStyle}>
-              {childCategories.map(childCategory => (
+              {childCategories.map((childCategory) => (
                 <li key={childCategory.id} style={threeDotsCss}>
-                  <Link
-                    to={`${routes.TREE_EXPLORER}/${childCategory.id}`}
-                    style={buttonStyle}
-                  >
+                  <Link to={`${routes.TREE_EXPLORER}/${childCategory.id}`} style={buttonStyle}>
                     {childCategory.name}
                   </Link>
                 </li>
@@ -216,7 +206,7 @@ GraphExplorerScreen.propTypes = {
   representorCategory: PropTypes.object.isRequired,
   files: PropTypes.array.isRequired,
   childCategories: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
-  parentCategories: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired
+  parentCategories: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
 };
 
 export default GraphExplorerScreen;
