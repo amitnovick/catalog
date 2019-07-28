@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Header, Modal, Button } from 'semantic-ui-react';
+import ModalContentRouter from './ModalContentRouter';
 import { useMachine } from '@xstate/react';
 
 import { RECEIVE_ENTITIES } from '../actionTypes';
@@ -12,40 +14,14 @@ import SubcategoriesContainers from './containers/SubcategoriesContainer';
 import CategorizedFilesContainer from './containers/CategorizedFilesContainer';
 import ConfirmationContainer from './containers/ConfirmationContainer';
 
-const getCategory = store =>
-  store && store.categoryScreen ? store.categoryScreen.category : {};
+const getCategory = (store) => (store && store.categoryScreen ? store.categoryScreen.category : {});
 
-// const queryAttemptDeleteCategory = categoryId => {
-//   return new Promise((resolve, reject) => {
-//     sqlDriver.run(
-//       attemptDeleteUnassociatedCategory,
-//       {
-//         $category_id: categoryId
-//       },
-//       function(err) {
-//         if (err) {
-//           console.log('unknown error:', err);
-//           reject();
-//         } else {
-//           const { changes: affectedRowsCount } = this;
-//           if (affectedRowsCount !== 1) {
-//             console.log('No affected rows error');
-//             reject();
-//           } else {
-//             resolve();
-//           }
-//         }
-//       }
-//     );
-//   });
-// };
-
-const queryCategorizedFiles = categoryId => {
+const queryCategorizedFiles = (categoryId) => {
   return new Promise((resolve, reject) => {
     getSqlDriver().all(
       selectCategorizedFiles,
       {
-        $category_id: categoryId
+        $category_id: categoryId,
       },
       (err, rows) => {
         if (err) {
@@ -54,26 +30,27 @@ const queryCategorizedFiles = categoryId => {
         } else {
           resolve(rows);
         }
-      }
+      },
     );
   });
 };
 
 const fetchSubcategories = async () => {
   const category = getCategory(store.getState());
+  console.log('fetchSubcategories: category:', category);
   const subcategories = await queryChildCategories(category.id);
   store.dispatch({
     type: RECEIVE_ENTITIES,
     payload: {
-      subcategories: subcategories
-    }
+      subcategories: subcategories,
+    },
   });
 };
 
-const getSubcategories = store =>
+const getSubcategories = (store) =>
   store && store.categoryScreen ? store.categoryScreen.subcategories : [];
 
-const getCategorizedFiles = store =>
+const getCategorizedFiles = (store) =>
   store && store.categoryScreen ? store.categoryScreen.categorizedFiles : [];
 
 const checkSubcategoriesEmpty = () => {
@@ -87,22 +64,23 @@ const fetchCategorizedFiles = async () => {
   store.dispatch({
     type: RECEIVE_ENTITIES,
     payload: {
-      categorizedFiles: categorizedFiles
-    }
+      categorizedFiles: categorizedFiles,
+    },
   });
 };
 
 const checkCategorizedFilesEmpty = () => {
+  //TODO: Conert to guard
   const categorizedFiles = getCategorizedFiles(store.getState());
   return categorizedFiles.length === 0 ? Promise.resolve() : Promise.reject();
 };
 
-const queryDeleteCategory = categoryId => {
+const queryDeleteCategory = (categoryId) => {
   return new Promise((resolve, reject) => {
     getSqlDriver().run(
       deleteCategoryFromDb,
       {
-        $category_id: categoryId
+        $category_id: categoryId,
       },
       function(err) {
         if (err) {
@@ -117,7 +95,7 @@ const queryDeleteCategory = categoryId => {
             resolve();
           }
         }
-      }
+      },
     );
   });
 };
@@ -133,29 +111,67 @@ const machineWithConfig = machine.withConfig({
     checkSubcategoriesEmpty: (_, __) => checkSubcategoriesEmpty(),
     fetchCategorizedFiles: (_, __) => fetchCategorizedFiles(),
     checkCategorizedFilesEmpty: (_, __) => checkCategorizedFilesEmpty(),
-    deleteCategory: (_, __) => deleteCategory()
-  }
+    deleteCategory: (_, __) => deleteCategory(),
+  },
 });
 
-const DeleteCategoryModalController = ({ onConfirmDelete, onCancelDelete }) => {
+const DeleteCategoryModal = ({ isOpen, onClose, onConfirmDelete }) => {
   const [current, send] = useMachine(
     machineWithConfig.withConfig({
       actions: {
-        closeModal: (_, __) => onConfirmDelete()
-      }
-    })
+        closeModal: (_, __) => onConfirmDelete(),
+      },
+    }),
   );
+
   if (current.matches('idle')) {
     if (current.matches('idle.subcategories')) {
-      return <SubcategoriesContainers />;
+      return (
+        <Modal open={isOpen} closeIcon dimmer onClose={onClose}>
+          <Header icon="archive" content="Delete Associated Subcategories / Files" />
+          <Modal.Content>
+            <SubcategoriesContainers />
+          </Modal.Content>
+          <Modal.Actions>
+            <Button size="big" color="blue" onClick={onClose}>
+              Close
+            </Button>
+          </Modal.Actions>
+        </Modal>
+      );
     } else if (current.matches('idle.categorized_files')) {
-      return <CategorizedFilesContainer />;
+      return (
+        <Modal open={isOpen} closeIcon dimmer onClose={onClose}>
+          <Header icon="archive" content="Delete Associated Subcategories / Files" />
+          <Modal.Content>
+            <CategorizedFilesContainer />
+          </Modal.Content>
+          <Modal.Actions>
+            <Button size="big" color="blue" onClick={onClose}>
+              Close
+            </Button>
+          </Modal.Actions>
+        </Modal>
+      );
     } else if (current.matches('idle.confirmation')) {
       return (
-        <ConfirmationContainer
-          onConfirmDelete={() => send('CLICK_CONFIRM_DELETE')}
-          onCancelDelete={onCancelDelete}
-        />
+        <Modal open={isOpen} closeIcon dimmer onClose={onClose}>
+          <Header icon="archive" content="Delete Associated Subcategories / Files" />
+          <Modal.Content>
+            <ConfirmationContainer
+              onConfirmDelete={() => send('CLICK_CONFIRM_DELETE')}
+              onCancelDelete={onClose}
+            />
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color="blue" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button color="red" onClick={onConfirmDelete}>
+              Confirm
+            </Button>
+          </Modal.Actions>
+        </Modal>
       );
     } else {
       return <h2>Unknown state</h2>;
@@ -169,9 +185,10 @@ const DeleteCategoryModalController = ({ onConfirmDelete, onCancelDelete }) => {
   }
 };
 
-DeleteCategoryModalController.propTypes = {
+DeleteCategoryModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
   onConfirmDelete: PropTypes.func.isRequired,
-  onCancelDelete: PropTypes.func.isRequired
 };
 
-export default DeleteCategoryModalController;
+export default DeleteCategoryModal;

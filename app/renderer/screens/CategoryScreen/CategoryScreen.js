@@ -4,17 +4,13 @@ import { useMachine } from '@xstate/react';
 
 import { RECEIVE_ENTITIES } from './actionTypes';
 import machine from './machine';
-import getSqlDriver from '../../sqlDriver';
 import store from '../../redux/store';
-import { selectCategorizedFiles } from './sqlQueries';
-import CategoryMenuContainer from './containers/CategoryMenuContainer';
-import queryChildCategories from '../../query-functions/queryChildCategories';
-import DeleteAssociatedCategoryModal from './components/DeleteAssociatedCategoryModal';
+import OpenInExplorerButtonContainer from './containers/OpenInExplorerButtonContainer';
 import queryCategoryNameAndParentId from '../../query-functions/queryCategoryName';
 import CategoryNameWidget from './CategoryNameWidget/CategoryNameWidget';
-import { Divider, Grid } from 'semantic-ui-react';
-
-const getCategory = (store) => (store && store.categoryScreen ? store.categoryScreen.category : {});
+import { Divider, Grid, Header } from 'semantic-ui-react';
+import DeleteCategoryModal from './DeleteCategoryModal/DeleteCategoryModal';
+import DeleteCategoryButtonContainer from './containers/DeleteCategoryButtonContainer';
 
 const fetchCategoryData = async (categoryId) => {
   const { name: categoryName, parent_id: parentCategoryId } = await queryCategoryNameAndParentId(
@@ -38,63 +34,6 @@ const updateCategoryData = (category, isRootCategory) => {
   });
 };
 
-const queryCategorizedFiles = (categoryId) => {
-  return new Promise((resolve, reject) => {
-    getSqlDriver().all(
-      selectCategorizedFiles,
-      {
-        $category_id: categoryId,
-      },
-      (err, rows) => {
-        if (err) {
-          console.log('err:', err);
-          reject();
-        } else {
-          resolve(rows);
-        }
-      },
-    );
-  });
-};
-
-const fetchSubcategories = async () => {
-  const category = getCategory(store.getState());
-  const subcategories = await queryChildCategories(category.id);
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      subcategories: subcategories,
-    },
-  });
-};
-
-const getSubcategories = (store) =>
-  store && store.categoryScreen ? store.categoryScreen.subcategories : [];
-
-const getCategorizedFiles = (store) =>
-  store && store.categoryScreen ? store.categoryScreen.categorizedFiles : [];
-
-const checkSubcategoriesEmpty = () => {
-  const subcategories = getSubcategories(store.getState());
-  return subcategories.length === 0 ? Promise.resolve() : Promise.reject();
-};
-
-const fetchCategorizedFiles = async () => {
-  const category = getCategory(store.getState());
-  const categorizedFiles = await queryCategorizedFiles(category.id);
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      categorizedFiles: categorizedFiles,
-    },
-  });
-};
-
-const checkCategorizedFilesEmpty = () => {
-  const categorizedFiles = getCategorizedFiles(store.getState());
-  return categorizedFiles.length === 0 ? Promise.resolve() : Promise.reject();
-};
-
 const updateNewCategoryName = (category) => {
   store.dispatch({
     type: RECEIVE_ENTITIES,
@@ -107,10 +46,6 @@ const updateNewCategoryName = (category) => {
 const machineWithConfig = machine.withConfig({
   services: {
     fetchCategoryData: (context, __) => fetchCategoryData(context.categoryId),
-    fetchSubcategories: (_, __) => fetchSubcategories(),
-    checkSubcategoriesEmpty: (_, __) => checkSubcategoriesEmpty(),
-    fetchCategorizedFiles: (_, __) => fetchCategorizedFiles(),
-    checkCategorizedFilesEmpty: (_, __) => checkCategorizedFilesEmpty(),
   },
   actions: {
     updateCategoryData: (_, event) =>
@@ -130,14 +65,16 @@ const CategoryScreen = ({ categoryId }) => {
       <Grid>
         <Grid.Column width="3" />
         <Grid.Column width="10">
-          <DeleteAssociatedCategoryModal
+          <Header as="h1">Category Screen</Header>
+          <CategoryNameWidget refetchCategoryData={() => send('REFETCH_CATEGORY_DATA')} />
+          <Divider horizontal />
+          <OpenInExplorerButtonContainer />
+          <DeleteCategoryModal
             isOpen={current.matches('idle.deleteCategoryStepsModal')}
             onClose={() => send('CLICK_CLOSE_MODAL')}
             onConfirmDelete={() => send('DELETE_CATEGORY_MODAL_CONFIRM_DELETE')}
           />
-          <CategoryNameWidget refetchCategoryData={() => send('REFETCH_CATEGORY_DATA')} />
-          <Divider horizontal />
-          <CategoryMenuContainer
+          <DeleteCategoryButtonContainer
             onClickDeleteCategory={(category) =>
               send('CLICK_DELETE_CATEGORY', {
                 category: category,

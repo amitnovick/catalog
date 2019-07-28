@@ -6,7 +6,6 @@ import { Header, Input, Button } from 'semantic-ui-react';
 const CategoryName = ({ category, newCategoryName, onChangeInputText, onClickRenameCategory }) => {
   return (
     <>
-      <Header as="h1">Category Screen</Header>
       <Input type="text" size="massive">
         <Input value={newCategoryName} onChange={({ target }) => onChangeInputText(target.value)} />
         <Button

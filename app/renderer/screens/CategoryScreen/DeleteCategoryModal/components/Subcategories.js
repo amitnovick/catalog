@@ -10,11 +10,9 @@ const Subcategories = ({ subcategories }) => {
     <>
       <Header>Subcategories:</Header>
       <ul>
-        {subcategories.map(subcategory => (
+        {subcategories.map((subcategory) => (
           <li key={subcategory.id}>
-            <Link to={`${routes.CATEGORY}/${subcategory.id}`}>
-              {subcategory.name}
-            </Link>
+            <Link to={`${routes.CATEGORY}/${subcategory.id}`}>{subcategory.name}</Link>
           </li>
         ))}
       </ul>
@@ -23,7 +21,7 @@ const Subcategories = ({ subcategories }) => {
 };
 
 Subcategories.propTypes = {
-  subcategories: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired
+  subcategories: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
 };
 
 export default Subcategories;

@@ -10,11 +10,9 @@ const CategorizedFiles = ({ categorizedFiles }) => {
     <>
       <Header>Categorized Files:</Header>
       <ul>
-        {categorizedFiles.map(categorizedFile => (
+        {categorizedFiles.map((categorizedFile) => (
           <li key={categorizedFile.id}>
-            <Link to={`${routes.FILE}/${categorizedFile.id}`}>
-              {categorizedFile.name}
-            </Link>
+            <Link to={`${routes.FILE}/${categorizedFile.id}`}>{categorizedFile.name}</Link>
           </li>
         ))}
       </ul>
@@ -23,7 +21,7 @@ const CategorizedFiles = ({ categorizedFiles }) => {
 };
 
 CategorizedFiles.propTypes = {
-  categorizedFiles: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired
+  categorizedFiles: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
 };
 
 export default CategorizedFiles;

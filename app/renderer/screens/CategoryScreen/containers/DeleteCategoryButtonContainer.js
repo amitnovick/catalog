@@ -1,20 +1,20 @@
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import CategoryMenu from '../components/CategoryMenu';
+import DeleteCategoryButton from '../components/DeleteCategoryButton';
 
 const getCategory = (store) => (store && store.categoryScreen ? store.categoryScreen.category : {});
 
 const getIsRootCategory = (store) =>
   store && store.categoryScreen ? store.categoryScreen.isRootCategory : null;
 
-const CategoryMenuContainer = connect((state) => ({
+const DeleteCategoryButtonContainer = connect((state) => ({
   category: getCategory(state),
   shouldDisableDeleteCategoryButton: getIsRootCategory(state),
-}))(CategoryMenu);
+}))(DeleteCategoryButton);
 
-CategoryMenuContainer.propTypes = {
+DeleteCategoryButtonContainer.propTypes = {
   onClickDeleteCategory: PropTypes.func.isRequired,
 };
 
-export default CategoryMenuContainer;
+export default DeleteCategoryButtonContainer;
