@@ -8,7 +8,7 @@ const FilesUnderCategoryTab = ({ onChangeSearchText, onChangeCategoryName, categ
   return (
     <>
       <Input
-        label={{ content: 'Category name', icon: 'folder' }}
+        label={{ icon: 'folder', color: 'blue' }}
         size="massive"
         value={categoryName}
         onChange={({ target }) => onChangeCategoryName(target.value)}
