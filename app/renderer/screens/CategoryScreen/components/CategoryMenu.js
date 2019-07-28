@@ -14,16 +14,10 @@ const CategoryMenu = ({
 }) => {
   return (
     <>
-      <h2>{`Category: ${category.name}`}</h2>
-      <Button
-        color="violet"
-        as={Link}
-        size="big"
-        to={`${routes.TREE_EXPLORER}/${category.id}`}
-        icon>
-        <Icon name="wpexplorer" size="big" />
-      </Button>
       <List>
+        <List.Item>
+          <h2>{`Category: ${category.name}`}</h2>
+        </List.Item>
         <List.Item>
           <Input type="text" size="massive">
             <Input
@@ -37,18 +31,25 @@ const CategoryMenu = ({
             />
           </Input>
         </List.Item>
-        <List.Item>
-          {shouldDisableDeleteCategoryButton ? (
-            <Button disabled size="massive" color="red">
-              <Icon name="remove" /> Delete category
-            </Button>
-          ) : (
-            <Button size="massive" color="red" onClick={() => onClickDeleteCategory(category)}>
-              <Icon name="remove" /> Delete category
-            </Button>
-          )}
-        </List.Item>
       </List>
+      <Button
+        color="violet"
+        as={Link}
+        to={`${routes.TREE_EXPLORER}/${category.id}`}
+        size="big"
+        icon>
+        <Icon name="wpexplorer" size="big" />
+      </Button>
+      <Button
+        onClick={
+          shouldDisableDeleteCategoryButton ? undefined : () => onClickDeleteCategory(category)
+        }
+        disabled={shouldDisableDeleteCategoryButton}
+        size="big"
+        color="red"
+        icon>
+        <Icon name="trash" size="big" />
+      </Button>
     </>
   );
 };
