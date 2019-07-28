@@ -12,7 +12,7 @@ import queryRootCategory from '../../query-functions/queryRootCategory';
 import routes from '../../routes';
 import queryChildCategories from '../../query-functions/queryChildCategories';
 import queryCategoryNameAndParentId from '../../query-functions/queryCategoryName';
-import { Button, Icon } from 'semantic-ui-react';
+import { Button, Icon, List } from 'semantic-ui-react';
 
 //////////////////// <GRAPH COMMUNICATION> ///////////////////
 
@@ -151,9 +151,12 @@ const GraphExplorerScreen = ({
             <ul style={listStyle}>
               {parentCategories.map((parentCategory) => (
                 <li key={parentCategory.id} style={threeDotsCss}>
-                  <Link to={`${routes.TREE_EXPLORER}/${parentCategory.id}`} style={buttonStyle}>
+                  <Button
+                    color="blue"
+                    as={Link}
+                    to={`${routes.TREE_EXPLORER}/${parentCategory.id}`}>
                     {parentCategory.name}
-                  </Link>
+                  </Button>
                 </li>
               ))}
             </ul>
@@ -183,15 +186,15 @@ const GraphExplorerScreen = ({
           </div>
           <div style={paneStyle({ width: 250 })}>
             <h2 style={{ textAlign: 'center' }}>Lower:</h2>
-            <ul style={listStyle}>
+            <List style={listStyle}>
               {childCategories.map((childCategory) => (
-                <li key={childCategory.id} style={threeDotsCss}>
-                  <Link to={`${routes.TREE_EXPLORER}/${childCategory.id}`} style={buttonStyle}>
+                <List.Item key={childCategory.id} style={threeDotsCss}>
+                  <Button color="blue" as={Link} to={`${routes.TREE_EXPLORER}/${childCategory.id}`}>
                     {childCategory.name}
-                  </Link>
-                </li>
+                  </Button>
+                </List.Item>
               ))}
-            </ul>
+            </List>
           </div>
         </div>
       );
