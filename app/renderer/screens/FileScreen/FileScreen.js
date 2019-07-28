@@ -211,7 +211,6 @@ const FileScreen = ({ fileId }) => {
           />
           {current.matches('idle.success') ? <h2 style={{ color: 'green' }}>Succeeded</h2> : null}
           {current.matches('idle.failure') ? <h2 style={{ color: 'red' }}>Failed</h2> : null}
-          {current.matches('loading') ? <h2>Loading...</h2> : null}
         </Grid.Column>
         <Grid.Column width="3" />
       </Grid>

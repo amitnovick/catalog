@@ -2,27 +2,25 @@
 
 ## About
 
-WikiFS provides an alternative implementation of a File System, built on top of the existing ones.
-The FIle System is accessible through a rich GUI that integrates common general-use operations on files and category hierarchies.
+WikiFS is an open-source data manager and file navigator. It helps organize files on local drives by adding categories to files. Users get the same user interface to manage their files on different platforms. WikiFS is compatible with Windows, Linux and Mac. The application requires neither internet connection, nor user's registration to run on desktop devices.
 
-## Motivation
+### Hierarchy of Categories
 
-The motivation comes from being frustrated with the limitation where **a file may only reside under single parent directory at a time**.
+Files may be assigned multiple categories.
+Categories form a hierarchy.
+A single top-level category is called the Root category.
+New categories are added as children of this Root category by default.
 
-For me as a computer user, storing my own files (text files, audio files, image files etc.) it is an unacceptable limitation, as it restricts my ability to organize my files in the way most natural to my brain. 
+#### Example Hierarchy
 
-### Categories, not Directories
-
-Using the **Category** concept, files may be assigned multiple categories, and be available to you in whichever lookup keyword makes most sense to you!
-
-## Features
-
-This File System is accessible through a GUI that provides rich functionality:
-- Search for files by name
-- Search for files under a specific category
-- Category tree Explorer
-- Control Panel  for creating new files and categories
-
+```
+└── Root
+    ├── BooksNotes
+    ├── FinancialDocuments
+    └── WebDevelopment
+        ├── CssTricks
+        └── JavaScript
+```
 ## Installation
 ### Build from source
 1. Clone the repository
