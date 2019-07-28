@@ -18,7 +18,7 @@ import formatFilePath from '../../utils/formatFilePath';
 import AddCategoryWidget from './AddCategoryWidget/AddCategoryWidget';
 import FileNameWidget from './FileNameWidget/FileNameWidget';
 import CategoriesWidget from './CategoriesWidget/CategoriesWidget';
-import { Grid } from 'semantic-ui-react';
+import { Grid, Divider } from 'semantic-ui-react';
 const fs = require('fs');
 
 const deleteFileFromFs = (fileName) =>
@@ -197,6 +197,7 @@ const FileScreen = ({ fileId }) => {
         <Grid.Column width="3" />
         <Grid.Column width="10">
           <FileNameWidget refetchFileData={() => send('REFETCH_FILE_DATA')} />
+          <Divider horizontal />
           <div style={{ border: '1px solid black', borderRadius: 6, padding: 5 }}>
             <CategoriesWidget />
             <AddCategoryWidget refetchFileData={() => send('REFETCH_FILE_DATA')} />
