@@ -14,7 +14,7 @@ import SubcategoriesContainers from './containers/SubcategoriesContainer';
 import CategorizedFilesContainer from './containers/CategorizedFilesContainer';
 import ConfirmationContainer from './containers/ConfirmationContainer';
 
-const getCategory = (store) => (store && store.categoryScreen ? store.categoryScreen.category : {});
+const getCategory = (store) => (store && store.categoryScreen ? store.categoryScreen.category : {}); //TODO: Replace `{}` with null
 
 const queryCategorizedFiles = (categoryId) => {
   return new Promise((resolve, reject) => {
@@ -37,7 +37,6 @@ const queryCategorizedFiles = (categoryId) => {
 
 const fetchSubcategories = async () => {
   const category = getCategory(store.getState());
-  console.log('fetchSubcategories: category:', category);
   const subcategories = await queryChildCategories(category.id);
   store.dispatch({
     type: RECEIVE_ENTITIES,
@@ -158,16 +157,13 @@ const DeleteCategoryModal = ({ isOpen, onClose, onConfirmDelete }) => {
         <Modal open={isOpen} closeIcon dimmer onClose={onClose}>
           <Header icon="archive" content="Delete Associated Subcategories / Files" />
           <Modal.Content>
-            <ConfirmationContainer
-              onConfirmDelete={() => send('CLICK_CONFIRM_DELETE')}
-              onCancelDelete={onClose}
-            />
+            <ConfirmationContainer />
           </Modal.Content>
           <Modal.Actions>
-            <Button color="blue" onClick={onClose}>
+            <Button size="big" color="blue" onClick={onClose}>
               Cancel
             </Button>
-            <Button color="red" onClick={onConfirmDelete}>
+            <Button size="big" color="red" onClick={() => send('CLICK_CONFIRM_DELETE')}>
               Confirm
             </Button>
           </Modal.Actions>
@@ -177,7 +173,11 @@ const DeleteCategoryModal = ({ isOpen, onClose, onConfirmDelete }) => {
       return <h2>Unknown state</h2>;
     }
   } else if (current.matches('loading')) {
-    return <h2>Loading...</h2>;
+    return (
+      <Modal isOpen={false}>
+        <Modal.Content>Loading...</Modal.Content>
+      </Modal>
+    );
   } else if (current.matches('failure')) {
     return <h2 style={{ color: 'red' }}>Error: failed somehow</h2>;
   } else {

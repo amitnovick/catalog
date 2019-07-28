@@ -69,11 +69,6 @@ const CategoryScreen = ({ categoryId }) => {
           <CategoryNameWidget refetchCategoryData={() => send('REFETCH_CATEGORY_DATA')} />
           <Divider horizontal />
           <OpenInExplorerButtonContainer />
-          <DeleteCategoryModal
-            isOpen={current.matches('idle.deleteCategoryStepsModal')}
-            onClose={() => send('CLICK_CLOSE_MODAL')}
-            onConfirmDelete={() => send('DELETE_CATEGORY_MODAL_CONFIRM_DELETE')}
-          />
           <DeleteCategoryButtonContainer
             onClickDeleteCategory={(category) =>
               send('CLICK_DELETE_CATEGORY', {
@@ -82,6 +77,13 @@ const CategoryScreen = ({ categoryId }) => {
             }
           />
           {current.matches('idle.failure') ? <h2 style={{ color: 'red' }}>Failed</h2> : null}
+          {current.matches('idle') ? (
+            <DeleteCategoryModal
+              isOpen={current.matches('idle.deleteCategoryStepsModal')}
+              onClose={() => send('CLICK_CLOSE_MODAL')}
+              onConfirmDelete={() => send('DELETE_CATEGORY_MODAL_CONFIRM_DELETE')}
+            />
+          ) : null}
         </Grid.Column>
         <Grid.Column width="3" />
       </Grid>
