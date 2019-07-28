@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Header, Modal, Button } from 'semantic-ui-react';
-import ModalContentRouter from './ModalContentRouter';
 import { useMachine } from '@xstate/react';
 
 import { RECEIVE_ENTITIES } from '../actionTypes';
@@ -37,13 +36,7 @@ const queryCategorizedFiles = (categoryId) => {
 
 const fetchSubcategories = async () => {
   const category = getCategory(store.getState());
-  const subcategories = await queryChildCategories(category.id);
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      subcategories: subcategories,
-    },
-  });
+  return queryChildCategories(category.id);
 };
 
 const getSubcategories = (store) =>
@@ -52,9 +45,9 @@ const getSubcategories = (store) =>
 const getCategorizedFiles = (store) =>
   store && store.categoryScreen ? store.categoryScreen.categorizedFiles : [];
 
-const checkSubcategoriesEmpty = () => {
+const isSubcategoriesEmpty = () => {
   const subcategories = getSubcategories(store.getState());
-  return subcategories.length === 0 ? Promise.resolve() : Promise.reject();
+  return subcategories.length === 0;
 };
 
 const fetchCategorizedFiles = async () => {
@@ -68,10 +61,9 @@ const fetchCategorizedFiles = async () => {
   });
 };
 
-const checkCategorizedFilesEmpty = () => {
-  //TODO: Conert to guard
+const isCategorizedFilesEmpty = () => {
   const categorizedFiles = getCategorizedFiles(store.getState());
-  return categorizedFiles.length === 0 ? Promise.resolve() : Promise.reject();
+  return categorizedFiles.length === 0;
 };
 
 const queryDeleteCategory = (categoryId) => {
@@ -104,13 +96,27 @@ const deleteCategory = async () => {
   return await queryDeleteCategory(category.id);
 };
 
+const updateSubcategories = (subcategories) => {
+  store.dispatch({
+    type: RECEIVE_ENTITIES,
+    payload: {
+      subcategories: subcategories,
+    },
+  });
+};
+
 const machineWithConfig = machine.withConfig({
   services: {
     fetchSubcategories: (_, __) => fetchSubcategories(),
-    checkSubcategoriesEmpty: (_, __) => checkSubcategoriesEmpty(),
     fetchCategorizedFiles: (_, __) => fetchCategorizedFiles(),
-    checkCategorizedFilesEmpty: (_, __) => checkCategorizedFilesEmpty(),
     deleteCategory: (_, __) => deleteCategory(),
+  },
+  actions: {
+    updateSubcategories: (_, event) => updateSubcategories(event.data),
+  },
+  guards: {
+    isSubcategoriesEmpty: (_, __) => isSubcategoriesEmpty(),
+    isCategorizedFilesEmpty: (_, __) => isCategorizedFilesEmpty(),
   },
 });
 
@@ -121,6 +127,7 @@ const DeleteCategoryModal = ({ isOpen, onClose, onConfirmDelete }) => {
         closeModal: (_, __) => onConfirmDelete(),
       },
     }),
+    { devTools: true },
   );
 
   if (current.matches('idle')) {

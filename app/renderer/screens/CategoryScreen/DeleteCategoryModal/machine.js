@@ -11,32 +11,35 @@ const machine = Machine({
         fetchingSubcategories: {
           invoke: {
             src: 'fetchSubcategories',
-            onDone: 'checkingSubcategoriesEmpty',
-            onError: '#delete-category-modal.failure'
-          }
-        },
-        checkingSubcategoriesEmpty: {
-          invoke: {
-            src: 'checkSubcategoriesEmpty',
-            onDone: 'fetchingCategorizedFiles',
-            onError: '#delete-category-modal.idle.subcategories'
-          }
+            onDone: [
+              {
+                target: 'fetchingCategorizedFiles',
+                actions: 'updateSubcategories',
+                cond: 'isSubcategoriesEmpty',
+              },
+              {
+                target: '#delete-category-modal.idle.subcategories',
+              },
+            ],
+            onError: '#delete-category-modal.failure',
+          },
         },
         fetchingCategorizedFiles: {
           invoke: {
             src: 'fetchCategorizedFiles',
-            onDone: 'checkingCategorizedFilesEmpty',
-            onError: '#delete-category-modal.failure'
-          }
+            onDone: [
+              {
+                target: '#delete-category-modal.idle.confirmation',
+                cond: 'isCategorizedFilesEmpty',
+              },
+              {
+                target: '#delete-category-modal.idle.categorized_files',
+              },
+            ],
+            onError: '#delete-category-modal.failure',
+          },
         },
-        checkingCategorizedFilesEmpty: {
-          invoke: {
-            src: 'checkCategorizedFilesEmpty',
-            onDone: '#delete-category-modal.idle.confirmation',
-            onError: '#delete-category-modal.idle.categorized_files'
-          }
-        }
-      }
+      },
     },
     idle: {
       states: {
@@ -47,25 +50,24 @@ const machine = Machine({
           states: {
             idle: {
               on: {
-                CLICK_CONFIRM_DELETE: 'deletingCategory'
-              }
+                CLICK_CONFIRM_DELETE: 'deletingCategory',
+              },
             },
             deletingCategory: {
               invoke: {
                 src: 'deleteCategory',
                 onDone: {
-                  actions: 'closeModal'
+                  actions: 'closeModal',
                 },
-                onError: 'failure'
-              }
+                onError: '#delete-category-modal.failure',
+              },
             },
-            failure: {}
-          }
-        }
-      }
+          },
+        },
+      },
     },
-    failure: {}
-  }
+    failure: {},
+  },
 });
 
 export default machine;
