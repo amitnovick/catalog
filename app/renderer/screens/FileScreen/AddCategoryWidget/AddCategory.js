@@ -17,22 +17,17 @@ const AddCategory = ({
   };
 
   return (
-    <div
-      style={{
-        margin: '0 auto',
-        width: '18em',
-      }} /* The results width seems to be 18em */
-    >
-      <Search
-        onResultSelect={handleChange}
-        onSearchChange={handleSearchChange}
-        results={searchResultCategories.map((searchResultCategory) => ({
-          id: searchResultCategory.id,
-          title: searchResultCategory.name,
-        }))}
-        value={inputSearchQuery}
-      />
-    </div>
+    <Search
+      style={{ display: 'inline' }}
+      input={{ icon: 'search', iconPosition: 'left' }}
+      onResultSelect={handleChange}
+      onSearchChange={handleSearchChange}
+      results={searchResultCategories.map((searchResultCategory) => ({
+        id: searchResultCategory.id,
+        title: searchResultCategory.name,
+      }))}
+      value={inputSearchQuery}
+    />
   );
 };
 

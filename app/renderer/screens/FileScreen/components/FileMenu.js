@@ -7,12 +7,7 @@ const FileMenu = ({ file, onClickOpenFile, onClickDeleteFile }) => {
   return (
     <>
       <br />
-      <Button
-        icon="envelope open"
-        size="massive"
-        color="green"
-        onClick={() => onClickOpenFile(file)}
-      />
+      <Button icon="external" size="massive" color="green" onClick={() => onClickOpenFile(file)} />
       <Button icon="trash" size="massive" color="red" onClick={() => onClickDeleteFile(file)} />
     </>
   );

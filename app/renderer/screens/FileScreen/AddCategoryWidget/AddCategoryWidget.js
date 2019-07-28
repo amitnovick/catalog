@@ -14,6 +14,13 @@ import { Message, Label, Button } from 'semantic-ui-react';
 import BroaderCategoriesModalContainer from './Modal/BroaderCategoriesModalContainer';
 import addNewCategory from '../../../query-functions/addNewCategory';
 import queryGetCategoryByName from '../../../query-functions/queryGetCategoryByName';
+import { css } from 'emotion';
+
+const spacedChildrenClass = css`
+  & > * {
+    margin: 0px 10px;
+  }
+`;
 
 const fetchSearchResultCategories = (searchQuery) => {
   return querySelectCategoriesWithMatchingName(searchQuery);
@@ -276,20 +283,24 @@ const AddCategoryWidget = ({ errorMessage, narrowerCategoriesOfFile, refetchFile
         onClose={() => send('CLOSE_BROAD_CATEGORIES_MODAL_REJECT')}
         onClickYes={() => send('CLICK_ACCEPT_BROAD_CATEGORIES_MODAL')}
       />
-
-      <AddCategoryContainer
-        onChooseSearchResultCategory={(category) =>
-          send('CHOOSE_CATEGORY_TO_ASSIGN', {
-            category: category,
-          })
-        }
-        onChangeInputSearchQuery={(searchQuery) =>
-          send('INPUT_SEARCH_QUERY_CHANGED', { searchQuery })
-        }
-      />
-      <Button inverted color="blue" size="big" onClick={() => send('CLICK_CREATE_NEW_CATEGORY')}>
-        add
-      </Button>
+      <div className={spacedChildrenClass}>
+        <AddCategoryContainer
+          onChooseSearchResultCategory={(category) =>
+            send('CHOOSE_CATEGORY_TO_ASSIGN', {
+              category: category,
+            })
+          }
+          onChangeInputSearchQuery={(searchQuery) =>
+            send('INPUT_SEARCH_QUERY_CHANGED', { searchQuery })
+          }
+        />
+        <Button
+          icon="plus"
+          color="blue"
+          size="medium"
+          onClick={() => send('CLICK_CREATE_NEW_CATEGORY')}
+        />
+      </div>
       {current.matches('idle.failure') ? (
         <Message error compact header="Error" content={errorMessage} />
       ) : null}
