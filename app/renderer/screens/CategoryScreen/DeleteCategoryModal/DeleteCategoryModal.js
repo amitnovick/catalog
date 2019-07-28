@@ -123,7 +123,6 @@ const DeleteCategoryModal = ({ isOpen, onClose, onConfirmDelete }) => {
         closeModal: (_, __) => onConfirmDelete(),
       },
     }),
-    { devTools: true },
   );
 
   if (current.matches('idle')) {
