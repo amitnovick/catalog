@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tab, Grid, Icon, Menu, Label } from 'semantic-ui-react';
+import { Tab, Grid } from 'semantic-ui-react';
 
 import { RECEIVE_ENTITIES } from './actionTypes';
 import { connect } from 'react-redux';

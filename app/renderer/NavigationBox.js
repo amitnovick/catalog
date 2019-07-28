@@ -2,22 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import routes from './routes';
-import { Menu } from 'semantic-ui-react';
+import { Menu, Icon } from 'semantic-ui-react';
 
 const NavigationBox = ({ path }) => {
   return (
     <Menu size="massive" inverted style={{ backgroundColor: '#073642' /* Solarized base03 */ }}>
       <Menu.Item active={path === routes.HOME} as={Link} to={routes.HOME}>
-        Home
+        <Icon name="home" size="big" />
       </Menu.Item>
       <Menu.Item active={path === routes.CONTROL_PANEL} as={Link} to={routes.CONTROL_PANEL}>
-        Control Panel
+        <Icon name="add" size="big" />
       </Menu.Item>
       <Menu.Item active={path === routes.SEARCH} as={Link} to={routes.SEARCH}>
-        Search
+        <Icon name="search" size="big" />
       </Menu.Item>
       <Menu.Item active={path === routes.TREE_EXPLORER} as={Link} to={routes.TREE_EXPLORER}>
-        Tree Explorer
+        <Icon name="wpexplorer" size="big" />
       </Menu.Item>
     </Menu>
   );
