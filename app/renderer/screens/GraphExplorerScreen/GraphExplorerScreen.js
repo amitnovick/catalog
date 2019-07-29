@@ -65,6 +65,7 @@ const fetchData = async (currentCategoryId) => {
   const representorCategory = categoriesInPath[categoriesInPath.length - 1];
 
   const files = await queryFiles(representorCategory.id);
+
   const childCategories = await queryChildCategories(representorCategory.id);
 
   return Promise.resolve({

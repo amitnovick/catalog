@@ -61,7 +61,7 @@ const RouteController = () => {
           render={({ match }) => (
             <Layout
               key="root"
-              BodyComponent={<GraphExplorerScreen initialCategoryId={undefined} />}
+              BodyComponent={<GraphExplorerScreen initialCategoryId={null} />}
               HeaderComponent={<NavigationBox path={match.path} />}
             />
           )}
