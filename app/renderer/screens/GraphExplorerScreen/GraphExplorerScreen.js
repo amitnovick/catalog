@@ -12,7 +12,7 @@ import queryRootCategory from '../../query-functions/queryRootCategory';
 import routes from '../../routes';
 import queryChildCategories from '../../query-functions/queryChildCategories';
 import queryCategoryNameAndParentId from '../../query-functions/queryCategoryName';
-import { Button, List, Grid, Divider } from 'semantic-ui-react';
+import { Button, List, Grid, Divider, Accordion, Icon, Label } from 'semantic-ui-react';
 
 //////////////////// <STYLING> ///////////////////
 
@@ -93,6 +93,31 @@ const fetchData = async (initialCategoryId) => {
   });
 };
 
+const CurrentCategoryPane = ({ CategoriesPanelContent, FilesPanelContent }) => {
+  const panels = [
+    {
+      key: 'categories',
+      title: {
+        content: <Label size="big">Categories</Label>,
+      },
+      content: {
+        content: <CategoriesPanelContent />,
+      },
+    },
+    {
+      key: 'files',
+      title: {
+        content: <Label size="big">Files</Label>,
+      },
+      content: {
+        content: <FilesPanelContent />,
+      },
+    },
+  ];
+
+  return <Accordion defaultActiveIndex={0} panels={panels} />;
+};
+
 const machineWithServices = machine.withConfig({
   services: {
     fetchInitialData: (context, _) => fetchData(context.initialCategoryId),
@@ -111,6 +136,7 @@ const GraphExplorerScreen = ({
       initialCategoryId: initialCategoryId,
     }),
   );
+
   const uiState = current.value;
   switch (uiState) {
     case 'loading':
@@ -118,7 +144,7 @@ const GraphExplorerScreen = ({
       return (
         <>
           <Divider horizontal />
-          <Grid>
+          <Grid style={{ minHeight: '90vh' }}>
             <Grid.Column width="3" />
             <Grid.Column width="3" style={{ border: '1px solid black' }}>
               <h2 style={{ textAlign: 'center' }}>Higher:</h2>
@@ -135,7 +161,7 @@ const GraphExplorerScreen = ({
                 ))}
               </ul>
             </Grid.Column>
-            <Grid.Column width="4" style={{ border: '1px solid black' }}>
+            <Grid.Column width="7" style={{ border: '1px solid black' }}>
               <Button
                 color="blue"
                 as={Link}
@@ -143,35 +169,40 @@ const GraphExplorerScreen = ({
                 to={`${routes.CATEGORY}/${representorCategory.id}`}>
                 {representorCategory.name}
               </Button>
-              <ul style={listStyle}>
-                {files.map((file) => (
-                  <li key={file.id} style={{ minWidth: '3em', minHeight: '1.5em' }}>
-                    <Button
-                      color="yellow"
-                      style={{ color: 'black' }}
-                      as={Link}
-                      size="big"
-                      to={`${routes.FILE}/${file.id}`}>
-                      {file.name}
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-            </Grid.Column>
-            <Grid.Column width="3" style={{ border: '1px solid black' }}>
-              <h2 style={{ textAlign: 'center' }}>Lower:</h2>
-              <List style={listStyle}>
-                {childCategories.map((childCategory) => (
-                  <List.Item key={childCategory.id} style={threeDotsCss}>
-                    <Button
-                      color="blue"
-                      as={Link}
-                      to={`${routes.TREE_EXPLORER}/${childCategory.id}`}>
-                      {childCategory.name}
-                    </Button>
-                  </List.Item>
-                ))}
-              </List>
+              <CurrentCategoryPane
+                CategoriesPanelContent={() => (
+                  <List selection verticalAlign="middle">
+                    {childCategories.map((childCategory) => (
+                      <List.Item
+                        key={childCategory.id}
+                        style={threeDotsCss}
+                        as={Link}
+                        to={`${routes.TREE_EXPLORER}/${childCategory.id}`}>
+                        <Icon name="folder" color="blue" size="large" />
+                        <List.Content>
+                          <List.Header>{childCategory.name}</List.Header>
+                        </List.Content>
+                      </List.Item>
+                    ))}
+                  </List>
+                )}
+                FilesPanelContent={() => (
+                  <List selection verticalAlign="middle">
+                    {files.map((file) => (
+                      <List.Item
+                        key={file.id}
+                        style={threeDotsCss}
+                        as={Link}
+                        to={`${routes.FILE}/${file.id}`}>
+                        <Icon name="file" color="yellow" size="large" />
+                        <List.Content>
+                          <List.Header>{file.name}</List.Header>
+                        </List.Content>
+                      </List.Item>
+                    ))}
+                  </List>
+                )}
+              />
             </Grid.Column>
             <Grid.Column width="3" />
           </Grid>
