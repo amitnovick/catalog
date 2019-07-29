@@ -4,20 +4,23 @@ import { Machine } from 'xstate';
 const machine = Machine({
   id: 'graph-machine',
   context: {
-    initialCategoryId: undefined
+    initialCategoryId: null,
   },
   initial: 'loading',
   states: {
     loading: {
       invoke: {
         src: 'fetchInitialData',
-        onDone: 'idle',
-        onError: 'failure'
-      }
+        onDone: {
+          target: 'idle',
+          actions: 'updateState',
+        },
+        onError: 'failure',
+      },
     },
     idle: {},
-    failure: {}
-  }
+    failure: {},
+  },
 });
 
 export default machine;

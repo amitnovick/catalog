@@ -7,19 +7,26 @@ import { RECEIVE_ENTITIES } from './actionTypes';
 import store from '../../redux/store';
 import getSqlDriver from '../../sqlDriver';
 import machine from './machine';
-import { selectParentCategories, selectFiles } from '../../sql_queries';
+import { selectFiles } from '../../sql_queries';
 import queryRootCategory from '../../query-functions/queryRootCategory';
 import routes from '../../routes';
 import queryChildCategories from '../../query-functions/queryChildCategories';
-import queryCategoryNameAndParentId from '../../query-functions/queryCategoryName';
-import { Button, List, Grid, Divider, Accordion, Icon, Label, Message } from 'semantic-ui-react';
+import {
+  List,
+  Grid,
+  Divider,
+  Accordion,
+  Icon,
+  Label,
+  Message,
+  Menu,
+  Button,
+  Segment,
+} from 'semantic-ui-react';
+import queryCategoriesInPath from '../../query-functions/queryCategoriesInPath';
+import { nil } from 'builder-util-runtime/out/uuid';
 
 //////////////////// <STYLING> ///////////////////
-
-const listStyle = {
-  listStyle: 'none',
-  padding: 0,
-};
 
 const threeDotsCss = {
   textOverflow: 'ellipsis',
@@ -30,24 +37,6 @@ const threeDotsCss = {
 };
 
 //////////////////// </STYLING> ///////////////////
-const queryParentCategories = (categoryId) => {
-  return new Promise((resolve, reject) => {
-    getSqlDriver().all(
-      selectParentCategories,
-      {
-        $category_id: categoryId,
-      },
-      (err, categoriesRows) => {
-        if (err) {
-          console.log('err:', err);
-          reject();
-        } else {
-          resolve(categoriesRows);
-        }
-      },
-    );
-  });
-};
 
 const queryFiles = (categoryId) => {
   return new Promise((resolve, reject) => {
@@ -68,28 +57,20 @@ const queryFiles = (categoryId) => {
   });
 };
 
-const fetchData = async (initialCategoryId) => {
-  const representorCategoryId =
-    initialCategoryId === undefined
-      ? await queryRootCategory().then((rootCategory) => rootCategory.id)
-      : initialCategoryId;
-  const { name: representorCategoryName } = await queryCategoryNameAndParentId(
-    representorCategoryId,
-  );
-  const files = await queryFiles(representorCategoryId);
-  const parentCategories = await queryParentCategories(representorCategoryId);
-  const childCategories = await queryChildCategories(representorCategoryId);
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      representorCategory: {
-        id: representorCategoryId,
-        name: representorCategoryName,
-      },
-      files: files,
-      childCategories: childCategories,
-      parentCategories: parentCategories,
-    },
+const fetchData = async (currentCategoryId) => {
+  const categoriesInPath =
+    currentCategoryId === null
+      ? await queryRootCategory().then((rootCategory) => [rootCategory])
+      : await queryCategoriesInPath(currentCategoryId);
+  const representorCategory = categoriesInPath[categoriesInPath.length - 1];
+
+  const files = await queryFiles(representorCategory.id);
+  const childCategories = await queryChildCategories(representorCategory.id);
+
+  return Promise.resolve({
+    categoriesInPath,
+    files,
+    childCategories,
   });
 };
 
@@ -114,24 +95,35 @@ const AccordionWrapper = ({ title, Content, shouldDefaultToActive }) => {
   );
 };
 
+const updateState = ({ files, childCategories, categoriesInPath }) => {
+  store.dispatch({
+    type: RECEIVE_ENTITIES,
+    payload: {
+      files: files,
+      childCategories: childCategories,
+      categoriesInPath: categoriesInPath,
+    },
+  });
+};
+
 const machineWithServices = machine.withConfig({
   services: {
     fetchInitialData: (context, _) => fetchData(context.initialCategoryId),
   },
+  actions: {
+    updateState: (_, event) => updateState(event.data),
+  },
 });
 
-const GraphExplorerScreen = ({
-  initialCategoryId,
-  representorCategory,
-  files,
-  childCategories,
-  parentCategories,
-}) => {
+const GraphExplorerScreen = ({ initialCategoryId, files, childCategories, categoriesInPath }) => {
   const [current] = useMachine(
     machineWithServices.withContext({
       initialCategoryId: initialCategoryId,
     }),
   );
+
+  const representorCategory =
+    categoriesInPath.length === 0 ? null : categoriesInPath[categoriesInPath.length - 1];
 
   const uiState = current.value;
   switch (uiState) {
@@ -140,93 +132,106 @@ const GraphExplorerScreen = ({
       return (
         <>
           <Divider horizontal />
+          {current.matches('loading') ? (
+            <Button fluid color="blue" size="massive">
+              {'       '}
+            </Button>
+          ) : (
+            <Button
+              fluid
+              color="blue"
+              as={Link}
+              size="massive"
+              to={`${routes.CATEGORY}/${representorCategory.id}`}>
+              {representorCategory.name}
+            </Button>
+          )}
+          <Divider horizontal />
           <Grid style={{ minHeight: '90vh' }}>
             <Grid.Column width="3" />
-            <Grid.Column width="3" style={{ border: '1px solid black' }}>
-              <h2 style={{ textAlign: 'center' }}>Higher:</h2>
-              <ul style={listStyle}>
-                {parentCategories.map((parentCategory) => (
-                  <li key={parentCategory.id} style={threeDotsCss}>
-                    <Button
-                      color="blue"
-                      as={Link}
-                      to={`${routes.TREE_EXPLORER}/${parentCategory.id}`}>
-                      {parentCategory.name}
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-            </Grid.Column>
-            <Grid.Column width="7" style={{ border: '1px solid black' }}>
-              {current.matches('loading') ? (
-                <h2 style={{ color: 'transparent' }}>Loading...</h2>
-              ) : (
-                <>
-                  <Button
-                    color="blue"
-                    as={Link}
-                    size="massive"
-                    to={`${routes.CATEGORY}/${representorCategory.id}`}>
-                    {representorCategory.name}
-                  </Button>
-                  <Divider horizontal />
-                  <List celled>
-                    <List.Item>
-                      <AccordionWrapper
-                        title="Categories"
-                        shouldDefaultToActive={true}
-                        Content={() => (
-                          <List divided selection verticalAlign="middle">
-                            {childCategories.length > 0 ? (
-                              childCategories.map((childCategory) => (
-                                <List.Item
-                                  key={childCategory.id}
-                                  as={Link}
-                                  to={`${routes.TREE_EXPLORER}/${childCategory.id}`}>
-                                  <Icon name="folder" color="blue" size="large" />
-                                  <List.Content>
-                                    <List.Header style={threeDotsCss}>
-                                      {childCategory.name}
-                                    </List.Header>
-                                  </List.Content>
+            <Grid.Column width="10">
+              <Segment>
+                {current.matches('loading') ? (
+                  <h2 style={{ color: 'transparent' }}>Loading...</h2>
+                ) : (
+                  <>
+                    <Menu secondary>
+                      {categoriesInPath.map((categoryInPath, categoryIndex) => (
+                        <Menu.Item
+                          key={categoriesInPath.id}
+                          as={Link}
+                          to={`${routes.TREE_EXPLORER}/${categoryInPath.id}`}
+                          active={categoryIndex === categoriesInPath.length - 1}>
+                          {categoryInPath.name}
+                        </Menu.Item>
+                      ))}
+                    </Menu>
+                    <Divider horizontal />
+                    <List celled>
+                      <List.Item>
+                        <AccordionWrapper
+                          title="Categories"
+                          shouldDefaultToActive={true}
+                          Content={() => (
+                            <List divided selection verticalAlign="middle">
+                              {childCategories.length > 0 ? (
+                                childCategories.map((childCategory) => (
+                                  <List.Item
+                                    key={childCategory.id}
+                                    as={Link}
+                                    to={`${routes.TREE_EXPLORER}/${childCategory.id}`}>
+                                    <Icon name="folder" color="blue" size="large" />
+                                    <List.Content>
+                                      <List.Header style={threeDotsCss}>
+                                        {childCategory.name}
+                                      </List.Header>
+                                    </List.Content>
+                                  </List.Item>
+                                ))
+                              ) : (
+                                <List.Item>
+                                  <Message info>
+                                    <Message.Header>No Categories</Message.Header>
+                                  </Message>
                                 </List.Item>
-                              ))
-                            ) : (
-                              <Message info>
-                                <Message.Header>No Categories</Message.Header>
-                              </Message>
-                            )}
-                          </List>
-                        )}
-                      />
-                    </List.Item>
-                    <List.Item>
-                      <AccordionWrapper
-                        title="Files"
-                        shouldDefaultToActive={files.length === 0}
-                        Content={() => (
-                          <List divided selection verticalAlign="middle">
-                            {files.length > 0 ? (
-                              files.map((file) => (
-                                <List.Item key={file.id} as={Link} to={`${routes.FILE}/${file.id}`}>
-                                  <Icon name="file" color="yellow" size="large" />
-                                  <List.Content>
-                                    <List.Header style={threeDotsCss}>{file.name}</List.Header>
-                                  </List.Content>
+                              )}
+                            </List>
+                          )}
+                        />
+                      </List.Item>
+                      <List.Item>
+                        <AccordionWrapper
+                          title="Files"
+                          shouldDefaultToActive={files.length === 0}
+                          Content={() => (
+                            <List divided selection verticalAlign="middle">
+                              {files.length > 0 ? (
+                                files.map((file) => (
+                                  <List.Item
+                                    key={file.id}
+                                    as={Link}
+                                    to={`${routes.FILE}/${file.id}`}>
+                                    <Icon name="file" color="yellow" size="large" />
+                                    <List.Content>
+                                      <List.Header style={threeDotsCss}>{file.name}</List.Header>
+                                    </List.Content>
+                                  </List.Item>
+                                ))
+                              ) : (
+                                <List.Item>
+                                  <Message info>
+                                    <Message.Header>No Files</Message.Header>
+                                  </Message>
                                 </List.Item>
-                              ))
-                            ) : (
-                              <Message info>
-                                <Message.Header>No Files</Message.Header>
-                              </Message>
-                            )}
-                          </List>
-                        )}
-                      />
-                    </List.Item>
-                  </List>
-                </>
-              )}
+                              )}
+                            </List>
+                          )}
+                        />
+                      </List.Item>
+                    </List>
+                  </>
+                )}
+              </Segment>
             </Grid.Column>
             <Grid.Column width="3" />
           </Grid>
@@ -241,10 +246,10 @@ const GraphExplorerScreen = ({
 };
 
 GraphExplorerScreen.propTypes = {
-  representorCategory: PropTypes.object.isRequired,
   files: PropTypes.array.isRequired,
   childCategories: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
-  parentCategories: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  initialCategoryId: PropTypes.any,
+  categoriesInPath: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
 };
 
 export default GraphExplorerScreen;

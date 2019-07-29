@@ -1,10 +1,9 @@
 import { RECEIVE_ENTITIES } from './actionTypes';
 
 const initialState = {
-  representorCategory: {},
   childCategories: [],
   files: [],
-  parentCategories: []
+  categoriesInPath: [],
 };
 
 export default function(state = initialState, action) {
