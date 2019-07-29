@@ -159,7 +159,7 @@ const GraphExplorerScreen = ({ initialCategoryId, files, childCategories, catego
                     <Menu secondary>
                       {categoriesInPath.map((categoryInPath, categoryIndex) => (
                         <Menu.Item
-                          key={categoriesInPath.id}
+                          key={categoryInPath.id}
                           as={Link}
                           to={`${routes.TREE_EXPLORER}/${categoryInPath.id}`}
                           active={categoryIndex === categoriesInPath.length - 1}>
