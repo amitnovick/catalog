@@ -12,7 +12,7 @@ import queryRootCategory from '../../query-functions/queryRootCategory';
 import routes from '../../routes';
 import queryChildCategories from '../../query-functions/queryChildCategories';
 import queryCategoryNameAndParentId from '../../query-functions/queryCategoryName';
-import { Button, List, Grid, Divider, Accordion, Icon, Label } from 'semantic-ui-react';
+import { Button, List, Grid, Divider, Accordion, Icon, Label, Message } from 'semantic-ui-react';
 
 //////////////////// <STYLING> ///////////////////
 
@@ -93,29 +93,25 @@ const fetchData = async (initialCategoryId) => {
   });
 };
 
-const CurrentCategoryPane = ({ CategoriesPanelContent, FilesPanelContent }) => {
+const AccordionWrapper = ({ title, Content, shouldDefaultToActive }) => {
   const panels = [
     {
-      key: 'categories',
+      key: title,
       title: {
-        content: <Label size="big">Categories</Label>,
+        content: <Label size="big">{title}</Label>,
       },
       content: {
-        content: <CategoriesPanelContent />,
-      },
-    },
-    {
-      key: 'files',
-      title: {
-        content: <Label size="big">Files</Label>,
-      },
-      content: {
-        content: <FilesPanelContent />,
+        content: <Content />,
       },
     },
   ];
 
-  return <Accordion defaultActiveIndex={0} panels={panels} />;
+  return (
+    <Accordion
+      defaultActiveIndex={shouldDefaultToActive === true ? 0 : undefined}
+      panels={panels}
+    />
+  );
 };
 
 const machineWithServices = machine.withConfig({
@@ -162,47 +158,75 @@ const GraphExplorerScreen = ({
               </ul>
             </Grid.Column>
             <Grid.Column width="7" style={{ border: '1px solid black' }}>
-              <Button
-                color="blue"
-                as={Link}
-                size="massive"
-                to={`${routes.CATEGORY}/${representorCategory.id}`}>
-                {representorCategory.name}
-              </Button>
-              <CurrentCategoryPane
-                CategoriesPanelContent={() => (
-                  <List selection verticalAlign="middle">
-                    {childCategories.map((childCategory) => (
-                      <List.Item
-                        key={childCategory.id}
-                        style={threeDotsCss}
-                        as={Link}
-                        to={`${routes.TREE_EXPLORER}/${childCategory.id}`}>
-                        <Icon name="folder" color="blue" size="large" />
-                        <List.Content>
-                          <List.Header>{childCategory.name}</List.Header>
-                        </List.Content>
-                      </List.Item>
-                    ))}
+              {current.matches('loading') ? (
+                <h2 style={{ color: 'transparent' }}>Loading...</h2>
+              ) : (
+                <>
+                  <Button
+                    color="blue"
+                    as={Link}
+                    size="massive"
+                    to={`${routes.CATEGORY}/${representorCategory.id}`}>
+                    {representorCategory.name}
+                  </Button>
+                  <Divider horizontal />
+                  <List celled>
+                    <List.Item>
+                      <AccordionWrapper
+                        title="Categories"
+                        shouldDefaultToActive={true}
+                        Content={() => (
+                          <List divided selection verticalAlign="middle">
+                            {childCategories.length > 0 ? (
+                              childCategories.map((childCategory) => (
+                                <List.Item
+                                  key={childCategory.id}
+                                  as={Link}
+                                  to={`${routes.TREE_EXPLORER}/${childCategory.id}`}>
+                                  <Icon name="folder" color="blue" size="large" />
+                                  <List.Content>
+                                    <List.Header style={threeDotsCss}>
+                                      {childCategory.name}
+                                    </List.Header>
+                                  </List.Content>
+                                </List.Item>
+                              ))
+                            ) : (
+                              <Message info>
+                                <Message.Header>No Categories</Message.Header>
+                              </Message>
+                            )}
+                          </List>
+                        )}
+                      />
+                    </List.Item>
+                    <List.Item>
+                      <AccordionWrapper
+                        title="Files"
+                        shouldDefaultToActive={files.length === 0}
+                        Content={() => (
+                          <List divided selection verticalAlign="middle">
+                            {files.length > 0 ? (
+                              files.map((file) => (
+                                <List.Item key={file.id} as={Link} to={`${routes.FILE}/${file.id}`}>
+                                  <Icon name="file" color="yellow" size="large" />
+                                  <List.Content>
+                                    <List.Header style={threeDotsCss}>{file.name}</List.Header>
+                                  </List.Content>
+                                </List.Item>
+                              ))
+                            ) : (
+                              <Message info>
+                                <Message.Header>No Files</Message.Header>
+                              </Message>
+                            )}
+                          </List>
+                        )}
+                      />
+                    </List.Item>
                   </List>
-                )}
-                FilesPanelContent={() => (
-                  <List selection verticalAlign="middle">
-                    {files.map((file) => (
-                      <List.Item
-                        key={file.id}
-                        style={threeDotsCss}
-                        as={Link}
-                        to={`${routes.FILE}/${file.id}`}>
-                        <Icon name="file" color="yellow" size="large" />
-                        <List.Content>
-                          <List.Header>{file.name}</List.Header>
-                        </List.Content>
-                      </List.Item>
-                    ))}
-                  </List>
-                )}
-              />
+                </>
+              )}
             </Grid.Column>
             <Grid.Column width="3" />
           </Grid>
