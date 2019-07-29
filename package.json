@@ -25,6 +25,7 @@
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.87.3",
     "sqlite3": "4.0.9",
+    "styled-components": "^4.3.2",
     "valid-filename": "^3.1.0",
     "xstate": "^4.6.0"
   },

@@ -11,32 +11,12 @@ import { selectFiles } from '../../sql_queries';
 import queryRootCategory from '../../query-functions/queryRootCategory';
 import routes from '../../routes';
 import queryChildCategories from '../../query-functions/queryChildCategories';
-import {
-  List,
-  Grid,
-  Divider,
-  Accordion,
-  Icon,
-  Label,
-  Message,
-  Menu,
-  Button,
-  Segment,
-} from 'semantic-ui-react';
+import { List, Grid, Divider, Button, Segment } from 'semantic-ui-react';
+
 import queryCategoriesInPath from '../../query-functions/queryCategoriesInPath';
-import { nil } from 'builder-util-runtime/out/uuid';
-
-//////////////////// <STYLING> ///////////////////
-
-const threeDotsCss = {
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  display: 'inline-block',
-  width: '100%',
-};
-
-//////////////////// </STYLING> ///////////////////
+import PathCategoriesMenu from './components/PathCategoriesMenu';
+import CategoriesAccordion from './components/CategoriesAccordion';
+import FilesAccordion from './components/FilesAccordion';
 
 const queryFiles = (categoryId) => {
   return new Promise((resolve, reject) => {
@@ -73,27 +53,6 @@ const fetchData = async (currentCategoryId) => {
     files,
     childCategories,
   });
-};
-
-const AccordionWrapper = ({ title, Content, shouldDefaultToActive }) => {
-  const panels = [
-    {
-      key: title,
-      title: {
-        content: <Label size="big">{title}</Label>,
-      },
-      content: {
-        content: <Content />,
-      },
-    },
-  ];
-
-  return (
-    <Accordion
-      defaultActiveIndex={shouldDefaultToActive === true ? 0 : undefined}
-      panels={panels}
-    />
-  );
 };
 
 const updateState = ({ files, childCategories, categoriesInPath }) => {
@@ -134,8 +93,8 @@ const GraphExplorerScreen = ({ initialCategoryId, files, childCategories, catego
         <>
           <Divider horizontal />
           {current.matches('loading') ? (
-            <Button fluid color="blue" size="massive">
-              {'       '}
+            <Button fluid color="blue" size="massive" style={{ color: 'transparent' }}>
+              Loading...
             </Button>
           ) : (
             <Button
@@ -148,90 +107,24 @@ const GraphExplorerScreen = ({ initialCategoryId, files, childCategories, catego
             </Button>
           )}
           <Divider horizontal />
-          <Grid style={{ minHeight: '90vh' }}>
+          <Grid>
             <Grid.Column width="3" />
             <Grid.Column width="10">
-              <Segment>
-                {current.matches('loading') ? (
-                  <h2 style={{ color: 'transparent' }}>Loading...</h2>
-                ) : (
+              <Segment style={{ minHeight: '90vh' }}>
+                {current.matches('idle') ? (
                   <>
-                    <Menu secondary>
-                      {categoriesInPath.map((categoryInPath, categoryIndex) => (
-                        <Menu.Item
-                          key={categoryInPath.id}
-                          as={Link}
-                          to={`${routes.TREE_EXPLORER}/${categoryInPath.id}`}
-                          active={categoryIndex === categoriesInPath.length - 1}>
-                          {categoryInPath.name}
-                        </Menu.Item>
-                      ))}
-                    </Menu>
+                    <PathCategoriesMenu categoriesInPath={categoriesInPath} />
                     <Divider horizontal />
                     <List celled>
                       <List.Item>
-                        <AccordionWrapper
-                          title="Categories"
-                          shouldDefaultToActive={true}
-                          Content={() => (
-                            <List divided selection verticalAlign="middle">
-                              {childCategories.length > 0 ? (
-                                childCategories.map((childCategory) => (
-                                  <List.Item
-                                    key={childCategory.id}
-                                    as={Link}
-                                    to={`${routes.TREE_EXPLORER}/${childCategory.id}`}>
-                                    <Icon name="folder" color="blue" size="large" />
-                                    <List.Content>
-                                      <List.Header style={threeDotsCss}>
-                                        {childCategory.name}
-                                      </List.Header>
-                                    </List.Content>
-                                  </List.Item>
-                                ))
-                              ) : (
-                                <List.Item>
-                                  <Message info>
-                                    <Message.Header>No Categories</Message.Header>
-                                  </Message>
-                                </List.Item>
-                              )}
-                            </List>
-                          )}
-                        />
+                        <CategoriesAccordion categories={childCategories} />
                       </List.Item>
                       <List.Item>
-                        <AccordionWrapper
-                          title="Files"
-                          shouldDefaultToActive={files.length === 0}
-                          Content={() => (
-                            <List divided selection verticalAlign="middle">
-                              {files.length > 0 ? (
-                                files.map((file) => (
-                                  <List.Item
-                                    key={file.id}
-                                    as={Link}
-                                    to={`${routes.FILE}/${file.id}`}>
-                                    <Icon name="file" color="yellow" size="large" />
-                                    <List.Content>
-                                      <List.Header style={threeDotsCss}>{file.name}</List.Header>
-                                    </List.Content>
-                                  </List.Item>
-                                ))
-                              ) : (
-                                <List.Item>
-                                  <Message info>
-                                    <Message.Header>No Files</Message.Header>
-                                  </Message>
-                                </List.Item>
-                              )}
-                            </List>
-                          )}
-                        />
+                        <FilesAccordion files={files} />
                       </List.Item>
                     </List>
                   </>
-                )}
+                ) : null}
               </Segment>
             </Grid.Column>
             <Grid.Column width="3" />
