@@ -2,7 +2,7 @@
 import { Machine } from 'xstate';
 
 const machine = Machine({
-  id: 'category-name-widget',
+  id: 'category-rename-modal-widget',
   initial: 'idle',
   states: {
     idle: {
