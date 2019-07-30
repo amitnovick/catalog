@@ -69,21 +69,6 @@ const isNewCategoryNameValidCategoryName = (newCategoryName) => {
   return newCategoryName.trim() !== '';
 };
 
-const machineWithConfig = machine.withConfig({
-  services: {
-    attemptToRenameCategory: (_, event) =>
-      attemptToRenameCategory(event.category, event.newCategoryName),
-  },
-  actions: {
-    resetNewCategoryNameToCategoryName: (_, __) => resetNewCategoryNameToCategoryName(),
-    updateInputText: (_, event) => updateNewCategoryName(event.inputText),
-  },
-  guards: {
-    isNewCategoryNameValidCategoryName: (_, event) =>
-      isNewCategoryNameValidCategoryName(event.newCategoryName),
-  },
-});
-
 const updateErrorMessage = (error) => {
   store.dispatch({
     type: RECEIVE_ENTITIES,
@@ -102,12 +87,27 @@ const updateErrorMessageInvalidCategoryName = () => {
   });
 };
 
+const machineWithConfig = machine.withConfig({
+  services: {
+    attemptToRenameCategory: (_, event) =>
+      attemptToRenameCategory(event.category, event.newCategoryName),
+  },
+  actions: {
+    resetNewCategoryNameToCategoryName: (_, __) => resetNewCategoryNameToCategoryName(),
+    updateInputText: (_, event) => updateNewCategoryName(event.inputText),
+    updateErrorMessage: (_, event) => updateErrorMessage(event.data),
+    updateErrorMessageInvalidCategoryName: (_, __) => updateErrorMessageInvalidCategoryName(),
+  },
+  guards: {
+    isNewCategoryNameValidCategoryName: (_, event) =>
+      isNewCategoryNameValidCategoryName(event.newCategoryName),
+  },
+});
+
 const CategoryNameWidget = ({ refetchCategoryData, errorMessage }) => {
   const [current, send] = useMachine(machineWithConfig, {
     actions: {
       refetchCategoryData: (_, __) => refetchCategoryData(),
-      updateErrorMessage: (_, event) => updateErrorMessage(event.data),
-      updateErrorMessageInvalidCategoryName: (_, __) => updateErrorMessageInvalidCategoryName(),
     },
   });
   return (

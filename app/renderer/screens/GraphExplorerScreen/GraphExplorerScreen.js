@@ -17,7 +17,7 @@ import queryCategoriesInPath from '../../query-functions/queryCategoriesInPath';
 import PathCategoriesMenu from './components/PathCategoriesMenu';
 import CategoriesAccordion from './components/CategoriesAccordion';
 import FilesAccordion from './components/FilesAccordion';
-import CategoryRenameModal from './CategoryRenameModal/CategoryRenameModal';
+import CategoryRenameModalWidget from './CategoryRenameModalWidget/CategoryRenameModalWidget';
 
 const queryFiles = (categoryId) => {
   return new Promise((resolve, reject) => {
@@ -159,10 +159,10 @@ const GraphExplorerScreen = ({ initialCategoryId, files, childCategories, catego
           <Grid.Column width="3" />
         </Grid>
         <Divider horizontal />
-        <CategoryRenameModal
+        <CategoryRenameModalWidget
           isOpen={current.matches('categoryRenamingModal')}
           onClose={() => send('CATEGORY_RENAMING_MODAL_CANCEL')}
-          onClickRenameButton={() => send('CATEGORY_RENAMING_MODAL_SUBMIT')}
+          refetchCategoryData={() => send('CATEGORY_RENAMING_MODAL_SUBMIT')}
         />
       </>
     );

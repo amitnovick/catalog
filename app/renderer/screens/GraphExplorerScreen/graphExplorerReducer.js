@@ -6,6 +6,7 @@ const initialState = {
   categoriesInPath: [],
   categoryRenameModalInputText: '',
   chosenCategoryRenamingCategoryModal: null,
+  errorMessageCategoryNameWidget: '',
 };
 
 export default function(state = initialState, action) {
