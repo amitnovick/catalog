@@ -4,6 +4,8 @@ const initialState = {
   childCategories: [],
   files: [],
   categoriesInPath: [],
+  categoryRenameModalInputText: '',
+  chosenCategoryRenamingCategoryModal: null,
 };
 
 export default function(state = initialState, action) {

@@ -17,6 +17,7 @@ import queryCategoriesInPath from '../../query-functions/queryCategoriesInPath';
 import PathCategoriesMenu from './components/PathCategoriesMenu';
 import CategoriesAccordion from './components/CategoriesAccordion';
 import FilesAccordion from './components/FilesAccordion';
+import CategoryRenameModal from './CategoryRenameModal/CategoryRenameModal';
 
 const queryFiles = (categoryId) => {
   return new Promise((resolve, reject) => {
@@ -42,6 +43,7 @@ const fetchData = async (currentCategoryId) => {
     currentCategoryId === null
       ? await queryRootCategory().then((rootCategory) => [rootCategory])
       : await queryCategoriesInPath(currentCategoryId);
+
   const representorCategory = categoriesInPath[categoriesInPath.length - 1];
 
   const files = await queryFiles(representorCategory.id);
@@ -66,17 +68,38 @@ const updateState = ({ files, childCategories, categoriesInPath }) => {
   });
 };
 
+const updateRenameCategoryInputText = (category) => {
+  store.dispatch({
+    type: RECEIVE_ENTITIES,
+    payload: {
+      categoryRenameModalInputText: category.name,
+    },
+  });
+};
+
+const updateChosenCategoryRenamingCategoryModal = (category) => {
+  store.dispatch({
+    type: RECEIVE_ENTITIES,
+    payload: {
+      chosenCategoryRenamingCategoryModal: category,
+    },
+  });
+};
+
 const machineWithServices = machine.withConfig({
   services: {
     fetchInitialData: (context, _) => fetchData(context.initialCategoryId),
   },
   actions: {
     updateState: (_, event) => updateState(event.data),
+    updateRenameCategoryInputText: (_, event) => updateRenameCategoryInputText(event.category),
+    updateChosenCategoryRenamingCategoryModal: (_, event) =>
+      updateChosenCategoryRenamingCategoryModal(event.category),
   },
 });
 
 const GraphExplorerScreen = ({ initialCategoryId, files, childCategories, categoriesInPath }) => {
-  const [current] = useMachine(
+  const [current, send] = useMachine(
     machineWithServices.withContext({
       initialCategoryId: initialCategoryId,
     }),
@@ -85,57 +108,68 @@ const GraphExplorerScreen = ({ initialCategoryId, files, childCategories, catego
   const representorCategory =
     categoriesInPath.length === 0 ? null : categoriesInPath[categoriesInPath.length - 1];
 
-  const uiState = current.value;
-  switch (uiState) {
-    case 'loading':
-    case 'idle':
-      return (
-        <>
-          <Divider horizontal />
-          {current.matches('loading') ? (
-            <Button fluid color="blue" size="massive" style={{ color: 'transparent' }}>
-              Loading...
-            </Button>
-          ) : (
-            <Button
-              fluid
-              color="blue"
-              as={Link}
-              size="massive"
-              to={`${routes.CATEGORY}/${representorCategory.id}`}>
-              {representorCategory.name}
-            </Button>
-          )}
-          <Divider horizontal />
-          <Grid>
-            <Grid.Column width="3" />
-            <Grid.Column width="10">
-              <Segment style={{ minHeight: '90vh' }}>
-                {current.matches('idle') ? (
-                  <>
-                    <PathCategoriesMenu categoriesInPath={categoriesInPath} />
-                    <Divider horizontal />
-                    <List celled>
-                      <List.Item>
-                        <CategoriesAccordion categories={childCategories} />
-                      </List.Item>
-                      <List.Item>
-                        <FilesAccordion files={files} />
-                      </List.Item>
-                    </List>
-                  </>
-                ) : null}
-              </Segment>
-            </Grid.Column>
-            <Grid.Column width="3" />
-          </Grid>
-          <Divider horizontal />
-        </>
-      );
-    case 'failure':
-      return <h2>Failure</h2>;
-    default:
-      return <h2>Unknown state</h2>;
+  if (
+    current.matches('idle.loading') ||
+    current.matches('idle.idle') ||
+    current.matches('categoryRenamingModal')
+  ) {
+    return (
+      <>
+        <Divider horizontal />
+        {current.matches('idle.loading') ? (
+          <Button fluid color="blue" size="massive" style={{ color: 'transparent' }}>
+            Loading...
+          </Button>
+        ) : (
+          <Button
+            fluid
+            color="blue"
+            as={Link}
+            size="massive"
+            to={`${routes.CATEGORY}/${representorCategory.id}`}>
+            {representorCategory.name}
+          </Button>
+        )}
+        <Divider horizontal />
+        <Grid>
+          <Grid.Column width="3" />
+          <Grid.Column width="10">
+            <Segment style={{ minHeight: '90vh' }}>
+              {current.matches('idle.idle') ? (
+                <>
+                  <PathCategoriesMenu categoriesInPath={categoriesInPath} />
+                  <Divider horizontal />
+                  <List celled>
+                    <List.Item>
+                      <CategoriesAccordion
+                        categories={childCategories}
+                        onClickRenameButton={(category) =>
+                          send('CLICK_CATEGORY_RENAME_BUTTON', { category })
+                        }
+                      />
+                    </List.Item>
+                    <List.Item>
+                      <FilesAccordion files={files} />
+                    </List.Item>
+                  </List>
+                </>
+              ) : null}
+            </Segment>
+          </Grid.Column>
+          <Grid.Column width="3" />
+        </Grid>
+        <Divider horizontal />
+        <CategoryRenameModal
+          isOpen={current.matches('categoryRenamingModal')}
+          onClose={() => send('CATEGORY_RENAMING_MODAL_CANCEL')}
+          onClickRenameButton={() => send('CATEGORY_RENAMING_MODAL_SUBMIT')}
+        />
+      </>
+    );
+  } else if (current.matches('idle.failure')) {
+    return <h2>Failure</h2>;
+  } else {
+    return <h2>Unknown state</h2>;
   }
 };
 

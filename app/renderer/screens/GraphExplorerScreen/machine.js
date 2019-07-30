@@ -6,20 +6,41 @@ const machine = Machine({
   context: {
     initialCategoryId: null,
   },
-  initial: 'loading',
+  initial: 'idle',
   states: {
-    loading: {
-      invoke: {
-        src: 'fetchInitialData',
-        onDone: {
-          target: 'idle',
-          actions: 'updateState',
+    idle: {
+      initial: 'loading',
+      states: {
+        loading: {
+          invoke: {
+            src: 'fetchInitialData',
+            onDone: {
+              target: 'idle',
+              actions: 'updateState',
+            },
+            onError: 'failure',
+          },
         },
-        onError: 'failure',
+        idle: {
+          on: {
+            CLICK_CATEGORY_RENAME_BUTTON: {
+              target: '#graph-machine.categoryRenamingModal',
+              actions: [
+                'updateRenameCategoryInputText',
+                'updateChosenCategoryRenamingCategoryModal',
+              ],
+            },
+          },
+        },
+        failure: {},
       },
     },
-    idle: {},
-    failure: {},
+    categoryRenamingModal: {
+      on: {
+        CATEGORY_RENAMING_MODAL_CANCEL: 'idle.idle',
+        CATEGORY_RENAMING_MODAL_SUBMIT: 'idle.loading',
+      },
+    },
   },
 });
 
