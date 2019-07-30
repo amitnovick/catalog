@@ -7,8 +7,18 @@ import { RECEIVE_ENTITIES } from '../actionTypes';
 import RenameModal from './components/RenameModal';
 import queryRenameCategory from '../query-functions/queryRenameCategory';
 
-const attemptToRenameCategory = (category, newCategoryName) => {
-  return queryRenameCategory(category.id, newCategoryName);
+const getChosenCategoryRenamingCategoryModal = (store) =>
+  store && store.graphExplorerScreen
+    ? store.graphExplorerScreen.chosenCategoryRenamingCategoryModal
+    : null;
+
+const getInputText = (store) =>
+  store && store.graphExplorerScreen ? store.graphExplorerScreen.categoryRenameModalInputText : '';
+
+const attemptToRenameCategory = () => {
+  const category = getChosenCategoryRenamingCategoryModal(store.getState());
+  const inputText = getInputText(store.getState());
+  return queryRenameCategory(category.id, inputText);
 };
 
 const updateNewCategoryName = (inputText) => {
@@ -32,8 +42,9 @@ const resetNewCategoryNameToCategoryName = () => {
   });
 };
 
-const isNewCategoryNameValidCategoryName = (newCategoryName) => {
-  return newCategoryName.trim() !== '';
+const isNewCategoryNameValidCategoryName = () => {
+  const inputText = getInputText(store.getState());
+  return inputText.trim() !== '';
 };
 
 const updateErrorMessage = (error) => {
@@ -54,17 +65,6 @@ const updateErrorMessageInvalidCategoryName = () => {
   });
 };
 
-// if (current.matches('renaming')) {
-//   return (
-//     <CategoryListItemRenamingContainer
-//       onChangeInputText={(inputText) => send('CHANGE_INPUT_TEXT', { inputText })}
-//       onClickCheckmark={() => send('CLICK_CHECKMARK')}
-//     />
-//   );
-// }
-
-// onClickRename={(category) => send('CLICK_RENAME', { inputText: category.name })}
-
 const machineWithConfig = machine.withConfig({
   services: {
     attemptToRenameCategory: (_, event) =>
@@ -82,25 +82,19 @@ const machineWithConfig = machine.withConfig({
   },
 });
 
-// TODO: Add `onClickRenameButton` as action
-
 const CategoryRenameModalWidget = ({ isOpen, onClose, refetchCategoryData }) => {
   const [current, send] = useMachine(machineWithConfig, {
     actions: {
       refetchCategoryData: (_, __) => refetchCategoryData(),
     },
+    devTools: true,
   });
   return (
     <RenameModal
       shouldShowErrorMessage={current.matches('idle.failure')}
       isOpen={isOpen}
       onClose={onClose}
-      onClickRenameButton={(category, newCategoryName) =>
-        send('CLICK_RENAME_CATEGORY', {
-          category: category,
-          newCategoryName: newCategoryName,
-        })
-      }
+      onClickRenameButton={() => send('CLICK_RENAME_CATEGORY')}
       onChangeInputText={(inputText) => send('CHANGE_INPUT_TEXT', { inputText })}
     />
   );
