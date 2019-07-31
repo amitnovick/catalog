@@ -11,7 +11,6 @@ import queryChildCategories from '../../query-functions/queryChildCategories';
 
 import queryCategoriesInPath from '../../query-functions/queryCategoriesInPath';
 import CategoryRenameModalWidget from './CategoryRenameModalWidget/CategoryRenameModalWidget';
-import ExplorerWidgetContainer from './ExplorerWidget/ExplorerWidgetContainer';
 import { assign } from 'xstate';
 import ExplorerWidget from './ExplorerWidget/ExplorerWidget';
 

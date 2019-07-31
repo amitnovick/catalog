@@ -1,11 +1,11 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { List, Icon, Button } from 'semantic-ui-react';
+import { Icon, Button } from 'semantic-ui-react';
 import styled from 'styled-components';
 
 import routes from '../../../../routes';
 
-const StyledListItem = styled(List.Item)``;
+const StyledListItem = styled.li``;
 
 const StyledDiv = styled.div`
   ${StyledListItem}:hover & {
@@ -14,9 +14,9 @@ const StyledDiv = styled.div`
 `;
 
 const RenameButton = styled(Button)`
-  display: none !important;
+  visibility: hidden;
   ${StyledListItem}:hover & {
-    display: inline-block !important;
+    visibility: visible;
   }
 `;
 
@@ -28,7 +28,7 @@ const CategoryListItem = ({ category, onDoubleClickRow, onClickRenameButton }) =
           onDoubleClick={() => onDoubleClickRow('double!')}
           style={{ display: 'inline-block', width: '100%', cursor: 'pointer' }}>
           <Icon name="folder" color="blue" size="big" />
-          <List.Content style={{ display: 'inline-block' }}>{category.name}</List.Content>
+          <span style={{ display: 'inline-block' }}>{category.name}</span>
         </StyledDiv>
         <RenameButton
           color="grey"
