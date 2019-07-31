@@ -1,21 +1,20 @@
-import {connect} from 'react-redux'
-import PropTypes from 'prop-types'
+import React from 'react';
+import { useService } from '@xstate/react';
+import PropTypes from 'prop-types';
 
-import RenameModalContent from '../components/RenameModalContent'
+import ReactContext from '../ReactContext';
+import RenameModalContent from '../components/RenameModalContent';
 
-const getInputText = (store) =>
-  store && store.graphExplorerScreen ? store.graphExplorerScreen.categoryRenameModalInputText : '';
+const RenameModalContentContainer = (props) => {
+  const service = React.useContext(ReactContext);
+  const [current] = useService(service);
+  const { inputText, errorMessage } = current.context;
 
-const getErrorMessage = (store) =>
-  store && store.graphExplorerScreen ? store.graphExplorerScreen.errorMessageCategoryNameWidget : ''
-
-const RenameModalContentContainer = connect(state => ({
-  inputText: getInputText(state),
-  errorMessage: getErrorMessage(state)
-}))(RenameModalContent)
+  return <RenameModalContent {...props} inputText={inputText} errorMessage={errorMessage} />;
+};
 
 RenameModalContent.propTypes = {
   shouldShowErrorMessage: PropTypes.bool.isRequired,
-}
+};
 
 export default RenameModalContentContainer;

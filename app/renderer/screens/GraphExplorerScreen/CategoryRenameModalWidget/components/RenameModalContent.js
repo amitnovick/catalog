@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Input, Message } from 'semantic-ui-react';
+import { Modal, Input, Message, Icon } from 'semantic-ui-react';
 
 const RenameModalContent = ({
   inputText,
@@ -9,13 +9,18 @@ const RenameModalContent = ({
   errorMessage,
 }) => {
   return (
-    <Modal.Content>
-      <p>Enter the new name:</p>
-      <Input
-        type="text"
-        value={inputText}
-        onChange={({ target }) => onChangeInputText(target.value)}
-      />
+    <Modal.Content image>
+      <div className="image">
+        <Icon name="folder" color="blue" />
+      </div>
+      <Modal.Description>
+        <p>Enter the new name:</p>
+        <Input
+          type="text"
+          value={inputText}
+          onChange={({ target }) => onChangeInputText(target.value)}
+        />
+      </Modal.Description>
       {shouldShowErrorMessage ? <Message error content={errorMessage} /> : null}
     </Modal.Content>
   );

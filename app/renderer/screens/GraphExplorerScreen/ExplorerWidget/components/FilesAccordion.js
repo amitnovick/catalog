@@ -1,8 +1,9 @@
 import React from 'react';
-import AccordionWrapper from './AccordionWrapper';
 import { List, Icon, Message } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import routes from '../../../routes';
+
+import AccordionWrapper from './AccordionWrapper';
+import routes from '../../../../routes';
 
 const threeDotsCss = {
   textOverflow: 'ellipsis',

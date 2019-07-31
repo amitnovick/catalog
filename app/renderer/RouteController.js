@@ -3,7 +3,7 @@ import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 
 import SearchScreen from './screens/SearchScreen/SearchScreen';
 import ControlPanelScreen from './screens/ControlPanelScreen/ControlPanelScreen';
-import GraphExplorerScreen from './screens/GraphExplorerScreen/GraphExplorerScreenContainer';
+import GraphExplorerScreen from './screens/GraphExplorerScreen/GraphExplorerScreen';
 import FileScreen from './screens/FileScreen/FileScreen';
 import routes from './routes';
 import CategoryScreen from './screens/CategoryScreen/CategoryScreen';

@@ -1,6 +1,7 @@
 import React from 'react';
-import AccordionWrapper from './AccordionWrapper';
 import { List, Message } from 'semantic-ui-react';
+
+import AccordionWrapper from './AccordionWrapper';
 import CategoryListItem from './CategoryListItem';
 
 const CategoriesAccordion = ({ categories, onClickRenameButton }) => {

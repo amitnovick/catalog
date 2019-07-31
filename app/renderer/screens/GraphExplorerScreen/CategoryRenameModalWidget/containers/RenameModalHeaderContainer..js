@@ -1,14 +1,15 @@
-import { connect } from 'react-redux';
+import React from 'react';
+import { useService } from '@xstate/react';
 
-import RenameModalHeader from '../components/RenameModalHeader'
+import RenameModalHeader from '../components/RenameModalHeader';
+import ReactContext from '../ReactContext';
 
-const getChosenCategoryRenamingCategoryModal = (store) =>
-  store && store.graphExplorerScreen
-    ? store.graphExplorerScreen.chosenCategoryRenamingCategoryModal
-    : null;
+const RenameModalHeaderContainer = (props) => {
+  const service = React.useContext(ReactContext);
+  const [current] = useService(service);
+  const { category } = current.context;
 
-const RenameModalHeaderContainer = connect(state => ({
-  category: getChosenCategoryRenamingCategoryModal(state),
-}))(RenameModalHeader)
+  return <RenameModalHeader {...props} category={category} />;
+};
 
-export default RenameModalHeaderContainer
+export default RenameModalHeaderContainer;

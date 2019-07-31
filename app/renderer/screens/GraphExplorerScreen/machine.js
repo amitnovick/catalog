@@ -2,33 +2,35 @@
 import { Machine } from 'xstate';
 
 const machine = Machine({
-  id: 'graph-machine',
+  id: 'explorer-screen',
   context: {
     initialCategoryId: null,
+    categoriesInPath: [],
+    files: [],
+    childCategories: [],
+    categoryRenamingModalCategory: null,
   },
   initial: 'idle',
   states: {
     idle: {
-      initial: 'loading',
+      id: 'explorer-screen-idle',
+      initial: 'fetchingData',
       states: {
-        loading: {
+        fetchingData: {
           invoke: {
-            src: 'fetchInitialData',
+            src: 'fetchData',
             onDone: {
-              target: 'idle',
+              target: '#explorer-screen-idle.idle',
               actions: 'updateState',
             },
-            onError: 'failure',
+            onError: '#explorer-screen-idle.failure',
           },
         },
         idle: {
           on: {
             CLICK_CATEGORY_RENAME_BUTTON: {
-              target: '#graph-machine.categoryRenamingModal',
-              actions: [
-                'updateRenameCategoryInputText',
-                'updateChosenCategoryRenamingCategoryModal',
-              ],
+              target: '#explorer-screen.categoryRenamingModal',
+              actions: 'updateCategoryRenamingModalCategory',
             },
           },
         },
@@ -38,7 +40,7 @@ const machine = Machine({
     categoryRenamingModal: {
       on: {
         CATEGORY_RENAMING_MODAL_CANCEL: 'idle.idle',
-        CATEGORY_RENAMING_MODAL_SUBMIT: 'idle.loading',
+        CATEGORY_RENAMING_MODAL_SUBMIT: 'idle.fetchingData',
       },
     },
   },

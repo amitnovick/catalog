@@ -4,6 +4,11 @@ import { Machine } from 'xstate';
 const machine = Machine({
   id: 'category-rename-modal-widget',
   initial: 'idle',
+  context: {
+    category: null,
+    inputText: '',
+    errorMessage: '',
+  },
   states: {
     idle: {
       initial: 'idle',
@@ -38,7 +43,7 @@ const machine = Machine({
         },
         onError: {
           target: 'idle.failure',
-          actions: ['updateErrorMessage', 'resetNewCategoryNameToCategoryName'],
+          actions: 'updateErrorMessage',
         },
       },
     },

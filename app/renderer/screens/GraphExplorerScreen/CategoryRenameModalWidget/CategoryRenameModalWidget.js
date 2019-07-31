@@ -2,101 +2,60 @@ import React from 'react';
 import { useMachine } from '@xstate/react';
 
 import machine from './machine';
-import store from '../../../redux/store';
-import { RECEIVE_ENTITIES } from '../actionTypes';
 import RenameModal from './components/RenameModal';
 import queryRenameCategory from '../query-functions/queryRenameCategory';
+import { assign } from 'xstate';
+import ReactContext from './ReactContext';
 
-const getChosenCategoryRenamingCategoryModal = (store) =>
-  store && store.graphExplorerScreen
-    ? store.graphExplorerScreen.chosenCategoryRenamingCategoryModal
-    : null;
-
-const getInputText = (store) =>
-  store && store.graphExplorerScreen ? store.graphExplorerScreen.categoryRenameModalInputText : '';
-
-const attemptToRenameCategory = () => {
-  const category = getChosenCategoryRenamingCategoryModal(store.getState());
-  const inputText = getInputText(store.getState());
+const attemptToRenameCategory = (category, inputText) => {
   return queryRenameCategory(category.id, inputText);
 };
 
-const updateNewCategoryName = (inputText) => {
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      categoryRenameModalInputText: inputText,
-    },
-  });
-};
-
-const getCategory = (store) => (store && store.categoryScreen ? store.categoryScreen.category : {});
-
-const resetNewCategoryNameToCategoryName = () => {
-  const category = getCategory(store.getState());
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      categoryRenameModalInputText: category.name,
-    },
-  });
-};
-
-const isNewCategoryNameValidCategoryName = () => {
-  const inputText = getInputText(store.getState());
+const isNewCategoryNameValidCategoryName = (inputText) => {
   return inputText.trim() !== '';
-};
-
-const updateErrorMessage = (error) => {
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      errorMessageCategoryNameWidget: error.message,
-    },
-  });
-};
-
-const updateErrorMessageInvalidCategoryName = () => {
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      errorMessageCategoryNameWidget: 'Invalid category name',
-    },
-  });
 };
 
 const machineWithConfig = machine.withConfig({
   services: {
-    attemptToRenameCategory: (_, event) =>
-      attemptToRenameCategory(event.category, event.newCategoryName),
+    attemptToRenameCategory: (context, _) =>
+      attemptToRenameCategory(context.category, context.inputText),
   },
   actions: {
-    resetNewCategoryNameToCategoryName: (_, __) => resetNewCategoryNameToCategoryName(),
-    updateInputText: (_, event) => updateNewCategoryName(event.inputText),
-    updateErrorMessage: (_, event) => updateErrorMessage(event.data),
-    updateErrorMessageInvalidCategoryName: (_, __) => updateErrorMessageInvalidCategoryName(),
+    updateInputText: assign({ inputText: (_, event) => event.inputText }),
+    updateErrorMessage: assign({ errorMessage: (_, event) => event.data.message }),
+    updateErrorMessageInvalidCategoryName: assign({
+      errorMessage: (_, __) => 'Invalid category name',
+    }),
   },
   guards: {
-    isNewCategoryNameValidCategoryName: (_, event) =>
-      isNewCategoryNameValidCategoryName(event.newCategoryName),
+    isNewCategoryNameValidCategoryName: (context, _) =>
+      isNewCategoryNameValidCategoryName(context.inputText),
   },
 });
 
-const CategoryRenameModalWidget = ({ isOpen, onClose, refetchCategoryData }) => {
-  const [current, send] = useMachine(machineWithConfig, {
-    actions: {
-      refetchCategoryData: (_, __) => refetchCategoryData(),
+const CategoryRenameModalWidget = ({ isOpen, onClose, refetchCategoryData, category }) => {
+  const [current, send, service] = useMachine(
+    machineWithConfig.withContext({
+      category: category,
+      inputText: category.name,
+    }),
+    {
+      actions: {
+        refetchCategoryData: (_, __) => refetchCategoryData(),
+      },
+      devTools: true,
     },
-    devTools: true,
-  });
+  );
   return (
-    <RenameModal
-      shouldShowErrorMessage={current.matches('idle.failure')}
-      isOpen={isOpen}
-      onClose={onClose}
-      onClickRenameButton={() => send('CLICK_RENAME_CATEGORY')}
-      onChangeInputText={(inputText) => send('CHANGE_INPUT_TEXT', { inputText })}
-    />
+    <ReactContext.Provider value={service}>
+      <RenameModal
+        shouldShowErrorMessage={current.matches('idle.failure')}
+        isOpen={isOpen}
+        onClose={onClose}
+        onClickRenameButton={() => send('CLICK_RENAME_CATEGORY')}
+        onChangeInputText={(inputText) => send('CHANGE_INPUT_TEXT', { inputText })}
+      />
+    </ReactContext.Provider>
   );
 };
 
