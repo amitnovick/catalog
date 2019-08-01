@@ -16,7 +16,6 @@ const ExplorerWidget = ({
   return (
     <>
       <PathCategoriesMenu categoriesInPath={categoriesInPath} />
-      <Divider horizontal />
       <List celled>
         <List.Item>
           <CategoriesAccordion

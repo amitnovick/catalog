@@ -120,7 +120,6 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
           </Grid.Column>
           <Grid.Column width="3" />
         </Grid>
-        <Divider horizontal />
         {current.matches('categoryRenamingModal') ? (
           <CategoryRenameModalWidget
             category={categoryRenamingModalCategory}

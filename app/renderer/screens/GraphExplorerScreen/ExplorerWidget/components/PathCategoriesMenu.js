@@ -1,22 +1,22 @@
 import React from 'react';
-import { Menu } from 'semantic-ui-react';
+import { Breadcrumb } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import routes from '../../../../routes';
 
 const PathCategoriesMenu = ({ categoriesInPath }) => {
-  return (
-    <Menu secondary>
-      {categoriesInPath.map((categoryInPath, categoryIndex) => (
-        <Menu.Item
-          key={categoryInPath.id}
-          as={Link}
-          to={`${routes.TREE_EXPLORER}/${categoryInPath.id}`}
-          active={categoryIndex === categoriesInPath.length - 1}>
-          {categoryInPath.name}
-        </Menu.Item>
-      ))}
-    </Menu>
-  );
+  const sections = categoriesInPath.map((categoryInPath, index) => ({
+    key: categoryInPath.id,
+    content: (
+      <Breadcrumb.Section
+        active={index === categoriesInPath.length - 1 ? true : undefined}
+        key={categoryInPath.id}
+        as={index !== categoriesInPath.length - 1 ? Link : undefined}
+        to={`${routes.TREE_EXPLORER}/${categoryInPath.id}`}>
+        {categoryInPath.name}
+      </Breadcrumb.Section>
+    ),
+  }));
+  return <Breadcrumb size="big" icon="right angle" sections={sections} />;
 };
 
 export default PathCategoriesMenu;
