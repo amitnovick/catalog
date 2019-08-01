@@ -4,7 +4,7 @@ import { Message, List } from 'semantic-ui-react';
 import AccordionWrapper from './AccordionWrapper';
 import CategoryListItem from './CategoryListItem';
 
-const CategoriesAccordion = ({ categories, onClickRenameButton }) => {
+const CategoriesAccordion = ({ categories, onClickRenameButton, onClickDeleteButton }) => {
   return (
     <AccordionWrapper
       title="Categories"
@@ -16,6 +16,7 @@ const CategoriesAccordion = ({ categories, onClickRenameButton }) => {
               category={childCategory}
               key={childCategory.id}
               onClickRenameButton={onClickRenameButton}
+              onClickDeleteButton={onClickDeleteButton}
             />
           ))}
           {categories.length === 0 ? (

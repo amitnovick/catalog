@@ -1,3 +1,5 @@
+// This module can be safely removed, all functionality was removed
+
 export const selectCategoryNameAndParentId = `
 SELECT categories.name, categories.parent_id
 FROM categories

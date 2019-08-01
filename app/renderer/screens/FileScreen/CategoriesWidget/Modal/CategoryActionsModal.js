@@ -5,16 +5,17 @@ import { Link } from 'react-router-dom';
 import routes from '../../../../routes';
 
 const CategoryActionsModal = ({ isOpen, onClose, category, onClickRemoveCategory }) => {
+  console.log('CategoryActionsModal: category:', category);
   return (
     <Modal open={isOpen} closeIcon dimmer onClose={onClose}>
       <Header content="Category Actions:" />
       <Modal.Content>
-        <Header>{`Category name: ${category.name}`}</Header>
+        <Header>{category === null ? '' : `Category name: ${category.name}`}</Header>
         <Button style={{ margin: 5 }} onClick={() => onClickRemoveCategory(category)}>
           <Icon name="remove" /> Remove category from file
         </Button>
         <br />
-        <Button as={Link} to={`${routes.CATEGORY}/${category.id}`}>
+        <Button as={Link} to={category === null ? '' : `${routes.CATEGORY}/${category.id}`}>
           <Icon name="sign-in alternate" /> Go to category page
         </Button>
       </Modal.Content>
@@ -30,7 +31,7 @@ const CategoryActionsModal = ({ isOpen, onClose, category, onClickRemoveCategory
 CategoryActionsModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  category: PropTypes.object.isRequired,
+  category: PropTypes.object,
   onClickRemoveCategory: PropTypes.func.isRequired,
 };
 

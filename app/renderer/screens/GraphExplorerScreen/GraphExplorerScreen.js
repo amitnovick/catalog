@@ -13,6 +13,7 @@ import queryCategoriesInPath from '../../query-functions/queryCategoriesInPath';
 import CategoryRenameModalWidget from './CategoryRenameModalWidget/CategoryRenameModalWidget';
 import { assign } from 'xstate';
 import ExplorerWidget from './ExplorerWidget/ExplorerWidget';
+import CategoryDeleteModalWidget from './CategoryDeleteModalWidget/CategoryDeleteModalWidget';
 
 const queryFiles = (categoryId) => {
   return new Promise((resolve, reject) => {
@@ -65,6 +66,9 @@ const machineWithServices = machine.withConfig({
     updateCategoryRenamingModalCategory: assign({
       categoryRenamingModalCategory: (_, event) => event.categoryRenamingModalCategory,
     }),
+    updateCategoryDeletionModalCategory: assign({
+      categoryDeletionModalCategory: (_, event) => event.category,
+    }),
   },
 });
 
@@ -73,10 +77,12 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
     machineWithServices.withContext({
       initialCategoryId: initialCategoryId,
     }),
+    { devTools: true },
   );
 
   const {
     categoryRenamingModalCategory,
+    categoryDeletionModalCategory,
     childCategories,
     files,
     categoriesInPath,
@@ -85,7 +91,8 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
   if (
     current.matches('idle.fetchingData') ||
     current.matches('idle.idle') ||
-    current.matches('categoryRenamingModal')
+    current.matches('categoryRenamingModal') ||
+    current.matches('categoryDeletionModal')
   ) {
     return (
       <>
@@ -104,6 +111,9 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
                       categoryRenamingModalCategory: category,
                     })
                   }
+                  onClickDeleteButton={(category) =>
+                    send('CLICK_CATEGORY_DELETE_BUTTON', { category })
+                  }
                 />
               ) : null}
             </Segment>
@@ -117,6 +127,14 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
             isOpen={true}
             onClose={() => send('CATEGORY_RENAMING_MODAL_CANCEL')}
             refetchCategoryData={() => send('CATEGORY_RENAMING_MODAL_SUBMIT')}
+          />
+        ) : null}
+        {current.matches('categoryDeletionModal') ? (
+          <CategoryDeleteModalWidget
+            category={categoryDeletionModalCategory}
+            isOpen={true}
+            onClose={() => send('CATEGORY_DELETION_MODAL_CANCEL')}
+            onConfirmDelete={() => send('CATEGORY_DELETION_MODAL_SUBMIT')}
           />
         ) : null}
       </>

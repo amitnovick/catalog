@@ -6,14 +6,24 @@ import PathCategoriesMenu from './components/PathCategoriesMenu';
 import CategoriesAccordion from './components/CategoriesAccordion';
 import FilesAccordion from './components/FilesAccordion';
 
-const ExplorerWidget = ({ categories, files, onClickRenameButton, categoriesInPath }) => {
+const ExplorerWidget = ({
+  categories,
+  files,
+  onClickRenameButton,
+  onClickDeleteButton,
+  categoriesInPath,
+}) => {
   return (
     <>
       <PathCategoriesMenu categoriesInPath={categoriesInPath} />
       <Divider horizontal />
       <List celled>
         <List.Item>
-          <CategoriesAccordion categories={categories} onClickRenameButton={onClickRenameButton} />
+          <CategoriesAccordion
+            onClickDeleteButton={onClickDeleteButton}
+            categories={categories}
+            onClickRenameButton={onClickRenameButton}
+          />
         </List.Item>
         <List.Item>
           <FilesAccordion files={files} />
@@ -28,6 +38,7 @@ ExplorerWidget.propTypes = {
   files: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   categoriesInPath: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   onClickRenameButton: PropTypes.func.isRequired,
+  onClickDeleteButton: PropTypes.func.isRequired,
 };
 
 export default ExplorerWidget;

@@ -43,7 +43,6 @@ const CategoryRenameModalWidget = ({ isOpen, onClose, refetchCategoryData, categ
       actions: {
         refetchCategoryData: (_, __) => refetchCategoryData(),
       },
-      devTools: true,
     },
   );
   return (

@@ -9,6 +9,7 @@ const machine = Machine({
     files: [],
     childCategories: [],
     categoryRenamingModalCategory: null,
+    categoryDeletionModalCategory: null,
   },
   initial: 'idle',
   states: {
@@ -32,6 +33,10 @@ const machine = Machine({
               target: '#explorer-screen.categoryRenamingModal',
               actions: 'updateCategoryRenamingModalCategory',
             },
+            CLICK_CATEGORY_DELETE_BUTTON: {
+              target: '#explorer-screen.categoryDeletionModal',
+              actions: 'updateCategoryDeletionModalCategory',
+            },
           },
         },
         failure: {},
@@ -41,6 +46,12 @@ const machine = Machine({
       on: {
         CATEGORY_RENAMING_MODAL_CANCEL: 'idle.idle',
         CATEGORY_RENAMING_MODAL_SUBMIT: 'idle.fetchingData',
+      },
+    },
+    categoryDeletionModal: {
+      on: {
+        CATEGORY_DELETION_MODAL_CANCEL: 'idle.idle',
+        CATEGORY_DELETION_MODAL_SUBMIT: 'idle.fetchingData',
       },
     },
   },

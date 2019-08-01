@@ -191,7 +191,7 @@ const FileScreen = ({ fileId }) => {
       fileId: fileId,
     }),
   );
-  if (current.matches('idle') || current.matches('loading')) {
+  if (current.matches('idle')) {
     return (
       <Grid>
         <Grid.Column width="3" />
@@ -218,6 +218,8 @@ const FileScreen = ({ fileId }) => {
     );
   } else if (current.matches('deletedFile')) {
     return <h2 style={{ color: 'green' }}>File has been deleted successfully</h2>;
+  } else if (current.matches('loading')) {
+    return <h2>Loading...</h2>;
   } else {
     return <h3>Unknown state</h3>;
   }

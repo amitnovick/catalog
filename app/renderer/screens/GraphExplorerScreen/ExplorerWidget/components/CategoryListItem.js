@@ -13,14 +13,19 @@ const StyledDiv = styled.div`
   }
 `;
 
-const RenameButton = styled(Button)`
+const HoveredButton = styled(Button)`
   visibility: hidden;
   ${StyledListItem}:hover & {
     visibility: visible;
   }
 `;
 
-const CategoryListItem = ({ category, onDoubleClickRow, onClickRenameButton }) => {
+const CategoryListItem = ({
+  category,
+  onDoubleClickRow,
+  onClickRenameButton,
+  onClickDeleteButton,
+}) => {
   return (
     <StyledListItem>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -30,21 +35,33 @@ const CategoryListItem = ({ category, onDoubleClickRow, onClickRenameButton }) =
           <Icon name="folder" color="blue" size="big" />
           <span style={{ display: 'inline-block' }}>{category.name}</span>
         </StyledDiv>
-        <RenameButton
+        <HoveredButton
           color="grey"
           icon={<Icon name="edit" style={{ color: 'white' }} />}
           onClick={() => onClickRenameButton(category)}
+        />
+
+        <HoveredButton
+          color="red"
+          icon={<Icon name="trash" style={{ color: 'white' }} />}
+          onClick={() => onClickDeleteButton(category)}
         />
       </div>
     </StyledListItem>
   );
 };
 
-const CategoryListItemWrapper = ({ category, onClickRenameButton, history }) => {
+const CategoryListItemWrapper = ({
+  category,
+  onClickRenameButton,
+  onClickDeleteButton,
+  history,
+}) => {
   return (
     <CategoryListItem
       category={category}
       onClickRenameButton={onClickRenameButton}
+      onClickDeleteButton={onClickDeleteButton}
       onDoubleClickRow={() => history.push(`${routes.TREE_EXPLORER}/${category.id}`)}
     />
   );
