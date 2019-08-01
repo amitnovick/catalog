@@ -6,7 +6,6 @@ import ControlPanelScreen from './screens/ControlPanelScreen/ControlPanelScreen'
 import GraphExplorerScreen from './screens/GraphExplorerScreen/GraphExplorerScreen';
 import FileScreen from './screens/FileScreen/FileScreen';
 import routes from './routes';
-import CategoryScreen from './screens/CategoryScreen/CategoryScreen';
 import HomeScreen from './screens/HomeScreen';
 import NavigationBox from './NavigationBox';
 import LoadConfigFileScreenContainer from './screens/StartupScreens/LoadConfigFileScreen/LoadConfigFileScreen';
@@ -84,17 +83,6 @@ const RouteController = () => {
           render={({ match }) => (
             <Layout
               BodyComponent={<FileScreen fileId={Number(match.params.id)} />}
-              HeaderComponent={<NavigationBox />}
-            />
-          )}
-        />
-        <Route
-          exact
-          path={`${routes.CATEGORY}/:id`}
-          render={({ match }) => (
-            <Layout
-              key={match.params.id}
-              BodyComponent={<CategoryScreen categoryId={Number(match.params.id)} />}
               HeaderComponent={<NavigationBox />}
             />
           )}

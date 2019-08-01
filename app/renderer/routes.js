@@ -5,7 +5,6 @@ const routes = {
   SEARCH: '/search',
   TREE_EXPLORER: '/tree-explorer',
   FILE: '/file',
-  CATEGORY: '/category',
 };
 
 export default routes;

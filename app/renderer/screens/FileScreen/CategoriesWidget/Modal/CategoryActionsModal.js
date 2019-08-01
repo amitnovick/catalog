@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import routes from '../../../../routes';
 
 const CategoryActionsModal = ({ isOpen, onClose, category, onClickRemoveCategory }) => {
-  console.log('CategoryActionsModal: category:', category);
   return (
     <Modal open={isOpen} closeIcon dimmer onClose={onClose}>
       <Header content="Category Actions:" />
@@ -15,7 +14,7 @@ const CategoryActionsModal = ({ isOpen, onClose, category, onClickRemoveCategory
           <Icon name="remove" /> Remove category from file
         </Button>
         <br />
-        <Button as={Link} to={category === null ? '' : `${routes.CATEGORY}/${category.id}`}>
+        <Button as={Link} to={category === null ? '' : `${routes.TREE_EXPLORER}/${category.id}`}>
           <Icon name="sign-in alternate" /> Go to category page
         </Button>
       </Modal.Content>
