@@ -27,7 +27,7 @@ const CategoryListItem = ({
   onClickDeleteButton,
 }) => {
   return (
-    <StyledListItem>
+    <StyledListItem style={{ marginTop: 4, marginBottom: 4 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <StyledDiv
           onDoubleClick={() => onDoubleClickRow('double!')}

@@ -3,15 +3,7 @@ import { List, Icon, Message } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
 import AccordionWrapper from './AccordionWrapper';
-import routes from '../../../../routes';
-
-const threeDotsCss = {
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  display: 'inline-block',
-  width: '100%',
-};
+import FileListItemWrapperHistoryWrapper from './FileListItem';
 
 const FilesAccordion = ({ files }) => {
   return (
@@ -19,16 +11,9 @@ const FilesAccordion = ({ files }) => {
       title="Files"
       shouldDefaultToActive={files.length === 0}
       Content={() => (
-        <List divided selection verticalAlign="middle">
+        <List size="big">
           {files.length > 0 ? (
-            files.map((file) => (
-              <List.Item key={file.id} as={Link} to={`${routes.FILE}/${file.id}`}>
-                <Icon name="file" color="yellow" size="large" />
-                <List.Content>
-                  <List.Header style={threeDotsCss}>{file.name}</List.Header>
-                </List.Content>
-              </List.Item>
-            ))
+            files.map((file) => <FileListItemWrapperHistoryWrapper key={file.id} file={file} />)
           ) : (
             <List.Item>
               <Message info>

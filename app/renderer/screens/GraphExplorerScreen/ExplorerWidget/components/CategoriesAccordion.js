@@ -10,7 +10,7 @@ const CategoriesAccordion = ({ categories, onClickRenameButton, onClickDeleteBut
       title="Categories"
       shouldDefaultToActive={true}
       Content={() => (
-        <List>
+        <List size="big">
           {categories.map((childCategory) => (
             <CategoryListItem
               category={childCategory}
