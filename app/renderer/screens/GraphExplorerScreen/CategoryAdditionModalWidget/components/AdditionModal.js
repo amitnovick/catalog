@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Modal from '../../Modal';
-import RenameModalHeaderContainer from '../containers/RenameModalHeaderContainer.';
-import RenameModalActions from './RenameModalActions';
-import RenameModalContentContainer from '../containers/RenameModalContentContainer';
+import RenameModalHeader from '../components/AdditionModalHeader';
+import AdditionModalActions from './AdditionModalActions';
+import RenameModalContentContainer from '../containers/AdditionModalContentContainer';
 
-const RenameModal = ({
-  onClickRenameButton,
+const AdditionModal = ({
+  onClickSubmitButton,
   onClose,
   onChangeInputText,
   shouldShowErrorMessage,
@@ -14,7 +14,7 @@ const RenameModal = ({
   return (
     <Modal
       onClose={onClose}
-      ModalHeader={<RenameModalHeaderContainer />}
+      ModalHeader={<RenameModalHeader />}
       ModalContent={
         <RenameModalContentContainer
           onChangeInputText={onChangeInputText}
@@ -22,20 +22,20 @@ const RenameModal = ({
         />
       }
       ModalActions={
-        <RenameModalActions
+        <AdditionModalActions
           onClickCancelButton={onClose}
-          onClickRenameButton={onClickRenameButton}
+          onClickSubmitButton={onClickSubmitButton}
         />
       }
     />
   );
 };
 
-RenameModal.propTypes = {
+AdditionModal.propTypes = {
   onClose: PropTypes.func.isRequired,
-  onClickRenameButton: PropTypes.func.isRequired,
+  onClickSubmitButton: PropTypes.func.isRequired,
   onChangeInputText: PropTypes.func.isRequired,
   shouldShowErrorMessage: PropTypes.bool.isRequired,
 };
 
-export default RenameModal;
+export default AdditionModal;

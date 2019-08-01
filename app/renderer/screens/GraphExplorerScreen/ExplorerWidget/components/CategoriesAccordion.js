@@ -1,10 +1,16 @@
 import React from 'react';
-import { Message, List } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
+import { Message, List, Button } from 'semantic-ui-react';
 
 import AccordionWrapper from './AccordionWrapper';
 import CategoryListItem from './CategoryListItem';
 
-const CategoriesAccordion = ({ categories, onClickRenameButton, onClickDeleteButton }) => {
+const CategoriesAccordion = ({
+  categories,
+  onClickRenameButton,
+  onClickDeleteButton,
+  onClickAddCategoryButton,
+}) => {
   return (
     <AccordionWrapper
       title="Categories"
@@ -26,8 +32,16 @@ const CategoriesAccordion = ({ categories, onClickRenameButton, onClickDeleteBut
           ) : null}
         </List>
       )}
+      Controls={() => <Button icon="add" size="large" onClick={() => onClickAddCategoryButton()} />}
     />
   );
+};
+
+CategoriesAccordion.propTypes = {
+  categories: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  onClickRenameButton: PropTypes.func.isRequired,
+  onClickDeleteButton: PropTypes.func.isRequired,
+  onClickAddCategoryButton: PropTypes.func.isRequired,
 };
 
 export default CategoriesAccordion;

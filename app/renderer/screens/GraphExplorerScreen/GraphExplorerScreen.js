@@ -14,6 +14,7 @@ import CategoryRenameModalWidget from './CategoryRenameModalWidget/CategoryRenam
 import { assign } from 'xstate';
 import ExplorerWidget from './ExplorerWidget/ExplorerWidget';
 import CategoryDeleteModalWidget from './CategoryDeleteModalWidget/CategoryDeleteModalWidget';
+import CategoryAdditionModalWidget from './CategoryAdditionModalWidget/CategoryAdditionModalWidget';
 
 const queryFiles = (categoryId) => {
   return new Promise((resolve, reject) => {
@@ -79,7 +80,6 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
     }),
     { devTools: true },
   );
-
   const {
     categoryRenamingModalCategory,
     categoryDeletionModalCategory,
@@ -88,11 +88,15 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
     categoriesInPath,
   } = current.context;
 
+  const currentCategory =
+    categoriesInPath !== undefined ? categoriesInPath[categoriesInPath.length - 1] : null;
+
   if (
     current.matches('idle.fetchingData') ||
     current.matches('idle.idle') ||
     current.matches('categoryRenamingModal') ||
-    current.matches('categoryDeletionModal')
+    current.matches('categoryDeletionModal') ||
+    current.matches('categoryAdditionModal')
   ) {
     return (
       <>
@@ -114,6 +118,7 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
                   onClickDeleteButton={(category) =>
                     send('CLICK_CATEGORY_DELETE_BUTTON', { category })
                   }
+                  onClickAddCategoryButton={() => send('CLICK_ADD_CATEGORY_BUTTON')}
                 />
               ) : null}
             </Segment>
@@ -123,7 +128,6 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
         {current.matches('categoryRenamingModal') ? (
           <CategoryRenameModalWidget
             category={categoryRenamingModalCategory}
-            isOpen={true}
             onClose={() => send('CATEGORY_RENAMING_MODAL_CANCEL')}
             refetchCategoryData={() => send('CATEGORY_RENAMING_MODAL_SUBMIT')}
           />
@@ -131,9 +135,15 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
         {current.matches('categoryDeletionModal') ? (
           <CategoryDeleteModalWidget
             category={categoryDeletionModalCategory}
-            isOpen={true}
             onClose={() => send('CATEGORY_DELETION_MODAL_CANCEL')}
             onConfirmDelete={() => send('CATEGORY_DELETION_MODAL_SUBMIT')}
+          />
+        ) : null}
+        {current.matches('categoryAdditionModal') ? (
+          <CategoryAdditionModalWidget
+            parentCategoryId={currentCategory.id}
+            onClose={() => send('CATEGORY_ADDITION_MODAL_CANCEL')}
+            refetchCategoryData={() => send('CATEGORY_ADDITION_MODAL_SUBMIT')}
           />
         ) : null}
       </>

@@ -11,7 +11,7 @@ import ConfirmationContainer from './containers/ConfirmationContainer';
 import { assign } from 'xstate';
 import queryCategorizedFiles from '../../../query-functions/queryCategorizedFilesV2';
 import queryDeleteCategory from '../../../query-functions/queryDeleteCategory';
-import Modal from './components/Modal';
+import Modal from '../Modal';
 import ReactContext from './ReactContext';
 import LoadingModal from './components/LoadingModal';
 

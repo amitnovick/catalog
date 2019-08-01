@@ -1,15 +1,15 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Modal from '../../Modal';
-import RenameModalHeaderContainer from '../containers/RenameModalHeaderContainer.';
-import RenameModalActions from './RenameModalActions';
-import RenameModalContentContainer from '../containers/RenameModalContentContainer';
+import React from "react";
+import PropTypes from "prop-types";
+import Modal from "./Modal";
+import RenameModalHeaderContainer from "../containers/AdditionModalHeaderContainer.";
+import RenameModalActions from "./AdditionModalActions";
+import RenameModalContentContainer from "../containers/AdditionModalContentContainer";
 
-const RenameModal = ({
+const AdditionModal = ({
   onClickRenameButton,
   onClose,
   onChangeInputText,
-  shouldShowErrorMessage,
+  shouldShowErrorMessage
 }) => {
   return (
     <Modal
@@ -31,11 +31,11 @@ const RenameModal = ({
   );
 };
 
-RenameModal.propTypes = {
+AdditionModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   onClickRenameButton: PropTypes.func.isRequired,
   onChangeInputText: PropTypes.func.isRequired,
-  shouldShowErrorMessage: PropTypes.bool.isRequired,
+  shouldShowErrorMessage: PropTypes.bool.isRequired
 };
 
-export default RenameModal;
+export default AdditionModal;

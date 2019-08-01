@@ -37,6 +37,9 @@ const machine = Machine({
               target: '#explorer-screen.categoryDeletionModal',
               actions: 'updateCategoryDeletionModalCategory',
             },
+            CLICK_ADD_CATEGORY_BUTTON: {
+              target: '#explorer-screen.categoryAdditionModal',
+            },
           },
         },
         failure: {},
@@ -52,6 +55,12 @@ const machine = Machine({
       on: {
         CATEGORY_DELETION_MODAL_CANCEL: 'idle.idle',
         CATEGORY_DELETION_MODAL_SUBMIT: 'idle.fetchingData',
+      },
+    },
+    categoryAdditionModal: {
+      on: {
+        CATEGORY_ADDITION_MODAL_CANCEL: 'idle.idle',
+        CATEGORY_ADDITION_MODAL_SUBMIT: 'idle.fetchingData',
       },
     },
   },

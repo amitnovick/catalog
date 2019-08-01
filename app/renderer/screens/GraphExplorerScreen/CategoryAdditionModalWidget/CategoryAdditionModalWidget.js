@@ -2,13 +2,13 @@ import React from 'react';
 import { useMachine } from '@xstate/react';
 
 import machine from './machine';
-import RenameModal from './components/RenameModal';
-import queryRenameCategory from '../query-functions/queryRenameCategory';
+import AdditionModal from './components/AdditionModal';
 import { assign } from 'xstate';
 import ReactContext from './ReactContext';
+import queryAddNewSubcategory from '../../../query-functions/queryAddNewSubcategory';
 
-const attemptToRenameCategory = (category, inputText) => {
-  return queryRenameCategory(category.id, inputText);
+const attemptToCreateCategory = (parentCategoryId, newCategoryName) => {
+  return queryAddNewSubcategory(parentCategoryId, newCategoryName);
 };
 
 const isNewCategoryNameValidCategoryName = (inputText) => {
@@ -17,8 +17,8 @@ const isNewCategoryNameValidCategoryName = (inputText) => {
 
 const machineWithConfig = machine.withConfig({
   services: {
-    attemptToRenameCategory: (context, _) =>
-      attemptToRenameCategory(context.category, context.inputText),
+    attemptToCreateCategory: (context, _) =>
+      attemptToCreateCategory(context.parentCategoryId, context.inputText),
   },
   actions: {
     updateInputText: assign({ inputText: (_, event) => event.inputText }),
@@ -33,11 +33,11 @@ const machineWithConfig = machine.withConfig({
   },
 });
 
-const CategoryRenameModalWidget = ({ onClose, refetchCategoryData, category }) => {
+const CategoryAdditionModalWidget = ({ onClose, refetchCategoryData, parentCategoryId }) => {
   const [current, send, service] = useMachine(
     machineWithConfig.withContext({
-      category: category,
-      inputText: category.name,
+      parentCategoryId: parentCategoryId,
+      inputText: '',
     }),
     {
       actions: {
@@ -47,14 +47,14 @@ const CategoryRenameModalWidget = ({ onClose, refetchCategoryData, category }) =
   );
   return (
     <ReactContext.Provider value={service}>
-      <RenameModal
+      <AdditionModal
         shouldShowErrorMessage={current.matches('idle.failure')}
         onClose={onClose}
-        onClickRenameButton={() => send('CLICK_RENAME_CATEGORY')}
+        onClickSubmitButton={() => send('CLICK_SUBMIT_BUTTON')}
         onChangeInputText={(inputText) => send('CHANGE_INPUT_TEXT', { inputText })}
       />
     </ReactContext.Provider>
   );
 };
 
-export default CategoryRenameModalWidget;
+export default CategoryAdditionModalWidget;

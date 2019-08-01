@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider, List } from 'semantic-ui-react';
+import { List } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import PathCategoriesMenu from './components/PathCategoriesMenu';
@@ -9,9 +9,10 @@ import FilesAccordion from './components/FilesAccordion';
 const ExplorerWidget = ({
   categories,
   files,
+  categoriesInPath,
   onClickRenameButton,
   onClickDeleteButton,
-  categoriesInPath,
+  onClickAddCategoryButton,
 }) => {
   return (
     <>
@@ -19,6 +20,7 @@ const ExplorerWidget = ({
       <List celled>
         <List.Item>
           <CategoriesAccordion
+            onClickAddCategoryButton={onClickAddCategoryButton}
             onClickDeleteButton={onClickDeleteButton}
             categories={categories}
             onClickRenameButton={onClickRenameButton}
@@ -38,6 +40,7 @@ ExplorerWidget.propTypes = {
   categoriesInPath: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   onClickRenameButton: PropTypes.func.isRequired,
   onClickDeleteButton: PropTypes.func.isRequired,
+  onClickAddCategoryButton: PropTypes.func.isRequired,
 };
 
 export default ExplorerWidget;
