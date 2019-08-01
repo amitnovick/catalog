@@ -13,6 +13,7 @@ import queryCategorizedFiles from '../../../query-functions/queryCategorizedFile
 import queryDeleteCategory from '../../../query-functions/queryDeleteCategory';
 import Modal from './components/Modal';
 import ReactContext from './ReactContext';
+import LoadingModal from './components/LoadingModal';
 
 const fetchSubcategories = (category) => {
   return queryChildCategories(category.id);
@@ -50,7 +51,7 @@ const machineWithConfig = machine.withConfig({
   },
 });
 
-const CategoryDeleteModalWidget = ({ isOpen, onClose, onConfirmDelete, category }) => {
+const CategoryDeleteModalWidget = ({ onClose, onConfirmDelete, category }) => {
   const [current, send, service] = useMachine(
     machineWithConfig
       .withConfig({
@@ -68,7 +69,6 @@ const CategoryDeleteModalWidget = ({ isOpen, onClose, onConfirmDelete, category 
     if (current.matches('idle.subcategories')) {
       return (
         <Modal
-          isOpen={isOpen}
           onClose={onClose}
           ModalHeader={
             <SemanticModal.Header>
@@ -95,48 +95,66 @@ const CategoryDeleteModalWidget = ({ isOpen, onClose, onConfirmDelete, category 
       );
     } else if (current.matches('idle.categorized_files')) {
       return (
-        <SemanticModal open={isOpen} closeIcon dimmer onClose={onClose}>
-          <Header icon="archive" content="Delete Associated Subcategories / Files" />
-          <SemanticModal.Content>
-            <ReactContext.Provider value={service}>
-              <CategorizedFilesContainer />
-            </ReactContext.Provider>
-          </SemanticModal.Content>
-          <SemanticModal.Actions>
-            <Button size="big" color="blue" onClick={onClose}>
-              Close
-            </Button>
-          </SemanticModal.Actions>
-        </SemanticModal>
+        <Modal
+          onClose={onClose}
+          ModalHeader={
+            <SemanticModal.Header>
+              <Header as="h3" textAlign="center">
+                {category === null ? '' : `Delete "${category.name}"`}
+              </Header>
+            </SemanticModal.Header>
+          }
+          ModalContent={
+            <SemanticModal.Content>
+              <ReactContext.Provider value={service}>
+                <CategorizedFilesContainer />
+              </ReactContext.Provider>
+            </SemanticModal.Content>
+          }
+          ModalActions={
+            <SemanticModal.Actions>
+              <Button size="big" color="blue" onClick={onClose}>
+                Close
+              </Button>
+            </SemanticModal.Actions>
+          }
+        />
       );
     } else if (current.matches('idle.confirmation')) {
       return (
-        <SemanticModal open={isOpen} closeIcon dimmer onClose={onClose}>
-          <Header icon="archive" content="Delete Associated Subcategories / Files" />
-          <SemanticModal.Content>
-            <ReactContext.Provider value={service}>
-              <ConfirmationContainer />
-            </ReactContext.Provider>
-          </SemanticModal.Content>
-          <SemanticModal.Actions>
-            <Button size="big" color="blue" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button size="big" color="red" onClick={() => send('CLICK_CONFIRM_DELETE')}>
-              Confirm
-            </Button>
-          </SemanticModal.Actions>
-        </SemanticModal>
+        <Modal
+          onClose={onClose}
+          ModalHeader={
+            <SemanticModal.Header>
+              <Header as="h3" textAlign="center">
+                {category === null ? '' : `Delete "${category.name}"`}
+              </Header>
+            </SemanticModal.Header>
+          }
+          ModalContent={
+            <SemanticModal.Content>
+              <ReactContext.Provider value={service}>
+                <ConfirmationContainer />
+              </ReactContext.Provider>
+            </SemanticModal.Content>
+          }
+          ModalActions={
+            <SemanticModal.Actions>
+              <Button size="big" color="blue" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button size="big" color="red" onClick={() => send('CLICK_CONFIRM_DELETE')}>
+                Confirm
+              </Button>
+            </SemanticModal.Actions>
+          }
+        />
       );
     } else {
       return <h2>Unknown state</h2>;
     }
   } else if (current.matches('loading')) {
-    return (
-      <SemanticModal open={true}>
-        <SemanticModal.Content>Loading...</SemanticModal.Content>
-      </SemanticModal>
-    );
+    return <LoadingModal category={category} onClose={onClose} />;
   } else if (current.matches('failure')) {
     return <h2 style={{ color: 'red' }}>Error: failed somehow</h2>;
   } else {
@@ -145,7 +163,6 @@ const CategoryDeleteModalWidget = ({ isOpen, onClose, onConfirmDelete, category 
 };
 
 CategoryDeleteModalWidget.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onConfirmDelete: PropTypes.func.isRequired,
 };
