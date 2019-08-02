@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Search } from 'semantic-ui-react';
 
-const AddCategory = ({
+const SearchCategory = ({
   inputSearchQuery,
   searchResultCategories,
   onChooseSearchResultCategory: onChangeValue,
@@ -31,11 +31,11 @@ const AddCategory = ({
   );
 };
 
-AddCategory.propTypes = {
+SearchCategory.propTypes = {
   searchResultCategories: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   inputSearchQuery: PropTypes.string.isRequired,
   onChangeInputSearchQuery: PropTypes.func.isRequired,
   onChooseSearchResultCategory: PropTypes.func.isRequired,
 };
 
-export default AddCategory;
+export default SearchCategory;

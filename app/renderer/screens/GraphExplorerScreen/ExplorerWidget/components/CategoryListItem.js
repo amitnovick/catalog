@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { Icon, Button } from 'semantic-ui-react';
 import styled from 'styled-components';
@@ -24,6 +25,7 @@ const CategoryListItem = ({
   category,
   onDoubleClickRow,
   onClickRenameButton,
+  onClickMoveToButton,
   onClickDeleteButton,
 }) => {
   return (
@@ -40,7 +42,11 @@ const CategoryListItem = ({
           icon={<Icon name="edit" style={{ color: 'white' }} />}
           onClick={() => onClickRenameButton(category)}
         />
-
+        <HoveredButton
+          color="teal"
+          icon={<Icon name="arrow circle right" style={{ color: 'white' }} />}
+          onClick={() => onClickMoveToButton(category)}
+        />
         <HoveredButton
           color="red"
           icon={<Icon name="trash" style={{ color: 'white' }} />}
@@ -54,6 +60,7 @@ const CategoryListItem = ({
 const CategoryListItemWrapper = ({
   category,
   onClickRenameButton,
+  onClickMoveToButton,
   onClickDeleteButton,
   history,
 }) => {
@@ -62,11 +69,19 @@ const CategoryListItemWrapper = ({
       category={category}
       onClickRenameButton={onClickRenameButton}
       onClickDeleteButton={onClickDeleteButton}
+      onClickMoveToButton={onClickMoveToButton}
       onDoubleClickRow={() => history.push(`${routes.TREE_EXPLORER}/${category.id}`)}
     />
   );
 };
 
 const CategoryListItemWrapperHistoryWrapper = withRouter(CategoryListItemWrapper);
+
+CategoryListItemWrapperHistoryWrapper.propTypes = {
+  category: PropTypes.any,
+  onClickRenameButton: PropTypes.func.isRequired,
+  onClickMoveToButton: PropTypes.func.isRequired,
+  onClickDeleteButton: PropTypes.func.isRequired,
+};
 
 export default CategoryListItemWrapperHistoryWrapper;

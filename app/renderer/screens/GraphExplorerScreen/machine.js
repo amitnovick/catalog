@@ -10,6 +10,7 @@ const machine = Machine({
     childCategories: [],
     categoryRenamingModalCategory: null,
     categoryDeletionModalCategory: null,
+    categoryMoveToModalCategory: null,
   },
   initial: 'idle',
   states: {
@@ -40,6 +41,10 @@ const machine = Machine({
             CLICK_ADD_CATEGORY_BUTTON: {
               target: '#explorer-screen.categoryAdditionModal',
             },
+            CLICK_CATEGORY_MOVE_TO__BUTTON: {
+              target: '#explorer-screen.categoryMoveToModal',
+              actions: 'updateCategoryMoveToModalCategory',
+            },
           },
         },
         failure: {},
@@ -61,6 +66,12 @@ const machine = Machine({
       on: {
         CATEGORY_ADDITION_MODAL_CANCEL: 'idle.idle',
         CATEGORY_ADDITION_MODAL_SUBMIT: 'idle.fetchingData',
+      },
+    },
+    categoryMoveToModal: {
+      on: {
+        CATEGORY_MOVE_TO_MODAL_CANCEL: 'idle.idle',
+        CATEGORY_MOVE_TO_MODAL_SUBMIT: 'idle.fetchingData',
       },
     },
   },

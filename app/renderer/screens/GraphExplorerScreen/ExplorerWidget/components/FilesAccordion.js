@@ -1,6 +1,5 @@
 import React from 'react';
-import { List, Icon, Message } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { List, Message } from 'semantic-ui-react';
 
 import AccordionWrapper from './AccordionWrapper';
 import FileListItemWrapperHistoryWrapper from './FileListItem';

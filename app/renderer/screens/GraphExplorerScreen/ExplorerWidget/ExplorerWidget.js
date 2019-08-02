@@ -11,6 +11,7 @@ const ExplorerWidget = ({
   files,
   categoriesInPath,
   onClickRenameButton,
+  onClickMoveToButton,
   onClickDeleteButton,
   onClickAddCategoryButton,
 }) => {
@@ -21,6 +22,7 @@ const ExplorerWidget = ({
         <List.Item>
           <CategoriesAccordion
             onClickAddCategoryButton={onClickAddCategoryButton}
+            onClickMoveToButton={onClickMoveToButton}
             onClickDeleteButton={onClickDeleteButton}
             categories={categories}
             onClickRenameButton={onClickRenameButton}
@@ -39,6 +41,7 @@ ExplorerWidget.propTypes = {
   files: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   categoriesInPath: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   onClickRenameButton: PropTypes.func.isRequired,
+  onClickMoveToButton: PropTypes.func.isRequired,
   onClickDeleteButton: PropTypes.func.isRequired,
   onClickAddCategoryButton: PropTypes.func.isRequired,
 };

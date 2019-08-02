@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import AddCategory from './AddCategory';
+import SearchCategory from '../../../components/SearchCategory';
 
 const getSearchResultCategories = (store) =>
   store && store.specificTagScreen ? store.specificTagScreen.searchResultCategories : [];
@@ -12,7 +12,7 @@ const getInputSearchQuery = (store) =>
 const AddCategoryContainer = connect((state) => ({
   searchResultCategories: getSearchResultCategories(state),
   inputSearchQuery: getInputSearchQuery(state),
-}))(AddCategory);
+}))(SearchCategory);
 
 AddCategoryContainer.propTypes = {
   onChooseSearchResultCategory: PropTypes.func.isRequired,

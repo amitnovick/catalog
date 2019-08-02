@@ -8,6 +8,7 @@ import CategoryListItem from './CategoryListItem';
 const CategoriesAccordion = ({
   categories,
   onClickRenameButton,
+  onClickMoveToButton,
   onClickDeleteButton,
   onClickAddCategoryButton,
 }) => {
@@ -22,6 +23,7 @@ const CategoriesAccordion = ({
               category={childCategory}
               key={childCategory.id}
               onClickRenameButton={onClickRenameButton}
+              onClickMoveToButton={onClickMoveToButton}
               onClickDeleteButton={onClickDeleteButton}
             />
           ))}
@@ -40,6 +42,7 @@ const CategoriesAccordion = ({
 CategoriesAccordion.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   onClickRenameButton: PropTypes.func.isRequired,
+  onClickMoveToButton: PropTypes.func.isRequired,
   onClickDeleteButton: PropTypes.func.isRequired,
   onClickAddCategoryButton: PropTypes.func.isRequired,
 };

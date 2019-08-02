@@ -15,6 +15,7 @@ import { assign } from 'xstate';
 import ExplorerWidget from './ExplorerWidget/ExplorerWidget';
 import CategoryDeleteModalWidget from './CategoryDeleteModalWidget/CategoryDeleteModalWidget';
 import CategoryAdditionModalWidget from './CategoryAdditionModalWidget/CategoryAdditionModalWidget';
+import CategoryMoveToModalWidget from './CategoryMoveToModalWidget/CategoryMoveToModalWidget';
 
 const queryFiles = (categoryId) => {
   return new Promise((resolve, reject) => {
@@ -70,6 +71,9 @@ const machineWithServices = machine.withConfig({
     updateCategoryDeletionModalCategory: assign({
       categoryDeletionModalCategory: (_, event) => event.category,
     }),
+    updateCategoryMoveToModalCategory: assign({
+      categoryMoveToModalCategory: (_, event) => event.category,
+    }),
   },
 });
 
@@ -83,6 +87,7 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
   const {
     categoryRenamingModalCategory,
     categoryDeletionModalCategory,
+    categoryMoveToModalCategory,
     childCategories,
     files,
     categoriesInPath,
@@ -96,7 +101,8 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
     current.matches('idle.idle') ||
     current.matches('categoryRenamingModal') ||
     current.matches('categoryDeletionModal') ||
-    current.matches('categoryAdditionModal')
+    current.matches('categoryAdditionModal') ||
+    current.matches('categoryMoveToModal')
   ) {
     return (
       <>
@@ -114,6 +120,9 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
                     send('CLICK_CATEGORY_RENAME_BUTTON', {
                       categoryRenamingModalCategory: category,
                     })
+                  }
+                  onClickMoveToButton={(category) =>
+                    send('CLICK_CATEGORY_MOVE_TO__BUTTON', { category })
                   }
                   onClickDeleteButton={(category) =>
                     send('CLICK_CATEGORY_DELETE_BUTTON', { category })
@@ -144,6 +153,13 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
             parentCategoryId={currentCategory.id}
             onClose={() => send('CATEGORY_ADDITION_MODAL_CANCEL')}
             refetchCategoryData={() => send('CATEGORY_ADDITION_MODAL_SUBMIT')}
+          />
+        ) : null}
+        {current.matches('categoryMoveToModal') ? (
+          <CategoryMoveToModalWidget
+            childCategory={categoryMoveToModalCategory}
+            onClose={() => send('CATEGORY_MOVE_TO_MODAL_CANCEL')}
+            onFinish={() => send('CATEGORY_MOVE_TO_MODAL_SUBMIT')}
           />
         ) : null}
       </>
