@@ -50,7 +50,7 @@ const machineWithConfig = machine.withConfig({
 });
 
 const CategoryMoveToModalWidget = ({ childCategory, onFinish, onClose }) => {
-  const [_, __, service] = useMachine(
+  const [, , service] = useMachine(
     machineWithConfig
       .withContext({
         childCategory: childCategory,
