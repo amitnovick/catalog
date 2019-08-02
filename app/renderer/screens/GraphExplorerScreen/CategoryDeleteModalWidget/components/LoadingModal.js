@@ -1,5 +1,5 @@
 import React from 'react';
-import Modal from '../../Modal';
+import Modal from '../../../../components/Modal';
 import { Modal as SemanticModal, Header } from 'semantic-ui-react';
 
 const LoadingModal = ({ onClose, category }) => {

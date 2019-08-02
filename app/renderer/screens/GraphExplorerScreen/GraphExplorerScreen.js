@@ -82,7 +82,6 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
     machineWithServices.withContext({
       initialCategoryId: initialCategoryId,
     }),
-    { devTools: true },
   );
   const {
     categoryRenamingModalCategory,

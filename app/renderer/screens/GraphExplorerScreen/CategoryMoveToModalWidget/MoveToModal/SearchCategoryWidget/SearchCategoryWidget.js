@@ -27,7 +27,6 @@ const SearchCategoryContainer = ({ onFinish }) => {
         onFinish: (_, event) => onFinish(event.category),
       },
     }),
-    { devTools: true },
   );
   const { inputSearchQuery, searchResultCategories } = current.context;
   return (

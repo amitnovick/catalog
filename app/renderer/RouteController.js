@@ -2,12 +2,11 @@ import React from 'react';
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 
 import SearchScreen from './screens/SearchScreen/SearchScreen';
-import ControlPanelScreen from './screens/ControlPanelScreen/ControlPanelScreen';
 import GraphExplorerScreen from './screens/GraphExplorerScreen/GraphExplorerScreen';
 import FileScreen from './screens/FileScreen/FileScreen';
 import routes from './routes';
 import HomeScreen from './screens/HomeScreen';
-import NavigationBox from './NavigationBox';
+import NavigationBoxWidget from './NavigationBoxWidget/NavigationBoxWidget';
 import LoadConfigFileScreenContainer from './screens/StartupScreens/LoadConfigFileScreen/LoadConfigFileScreen';
 
 const Layout = ({ BodyComponent, HeaderComponent }) => {
@@ -30,17 +29,7 @@ const RouteController = () => {
           render={({ match }) => (
             <Layout
               BodyComponent={<HomeScreen />}
-              HeaderComponent={<NavigationBox path={match.path} />}
-            />
-          )}
-        />
-        <Route
-          exact
-          path={routes.CONTROL_PANEL}
-          render={({ match }) => (
-            <Layout
-              BodyComponent={<ControlPanelScreen />}
-              HeaderComponent={<NavigationBox path={match.path} />}
+              HeaderComponent={<NavigationBoxWidget path={match.path} />}
             />
           )}
         />
@@ -50,7 +39,7 @@ const RouteController = () => {
           render={({ match }) => (
             <Layout
               BodyComponent={<SearchScreen />}
-              HeaderComponent={<NavigationBox path={match.path} />}
+              HeaderComponent={<NavigationBoxWidget path={match.path} />}
             />
           )}
         />
@@ -61,7 +50,7 @@ const RouteController = () => {
             <Layout
               key="root"
               BodyComponent={<GraphExplorerScreen initialCategoryId={null} />}
-              HeaderComponent={<NavigationBox path={match.path} />}
+              HeaderComponent={<NavigationBoxWidget path={match.path} />}
             />
           )}
         />
@@ -73,7 +62,7 @@ const RouteController = () => {
             <Layout
               key={match.params.id}
               BodyComponent={<GraphExplorerScreen initialCategoryId={match.params.id} />}
-              HeaderComponent={<NavigationBox />}
+              HeaderComponent={<NavigationBoxWidget />}
             />
           )}
         />
@@ -83,7 +72,7 @@ const RouteController = () => {
           render={({ match }) => (
             <Layout
               BodyComponent={<FileScreen fileId={Number(match.params.id)} />}
-              HeaderComponent={<NavigationBox />}
+              HeaderComponent={<NavigationBoxWidget />}
             />
           )}
         />

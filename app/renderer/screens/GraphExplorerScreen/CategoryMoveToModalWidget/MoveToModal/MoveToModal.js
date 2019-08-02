@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Modal from '../../Modal';
+import Modal from '../../../../components/Modal';
 import MoveToModalHeaderContainer from './containers/MoveToModalHeaderContainer';
 import MoveToModalContentContainer from './containers/MoveToModalContentContainer';
 import MoveToModalActionsContainer from './containers/MoveToModalActionsContainer';
