@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { List, Header } from 'semantic-ui-react';
-import AddNewInstanceSection from './AddNewInstanceSection/AddNewInstanceSection';
+import AddNewInstanceWidget from './AddNewInstanceWidget/AddNewInstanceWidget';
 import InstanceListItem from './InstanceListItem/InstanceListItem';
 import { RECEIVE_ENTITIES } from '../actionTypes';
 import LoadUserFilesScreen from '../LoadUserFilesScreen/LoadUserFilesScreen';
@@ -28,7 +28,7 @@ const InstancesMenuScreen = ({ instancesPaths, updateChosenInstancePath }) => {
             />
           ))}
           <List.Item style={{ border: '1px solid black' }}>
-            <AddNewInstanceSection />
+            <AddNewInstanceWidget />
           </List.Item>
         </List>
       </>

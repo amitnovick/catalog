@@ -8,6 +8,7 @@ const machine = Machine({
     idle: {
       on: {
         CLICK_ADD_BUTTON: 'fileAdditionModal',
+        CLICK_FILE_IMPORT_BUTTON: 'fileImportModal',
       },
     },
     fileAdditionModal: {
@@ -17,6 +18,11 @@ const machine = Machine({
           target: 'idle',
           actions: 'navigateToFileScreen',
         },
+      },
+    },
+    fileImportModal: {
+      on: {
+        CLOSE_FILE_IMPORT_MODAL: 'idle',
       },
     },
   },

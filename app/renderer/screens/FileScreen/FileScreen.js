@@ -14,26 +14,11 @@ import getSqlDriver from '../../sqlDriver';
 import store from '../../redux/store';
 import FileMenuContainer from './containers/FileMenuContainer';
 import openFileByName from '../../utils/openFileByName';
-import formatFilePath from '../../utils/formatFilePath';
 import AddCategoryWidget from './AddCategoryWidget/AddCategoryWidget';
 import FileNameWidget from './FileNameWidget/FileNameWidget';
 import CategoriesWidget from './CategoriesWidget/CategoriesWidget';
 import { Grid, Divider } from 'semantic-ui-react';
-const fs = require('fs');
-
-const deleteFileFromFs = (fileName) =>
-  new Promise((resolve, reject) => {
-    const filePath = formatFilePath(fileName);
-    fs.unlink(filePath, (err) => {
-      if (err) {
-        console.log('unknown error occurred:', err);
-        reject();
-      } else {
-        console.log('The file has been deleted!');
-        resolve();
-      }
-    });
-  });
+import deleteFileFromFs from '../../utils/deleteFile';
 
 const queryCategoriesOfFile = (fileId) => {
   return new Promise((resolve, reject) => {

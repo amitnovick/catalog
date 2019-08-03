@@ -83,7 +83,7 @@ const machineWithConfig = machine.withConfig({
   },
 });
 
-const AddNewInstanceSection = ({ addNewInstanceErrorMessage }) => {
+const AddNewInstanceWidget = ({ addNewInstanceErrorMessage }) => {
   const [current, send] = useMachine(machineWithConfig, { devTools: true });
 
   if (current.matches('idle')) {
@@ -114,4 +114,4 @@ const getAddNewInstanceErrorMessage = (store) =>
 
 export default connect((state) => ({
   addNewInstanceErrorMessage: getAddNewInstanceErrorMessage(state),
-}))(AddNewInstanceSection);
+}))(AddNewInstanceWidget);

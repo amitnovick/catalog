@@ -6,6 +6,7 @@ import NavigationBox from './NavigationBox';
 import machine from './machine';
 import FileAdditionModalWidget from './FileAdditionModalWidget/FileAdditionModalWidget';
 import routes from '../routes';
+import FileImportModalWidget from './FileImportModalWidget/FileImportModalWidget';
 
 const machineWithConfig = machine.withConfig({
   actions: {
@@ -14,16 +15,23 @@ const machineWithConfig = machine.withConfig({
 });
 
 const NavigationBoxWidget = ({ path, history }) => {
-  const [current, send] = useMachine(machineWithConfig);
+  const [current, send] = useMachine(machineWithConfig, {});
 
   return (
     <>
-      <NavigationBox path={path} onClickAddButton={() => send('CLICK_ADD_BUTTON')} />
+      <NavigationBox
+        path={path}
+        onClickAddButton={() => send('CLICK_ADD_BUTTON')}
+        onClickFileImportButton={() => send('CLICK_FILE_IMPORT_BUTTON')}
+      />
       {current.matches('fileAdditionModal') ? (
         <FileAdditionModalWidget
           onClose={() => send('CLOSE_FILE_ADDITION_MODAL')}
           onFinish={(fileId) => send('FILE_ADDITION_MODAL_SUBMIT', { history, fileId })}
         />
+      ) : null}
+      {current.matches('fileImportModal') ? (
+        <FileImportModalWidget onClose={() => send('CLOSE_FILE_IMPORT_MODAL')} />
       ) : null}
     </>
   );
