@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Header, Label } from 'semantic-ui-react';
+import { Button, Label } from 'semantic-ui-react';
 import { css } from 'emotion';
 
 /* TODO:
@@ -19,8 +19,7 @@ const inputClass = css`
 const AddNewInstance = ({ onInput, onSubmit, inputPath }) => {
   const isDisabled = inputPath === '';
   return (
-    <>
-      <Header as="h1">Please choose the directory that would contain your WikiFS Data Files</Header>
+    <div style={{ textAlign: 'center' }}>
       {isDisabled ? null : (
         <Label as="label" size="massive" htmlFor="directory-picker">{`Chosen: ${inputPath}`}</Label>
       )}
@@ -55,7 +54,7 @@ const AddNewInstance = ({ onInput, onSubmit, inputPath }) => {
           htmlFor="directory-picker"
           size="massive" /* Note: It is necessary to have `htmlFor` here and point to the <input/> in order to trigger the Filepicker element */
         >
-          {isDisabled ? 'Choose Directory' : 'Change Directory'}
+          {isDisabled ? 'Choose location for new instance' : 'Change location'}
         </Button>
       </label>
       <br />
@@ -64,7 +63,7 @@ const AddNewInstance = ({ onInput, onSubmit, inputPath }) => {
           Save
         </Button>
       )}
-    </>
+    </div>
   );
 };
 

@@ -99,17 +99,9 @@ const InstanceListItem = ({ instancePath, onClickInstancePath }) => {
         <Icon name="remove" />
       </Button>
       <div className={childDivClass} style={centerInParentStyle}>
-        <Header
-          as="h2"
-          style={{
-            border: '1px solid black',
-            borderRadius: 5,
-            padding: '10px 30px',
-            cursor: 'pointer',
-          }}
-          onClick={() => onClickInstancePath(instancePath)}>
+        <Button size="massive" color="blue" onClick={() => onClickInstancePath(instancePath)}>
           {instancePath}
-        </Header>
+        </Button>
       </div>
     </List.Item>
   );
