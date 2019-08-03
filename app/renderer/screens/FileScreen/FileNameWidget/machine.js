@@ -37,7 +37,7 @@ const machine = Machine({
         },
         onError: {
           target: 'idle.failure',
-          actions: 'resetNewFileNameToFileName',
+          actions: ['updateErrorMessage', 'resetNewFileNameToFileName'],
         },
       },
     },

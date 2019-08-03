@@ -1,16 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import FileNameContainer from './FileNameContainer';
 import { useMachine } from '@xstate/react';
 import machine from './machine';
 import store from '../../../redux/store';
 import { RECEIVE_ENTITIES } from '../actionTypes';
-import formatFilePath from '../../../utils/formatFilePath';
-import getSqlDriver from '../../../sqlDriver';
-import { updateFileName } from '../../../sql_queries';
-import { Icon } from 'semantic-ui-react';
+import { Icon, Message } from 'semantic-ui-react';
+import queryUpdateFileName from '../../../query-functions/queryUpdateFileName';
+import renameFile from '../../../utils/renameFile';
 const isValidFilename = require('valid-filename');
-const fs = require('fs');
 
 const isNewFileNameValidFileName = (newFileName) => {
   return isValidFilename(newFileName) && newFileName.trim() !== '';
@@ -28,60 +27,17 @@ const resetNewFileNameToFileName = () => {
   });
 };
 
-const fileNameAlreadyExistsErrorMessage = `SQLITE_CONSTRAINT: UNIQUE constraint failed: files.name`;
-
-const renameFileToFs = (oldFileName, newFileName) =>
-  new Promise((resolve, reject) => {
-    const oldFilePath = formatFilePath(oldFileName);
-    const newFilePath = formatFilePath(newFileName);
-    fs.rename(oldFilePath, newFilePath, (err) => {
-      if (err) {
-        console.log('unknown error occurred:', err);
-        reject();
-      } else {
-        console.log('The file has been renamed!');
-        resolve();
-      }
-    });
-  });
-
-const queryRenameFileInDb = (fileId, newFileName) => {
-  return new Promise((resolve, reject) => {
-    getSqlDriver().run(
-      updateFileName,
-      {
-        $file_name: newFileName,
-        $file_id: fileId,
-      },
-      function(err) {
-        if (err) {
-          if (err.message === fileNameAlreadyExistsErrorMessage) {
-            console.log('Error: file name already exists in db');
-          } else {
-            console.log('unknown error:', err);
-          }
-          reject();
-        } else {
-          const { changes: affectedRowsCount } = this;
-          if (affectedRowsCount !== 1) {
-            console.log('No affected rows error');
-            reject();
-          } else {
-            resolve();
-          }
-        }
-      },
-    );
-  });
-};
-
 const attemptToRenameFile = async (file, newFileName) => {
-  await queryRenameFileInDb(file.id, newFileName);
+  await queryUpdateFileName(file.id, newFileName);
   try {
-    return await renameFileToFs(file.name, newFileName);
+    return await renameFile(file.name, newFileName);
   } catch (error) {
-    await queryRenameFileInDb(file.id, file.name); // Revert rename
-    throw error;
+    try {
+      await queryUpdateFileName(file.id, file.name); // Revert rename
+      throw new Error(`A file with the name ${newFileName} already exists!`);
+    } catch (error2) {
+      throw new Error(`Unknown error: ${error2.message}`);
+    }
   }
 };
 
@@ -94,6 +50,15 @@ const updateNewFileName = (inputText) => {
   });
 };
 
+const updateErrorMessage = (errorMessage) => {
+  store.dispatch({
+    type: RECEIVE_ENTITIES,
+    payload: {
+      fileNameWidgetErrorMessage: errorMessage,
+    },
+  });
+};
+
 const machineWithConfig = machine.withConfig({
   services: {
     attemptToRenameFile: (_, event) => attemptToRenameFile(event.file, event.newFileName),
@@ -101,13 +66,14 @@ const machineWithConfig = machine.withConfig({
   actions: {
     resetNewFileNameToFileName: (_, __) => resetNewFileNameToFileName(),
     updateInputText: (_, event) => updateNewFileName(event.inputText),
+    updateErrorMessage: (_, event) => updateErrorMessage(event.data.message),
   },
   guards: {
     isNewFileNameValidFileName: (_, event) => isNewFileNameValidFileName(event.newFileName),
   },
 });
 
-const FileNameWidget = ({ refetchFileData }) => {
+const FileNameWidget = ({ refetchFileData, errorMessage }) => {
   const [current, send] = useMachine(machineWithConfig, {
     actions: {
       refetchFileData: (_, __) => refetchFileData(),
@@ -125,7 +91,12 @@ const FileNameWidget = ({ refetchFileData }) => {
         }
       />
       {current.matches('idle.success') ? <Icon size="big" name="checkmark" color="green" /> : null}
-      {current.matches('idle.failure') ? <Icon size="big" name="remove" color="red" /> : null}
+      {current.matches('idle.failure') ? (
+        <>
+          <Icon size="big" name="remove" color="red" />
+          <Message error content={errorMessage} />
+        </>
+      ) : null}
     </>
   );
 };
@@ -134,4 +105,9 @@ FileNameWidget.propTypes = {
   refetchFileData: PropTypes.func.isRequired,
 };
 
-export default FileNameWidget;
+const getErrorMessage = (store) =>
+  store && store.specificTagScreen ? store.specificTagScreen.fileNameWidgetErrorMessage : '';
+
+export default connect((state) => ({
+  errorMessage: getErrorMessage(state),
+}))(FileNameWidget);
