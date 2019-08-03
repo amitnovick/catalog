@@ -1,7 +1,7 @@
 import React from 'react';
 import { css } from 'emotion';
 import { connect } from 'react-redux';
-import { Header, List, Button, Icon } from 'semantic-ui-react';
+import { List, Button, Icon } from 'semantic-ui-react';
 import machine from './machine';
 import { useMachine } from '@xstate/react';
 import store from '../../../../redux/store';
