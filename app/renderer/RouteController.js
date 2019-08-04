@@ -71,6 +71,7 @@ const RouteController = () => {
           path={`${routes.FILE}/:id`}
           render={({ match }) => (
             <Layout
+              key={match.params.id}
               BodyComponent={<FileScreen fileId={Number(match.params.id)} />}
               HeaderComponent={<NavigationBoxWidget />}
             />
