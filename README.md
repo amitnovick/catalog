@@ -17,6 +17,7 @@ The novelty that Catalog provides lies in how **files can be assigned multiple c
 
 ## Installation
 ### Build from source
+
 1. Clone the repository
 
 2. Install dependencies
@@ -37,4 +38,6 @@ npm run pack
 npm run develop
 ```
 
-Copyright Amit Novick 2019
+## License
+
+Copyright © 2019 [Amit Novick](https://amitnovick.netlify.com/). Distributed under the GNU AFFERO PUBLIC LICENSE, Version 3. See separate LICENSE file.
