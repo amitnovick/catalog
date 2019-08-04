@@ -1,14 +1,14 @@
 {
-  "name": "wiki-fs",
+  "name": "catalog",
   "version": "0.0.0",
-  "description": "A File System with File Management integration built using Electron",
+  "description": "A File Manager application",
   "main": "init.js",
   "author": {
-    "name": "Jordan Schroter",
-    "email": "email@author.com"
+    "name": "Amit Novick",
+    "email": "axnovick@gmail.com"
   },
-  "repository": "https://github.com/jschr/electron-react-redux-boilerplate",
-  "license": "MIT",
+  "repository": "https://github.com/amitnovick/catalog",
+  "license": "AGPLv3",
   "dependencies": {
     "@babel/register": "^7.0.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.21",

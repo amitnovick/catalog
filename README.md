@@ -1,32 +1,19 @@
-# WikiFS - A Structure for your Files that Fits your Brain
+# Catalog - Better Structure for Your Files
 ## About
 
-WikiFS is an open-source data manager and file navigator. It helps organize files on local drives by adding categories to files. Users get the same user interface to manage their files on different platforms. WikiFS is compatible with Windows, Linux and Mac. The application requires neither internet connection, nor user's registration to run on desktop devices.
-
-### Categories
-
-When you have multiple files, you start wanting to organize them into categories.
-Categories can be nested under other categories.
-A single top-level category exists at all times, and is called the Root category.
-New categories are added as children of this Root category by default.
-
-#### Example Hierarchy
-
-```
-└── Root
-    ├── BooksNotes
-    ├── FinancialDocuments
-    └── WebDevelopment
-        ├── CssTricks
-        └── JavaScript
-```
+Catalog is an open-source data manager and file navigator. It helps organize files on local drives by adding categories to files. Users get the same user interface to manage their files on different platforms. Catalog is compatible with Windows, Linux and Mac. The application requires neither internet connection, nor user's registration to run on desktop devices.
 
 ### Files
 
-You may be thinking, alright, categories are just like folders in the File System we already have.
-So how is this system any different?
-In WikiFS, files are not restricted to a single category.
-In fact, files can have multiple categories at once. WikiFS will help you maintain the categories of files throughout common operations like: moving categories around, adding and removing categories to a file.
+Catalog is meant for files that you care about: documents, audio, video and more.
+
+When there are many files to keep track of, Catalog offers you Categories which can be assigned to files;
+
+Related files can go under designated categories like: Documents, Music, Videos etc.
+
+Categories can also be nested under other categories: Documents can further contain the following nested categories: MeetingSummaries, FinancialReports, SchoolPapers etc.
+
+The novelty that Catalog provides lies in how files can be assigned multiple categories, and how the program assists you in preserving the category hierarchy while doing various operations: assigning a category to a file, moving a nested category to a different parent category, and more.
 
 ## Installation
 ### Build from source
@@ -42,7 +29,7 @@ npm install
 npm run pack
 ```
 
-4. Install a binary on `/dist` that should be named `WikiFS...`
+4. Install a binary on `/dist` that should be named `Catalog...`
 
 ## Development
 
