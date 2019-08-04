@@ -2,10 +2,12 @@ import getSqlDriver from '../sqlDriver';
 
 const insertFile = `
 INSERT INTO files (
-  name
+  name,
+  added_at
 )
 VALUES (
-  $file_name
+  $file_name,
+  datetime("now")
 );
 `;
 

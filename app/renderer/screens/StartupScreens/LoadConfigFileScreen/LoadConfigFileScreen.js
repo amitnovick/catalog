@@ -12,13 +12,9 @@ import { CONFIG_FILE_KEY, CONFIG_FILE_NAME } from '../configConstants';
 const fs = require('fs');
 const path = require('path');
 
-const getConfigDirectoryPath = (store) =>
-  store && store.startupScreen ? store.startupScreen.configDirectoryPath : '';
-
 const attemptToReadConfigFile = () => {
   return new Promise((resolve, reject) => {
     const configDirectoryPath = remote.app.getPath('userData');
-    // const configDirectoryPath = getConfigDirectoryPath(store.getState());
     const configFilePath = path.join(configDirectoryPath, CONFIG_FILE_NAME);
     fs.readFile(configFilePath, 'utf8', (err, data) => {
       if (err) {
@@ -39,6 +35,9 @@ const attemptToReadConfigFile = () => {
   });
 };
 
+const getConfigDirectoryPath = (store) =>
+  store && store.startupScreen ? store.startupScreen.configDirectoryPath : '';
+
 const writeDefaultConfigFile = () => {
   return new Promise((resolve, reject) => {
     const configDirectoryPath = getConfigDirectoryPath(store.getState());
@@ -52,7 +51,8 @@ const writeDefaultConfigFile = () => {
         const errorMessage = `Couldn't write to file at: ${configDirectoryPath}`;
         reject(errorMessage);
       } else {
-        resolve(instancesPaths);
+        const resolvedValue = { instancesPaths };
+        resolve(resolvedValue);
       }
     });
   });
@@ -87,7 +87,7 @@ const updateConfigDirectoryPath = (configDirectoryPath) => {
 
 const configFileMachineConfigured = machine.withConfig({
   actions: {
-    updateInstancesPaths: (_, event) => updateInstancesPaths(event.data),
+    updateInstancesPaths: (_, event) => updateInstancesPaths(event.data.instancesPaths),
     updateErrorMessage: (_, event) => updateErrorMessage(event.data),
     updateConfigDirectoryPath: (_, event) =>
       updateConfigDirectoryPath(event.data.configDirectoryPath),

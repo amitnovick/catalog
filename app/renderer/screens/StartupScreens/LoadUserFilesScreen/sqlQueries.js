@@ -1,7 +1,8 @@
 export const createFilesTableIfNotExists = `
 CREATE TABLE IF NOT EXISTS files (
   id INTEGER PRIMARY KEY,
-  name TEXT UNIQUE NOT NULL
+  name TEXT UNIQUE NOT NULL,
+  added_at TEXT NOT NULL
 );
 `;
 

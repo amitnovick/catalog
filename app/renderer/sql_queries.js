@@ -44,10 +44,12 @@ WHERE categories.name = $child_name
 
 export const insertFile = `
 INSERT INTO files (
-  name
+  name,
+  added_at
 )
 VALUES (
-  $file_name
+  $file_name,
+  datetime("now")
 );
 `;
 
