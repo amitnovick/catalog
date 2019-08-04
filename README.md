@@ -1,4 +1,4 @@
-# Catalog - Better Structure for Your Files
+# Catalog - A Better Structure for Your Files
 
 ## About
 
