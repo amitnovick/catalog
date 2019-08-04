@@ -87,7 +87,7 @@ const updateConfigDirectoryPath = (configDirectoryPath) => {
 
 const configFileMachineConfigured = machine.withConfig({
   actions: {
-    updateInstancesPaths: (_, event) => updateInstancesPaths(event.data.instancesPaths),
+    updateInstancesPaths: (_, event) => updateInstancesPaths(event.data),
     updateErrorMessage: (_, event) => updateErrorMessage(event.data),
     updateConfigDirectoryPath: (_, event) =>
       updateConfigDirectoryPath(event.data.configDirectoryPath),
