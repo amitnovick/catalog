@@ -109,7 +109,7 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
         <Grid>
           <Grid.Column width="3" />
           <Grid.Column width="10">
-            <Segment style={{ minHeight: '90vh' }}>
+            <Segment style={{ minHeight: '85vh' }}>
               {current.matches('idle.idle') ? (
                 <ExplorerWidget
                   categories={childCategories}
