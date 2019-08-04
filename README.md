@@ -3,7 +3,7 @@
 
 Catalog is an open-source data manager and file navigator. It helps organize files on local drives by adding categories to files. Users get the same user interface to manage their files on different platforms. Catalog is compatible with Windows, Linux and Mac. The application requires neither internet connection, nor user's registration to run on desktop devices.
 
-![App Screenshot](docs/app-screenshot.png)
+![App Screenshot](docs/app-screenshot.png | width=100)
 
 ### Files
 
