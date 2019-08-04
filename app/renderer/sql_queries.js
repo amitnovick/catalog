@@ -24,9 +24,10 @@ LIMIT 1;
 export const insertCategory = `
 INSERT INTO categories (
   parent_id,
-  name
+  name,
+  added_at
 )
-SELECT categories.id , $category_name
+SELECT categories.id , $category_name, datetime("now")
 FROM categories
 WHERE categories.parent_id IS NULL;
 ;

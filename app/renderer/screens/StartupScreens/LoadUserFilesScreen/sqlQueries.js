@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS categories (
   id INTEGER PRIMARY KEY,
   parent_id INTEGER,
   name TEXT UNIQUE NOT NULL,
+  added_at TEXT NOT NULL,
   FOREIGN KEY(parent_id) REFERENCES categories(id)
 );
 `;
@@ -34,8 +35,9 @@ WITH existing_root AS (
 )
 INSERT INTO categories (
   parent_id,
-  name
+  name,
+  added_at
 )
-SELECT NULL,"Root"
+SELECT NULL,"Root", datetime("now")
 WHERE NOT EXISTS (SELECT 1 FROM existing_root);
   `;
