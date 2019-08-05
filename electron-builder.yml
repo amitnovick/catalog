@@ -37,3 +37,4 @@ linux:
 
 publish:
   provider: github
+  publishAutoUpdate: false
