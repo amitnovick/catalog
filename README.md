@@ -11,25 +11,33 @@ internet connection, nor user's registration to run on desktop devices.
   <img src="docs/app-screenshot.png" width="350" alt="Catalog App Screenshot">
 </div>
 
-### Files
-
-Catalog is meant for files that you care about: documents, audio, video and more.
-
-When there are many files to keep track of, Catalog offers you **categories** which can be assigned
-to files;
-
-Related files can go under designated categories like: Documents, Music, Videos etc.
-
-**Categories can also be nested** under other categories: Documents can further contain the
-following nested categories: MeetingSummaries, FinancialReports, SchoolPapers etc.
-
-The novelty that Catalog provides lies in how **files can be assigned multiple categories**, and how
-the program assists you in preserving the category hierarchy while doing various operations:
-assigning a category to a file, moving a nested category to a different parent category, and more.
-
 ## Installation
 
-### Build from source
+### Option 1: Binaries (**for most users**)
+
+#### Mac OS X
+
+Download the latest release for your platform:
+
+1. Download the latest release for your platform: choose Asset
+   [Catalog-X.Y.Z.dmg](https://github.com/amitnovick/catalog/releases)
+2. At the moment the application is not registered with Apple, which means that you might need to
+   explicitly instruct Mac OS to install it or unblock it if it is blocked.
+
+#### Windows
+
+1. Download the latest release for your platform: choose Asset
+   [catalog-setup-X.Y.Z.exe](https://github.com/amitnovick/catalog/releases)
+2. Open the file and start the installation
+
+#### Linux
+
+1. Download the latest release for your platform: choose Asset
+   [catalog-X.Y.Z-x86_64.AppImage](https://github.com/amitnovick/catalog/releases)
+2. Enable necessary permission for execution via `chmod a+x ./catalog-X.Y.Z-x86_64.AppImage`
+3. Open with: `./catalog-X.Y.Z-x86_64.AppImage`
+
+### Option 2: Instructions to build from source
 
 1. Clone the repository
 
@@ -59,7 +67,7 @@ npm run pack:win
 npm run pack:linux
 ```
 
-1. Install a binary on `/dist` that should be named `Catalog...`
+Finally: Install a binary on `/dist` that should be named `Catalog...`
 
 ## Development
 
