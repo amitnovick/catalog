@@ -8,7 +8,7 @@
     "email": "axnovick@gmail.com"
   },
   "repository": "https://github.com/amitnovick/catalog",
-  "license": "AGPLv3",
+  "license": "AGPL-3.0-only",
   "dependencies": {
     "@babel/register": "^7.0.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.21",
