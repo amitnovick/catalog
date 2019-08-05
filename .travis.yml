@@ -3,8 +3,7 @@ if: tag IS present
 # safelist
 branches:
   only:
-  - master
-  - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
+    - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
 
 matrix:
   include:
@@ -41,7 +40,3 @@ script:
     fi
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
-
-branches:
-  except:
-    - "/^v\\d+\\.\\d+\\.\\d+$/"
