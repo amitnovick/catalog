@@ -1,7 +1,8 @@
+if: tag IS present
+
 matrix:
   include:
     - os: osx
-      if: tag IS present
       osx_image: xcode10.2
       language: node_js
       node_js: '10'
@@ -9,7 +10,6 @@ matrix:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
     - os: linux
-      if: tag IS present
       services: docker
       language: node_js
       node_js: '10'
