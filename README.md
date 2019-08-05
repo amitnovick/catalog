@@ -13,31 +13,27 @@ internet connection, nor user's registration to run on desktop devices.
 
 ## Installation
 
-### Option 1: Binaries (**for most users**)
-
-#### Mac OS X
-
-Download the latest release for your platform:
+### Mac OS X
 
 1. Download the latest release for your platform: choose Asset
    [Catalog-X.Y.Z.dmg](https://github.com/amitnovick/catalog/releases)
 2. At the moment the application is not registered with Apple, which means that you might need to
    explicitly instruct Mac OS to install it or unblock it if it is blocked.
 
-#### Windows
+### Windows
 
 1. Download the latest release for your platform: choose Asset
    [catalog-setup-X.Y.Z.exe](https://github.com/amitnovick/catalog/releases)
 2. Open the file and start the installation
 
-#### Linux
+### Linux
 
 1. Download the latest release for your platform: choose Asset
    [catalog-X.Y.Z-x86_64.AppImage](https://github.com/amitnovick/catalog/releases)
 2. Enable necessary permission for execution via `chmod a+x ./catalog-X.Y.Z-x86_64.AppImage`
 3. Open with: `./catalog-X.Y.Z-x86_64.AppImage`
 
-### Option 2: Instructions to build from source
+## Alternative: Installation from source
 
 1. Clone the repository
 
