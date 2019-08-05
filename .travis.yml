@@ -1,6 +1,7 @@
+# safelist
 branches:
   only:
-  - master
+  - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
 
 if: tag IS present
 
