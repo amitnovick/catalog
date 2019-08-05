@@ -36,6 +36,7 @@ linux:
     - AppImage
 
 publish:
-  provider: github
+  provider: 'github'
+  owner: 'amitnovick'
   publishAutoUpdate: false
   private: false
