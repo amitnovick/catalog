@@ -12,7 +12,7 @@ import queryChildCategories from '../../query-functions/queryChildCategories';
 import queryCategoriesInPath from '../../query-functions/queryCategoriesInPath';
 import CategoryRenameModalWidget from './CategoryRenameModalWidget/CategoryRenameModalWidget';
 import { assign } from 'xstate';
-import ExplorerWidget from './ExplorerWidget/ExplorerWidget';
+import Explorer from './Explorer/Explorer';
 import CategoryDeleteModalWidget from './CategoryDeleteModalWidget/CategoryDeleteModalWidget';
 import CategoryAdditionModalWidget from './CategoryAdditionModalWidget/CategoryAdditionModalWidget';
 import CategoryMoveToModalWidget from './CategoryMoveToModalWidget/CategoryMoveToModalWidget';
@@ -111,7 +111,7 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
           <Grid.Column width="10">
             <Segment style={{ minHeight: '85vh' }}>
               {current.matches('idle.idle') ? (
-                <ExplorerWidget
+                <Explorer
                   categories={childCategories}
                   files={files}
                   categoriesInPath={categoriesInPath}

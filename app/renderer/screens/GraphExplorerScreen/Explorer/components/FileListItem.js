@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { Icon } from 'semantic-ui-react';
 import styled from 'styled-components';
 
@@ -21,7 +21,12 @@ const FileListItem = ({ file, onDoubleClickRow }) => {
           onDoubleClick={() => onDoubleClickRow('double!')}
           style={{ display: 'inline-block', width: '100%', cursor: 'pointer' }}>
           <Icon name="file" color="yellow" size="big" />
-          <span style={{ display: 'inline-block' }}>{file.name}</span>
+          <Link
+            title="Open in file screen"
+            to={`${routes.FILE}/${file.id}`}
+            style={{ display: 'inline-block' }}>
+            {file.name}
+          </Link>
         </StyledDiv>
       </div>
     </StyledListItem>

@@ -6,7 +6,7 @@ import RenameModalActions from './RenameModalActions';
 import RenameModalContentContainer from '../containers/RenameModalContentContainer';
 
 const RenameModal = ({
-  onClickRenameButton,
+  onClickRenameButton: onSubmit,
   onClose,
   onChangeInputText,
   shouldShowErrorMessage,
@@ -19,13 +19,11 @@ const RenameModal = ({
         <RenameModalContentContainer
           onChangeInputText={onChangeInputText}
           shouldShowErrorMessage={shouldShowErrorMessage}
+          onHitEnterKey={onSubmit}
         />
       }
       ModalActions={
-        <RenameModalActions
-          onClickCancelButton={onClose}
-          onClickRenameButton={onClickRenameButton}
-        />
+        <RenameModalActions onClickCancelButton={onClose} onClickRenameButton={onSubmit} />
       }
     />
   );

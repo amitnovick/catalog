@@ -7,6 +7,7 @@ const RenameModalContent = ({
   onChangeInputText,
   shouldShowErrorMessage,
   errorMessage,
+  onHitEnterKey,
 }) => {
   return (
     <Modal.Content image>
@@ -16,12 +17,14 @@ const RenameModalContent = ({
       <Modal.Description>
         <p>Enter the new name:</p>
         <Input
+          autoFocus
           type="text"
           value={inputText}
+          onKeyUp={({ key }) => (key === 'Enter' ? onHitEnterKey() : null)}
           onChange={({ target }) => onChangeInputText(target.value)}
         />
+        {shouldShowErrorMessage ? <Message error content={errorMessage} /> : null}
       </Modal.Description>
-      {shouldShowErrorMessage ? <Message error content={errorMessage} /> : null}
     </Modal.Content>
   );
 };
@@ -30,6 +33,8 @@ RenameModalContent.propTypes = {
   inputText: PropTypes.string.isRequired,
   shouldShowErrorMessage: PropTypes.bool.isRequired,
   errorMessage: PropTypes.string.isRequired,
+  onHitEnterKey: PropTypes.func.isRequired,
+  onChangeInputText: PropTypes.func.isRequired,
 };
 
 export default RenameModalContent;

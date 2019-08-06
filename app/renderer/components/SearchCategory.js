@@ -6,6 +6,7 @@ const SearchCategory = ({
   inputSearchQuery,
   searchResultCategories,
   onHitEnterKey,
+  autoFocus,
   onChooseSearchResultCategory: onChangeValue,
   onChangeInputSearchQuery: onSearchQueryChange,
 }) => {
@@ -19,6 +20,7 @@ const SearchCategory = ({
 
   return (
     <Search
+      autoFocus={autoFocus !== undefined ? autoFocus : undefined}
       onKeyUp={({ key }) => (key === 'Enter' ? onHitEnterKey() : null)}
       style={{ display: 'inline' }}
       input={{ icon: 'search', iconPosition: 'left' }}

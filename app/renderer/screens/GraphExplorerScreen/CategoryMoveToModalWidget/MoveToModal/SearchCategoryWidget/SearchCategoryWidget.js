@@ -31,6 +31,7 @@ const SearchCategoryContainer = ({ onFinish }) => {
   const { inputSearchQuery, searchResultCategories } = current.context;
   return (
     <SearchCategory
+      autoFocus={true}
       inputSearchQuery={inputSearchQuery}
       onChangeInputSearchQuery={(inputSearchQuery) =>
         send('CHANGE_INPUT_SEARCH_QUERY', { inputSearchQuery })

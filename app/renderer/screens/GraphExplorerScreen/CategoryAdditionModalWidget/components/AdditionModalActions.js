@@ -17,9 +17,3 @@ AdditionModalActions.propTypes = {
 };
 
 export default AdditionModalActions;
-
-// import React from 'react';
-
-// export default () => {
-//   return <h2>Hi</h2>;
-// };

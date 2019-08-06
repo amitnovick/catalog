@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Modal from '../../../../components/Modal';
-import RenameModalHeader from '../components/AdditionModalHeader';
+import AdditionModalHeader from './AdditionModalHeader';
 import AdditionModalActions from './AdditionModalActions';
-import RenameModalContentContainer from '../containers/AdditionModalContentContainer';
+import AdditionModalContentContainer from '../containers/AdditionModalContentContainer';
 
 const AdditionModal = ({
   onClickSubmitButton,
@@ -14,11 +14,12 @@ const AdditionModal = ({
   return (
     <Modal
       onClose={onClose}
-      ModalHeader={<RenameModalHeader />}
+      ModalHeader={<AdditionModalHeader />}
       ModalContent={
-        <RenameModalContentContainer
+        <AdditionModalContentContainer
           onChangeInputText={onChangeInputText}
           shouldShowErrorMessage={shouldShowErrorMessage}
+          onHitEnterKey={onClickSubmitButton}
         />
       }
       ModalActions={

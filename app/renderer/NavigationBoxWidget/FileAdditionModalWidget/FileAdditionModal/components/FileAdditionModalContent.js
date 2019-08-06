@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, Modal, Icon, Message } from 'semantic-ui-react';
+import { Input, Modal, Icon, Message, Header } from 'semantic-ui-react';
 
 const FileAdditionModalContent = ({
   shouldShouldErrorMessage,
   errorMessage,
   inputText,
   onChangeInputText,
+  onHitEnterKey,
 }) => {
   return (
     <Modal.Content image>
@@ -14,8 +15,10 @@ const FileAdditionModalContent = ({
         <Icon name="file" color="yellow" />
       </div>
       <Modal.Description>
-        <p>Choose the name of the new file:</p>
+        <Header as="h3">Choose the name of the new file:</Header>
         <Input
+          autoFocus
+          onKeyUp={({ key }) => (key === 'Enter' ? onHitEnterKey() : null)}
           type="text"
           value={inputText}
           onChange={({ target }) => onChangeInputText(target.value)}
@@ -29,6 +32,9 @@ const FileAdditionModalContent = ({
 FileAdditionModalContent.propTypes = {
   shouldShouldErrorMessage: PropTypes.bool.isRequired,
   errorMessage: PropTypes.string.isRequired,
+  inputText: PropTypes.string.isRequired,
+  onChangeInputText: PropTypes.func.isRequired,
+  onHitEnterKey: PropTypes.func.isRequired,
 };
 
 export default FileAdditionModalContent;

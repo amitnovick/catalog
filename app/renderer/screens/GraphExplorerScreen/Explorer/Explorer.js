@@ -6,7 +6,7 @@ import PathCategoriesMenu from './components/PathCategoriesMenu';
 import CategoriesAccordion from './components/CategoriesAccordion';
 import FilesAccordion from './components/FilesAccordion';
 
-const ExplorerWidget = ({
+const Explorer = ({
   categories,
   files,
   categoriesInPath,
@@ -36,7 +36,7 @@ const ExplorerWidget = ({
   );
 };
 
-ExplorerWidget.propTypes = {
+Explorer.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   files: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   categoriesInPath: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
@@ -46,4 +46,4 @@ ExplorerWidget.propTypes = {
   onClickAddCategoryButton: PropTypes.func.isRequired,
 };
 
-export default ExplorerWidget;
+export default Explorer;

@@ -13,6 +13,7 @@ const FileAdditionModalContentContainer = () => {
 
   return (
     <FileAdditionModalContent
+      onHitEnterKey={() => send('CLICK_SUBMIT_BUTTON')}
       onChangeInputText={(inputText) => send('CHANGE_INPUT_TEXT', { inputText })}
       inputText={inputText}
       errorMessage={errorMessage}

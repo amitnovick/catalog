@@ -38,6 +38,7 @@ const CategoryAdditionModalWidget = ({ onClose, refetchCategoryData, parentCateg
     machineWithConfig.withContext({
       parentCategoryId: parentCategoryId,
       inputText: '',
+      errorMessage: '',
     }),
     {
       actions: {

@@ -38,6 +38,7 @@ const CategoryRenameModalWidget = ({ onClose, refetchCategoryData, category }) =
     machineWithConfig.withContext({
       category: category,
       inputText: category.name,
+      errorMessage: '',
     }),
     {
       actions: {

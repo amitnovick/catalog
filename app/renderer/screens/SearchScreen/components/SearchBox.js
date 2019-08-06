@@ -5,6 +5,7 @@ import { Input, Label, Icon } from 'semantic-ui-react';
 const SearchBox = ({ searchText, onChangeSearchText }) => {
   return (
     <Input
+      autoFocus
       type="text"
       icon="search"
       label={

@@ -13,8 +13,10 @@ const RenameModalContentContainer = (props) => {
   return <RenameModalContent {...props} inputText={inputText} errorMessage={errorMessage} />;
 };
 
-RenameModalContent.propTypes = {
+RenameModalContentContainer.propTypes = {
   shouldShowErrorMessage: PropTypes.bool.isRequired,
+  onChangeInputText: PropTypes.func.isRequired,
+  onHitEnterKey: PropTypes.func.isRequired,
 };
 
 export default RenameModalContentContainer;

@@ -2,31 +2,34 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import routes from '../../../routes';
-import { List, Icon, Button } from 'semantic-ui-react';
-
-const threeDotsCss = {
-  overflow: 'hidden',
-  whiteSpace: 'nowrap',
-  textOverflow: 'ellipsis',
-};
+import { List, Icon, Message } from 'semantic-ui-react';
 
 const SearchResultsList = ({ files }) => {
   return (
-    <List>
-      {files.map((file) => (
-        <List.Item key={file.name}>
-          <div style={threeDotsCss}>
-            <Button
-              as={Link}
-              size="big"
-              color="yellow"
-              style={{ color: '#101010' }}
-              to={`${routes.FILE}/${file.id}`}>
-              <Icon name="sign-in alternate" /> {`${file.name}`}
-            </Button>
-          </div>
+    <List size="big">
+      {files.length > 0 ? (
+        files.map((file) => (
+          <li key={file.id} style={{ marginTop: 4, marginBottom: 4 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div style={{ display: 'inline-block', width: '100%' }}>
+                <Icon name="file" color="yellow" size="big" />
+                <Link
+                  title="Open in file screen"
+                  to={`${routes.FILE}/${file.id}`}
+                  style={{ display: 'inline-block' }}>
+                  {file.name}
+                </Link>
+              </div>
+            </div>
+          </li>
+        ))
+      ) : (
+        <List.Item>
+          <Message info>
+            <Message.Header>No Results</Message.Header>
+          </Message>
         </List.Item>
-      ))}
+      )}
     </List>
   );
 };

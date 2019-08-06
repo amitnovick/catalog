@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import ReactContext from '../ReactContext';
 import AdditionModalContent from '../components/AdditionModalContent';
 
-const RenameModalContentContainer = (props) => {
+const AdditionModalContentContainer = (props) => {
   const service = React.useContext(ReactContext);
   const [current] = useService(service);
   const { inputText, errorMessage } = current.context;
@@ -13,8 +13,10 @@ const RenameModalContentContainer = (props) => {
   return <AdditionModalContent {...props} inputText={inputText} errorMessage={errorMessage} />;
 };
 
-AdditionModalContent.propTypes = {
+AdditionModalContentContainer.propTypes = {
   shouldShowErrorMessage: PropTypes.bool.isRequired,
+  onHitEnterKey: PropTypes.func.isRequired,
+  onChangeInputText: PropTypes.func.isRequired,
 };
 
-export default RenameModalContentContainer;
+export default AdditionModalContentContainer;
