@@ -20,6 +20,7 @@ const machine = Machine({
           },
           {
             target: 'idle.failure',
+            actions: ['updateErrorMessageInvalidFileName', 'resetNewFileNameToFileName'],
           },
         ],
         CHANGE_INPUT_TEXT: {

@@ -278,11 +278,12 @@ const AddCategoryWidget = ({ errorMessage, narrowerCategoriesOfFile, refetchFile
 
   return (
     <>
-      <BroaderCategoriesModalContainer
-        isOpen={current.matches('broadCategoriesModal')}
-        onClose={() => send('CLOSE_BROAD_CATEGORIES_MODAL_REJECT')}
-        onClickYes={() => send('CLICK_ACCEPT_BROAD_CATEGORIES_MODAL')}
-      />
+      {current.matches('broadCategoriesModal') ? (
+        <BroaderCategoriesModalContainer
+          onClose={() => send('CLOSE_BROAD_CATEGORIES_MODAL_REJECT')}
+          onClickYes={() => send('CLICK_ACCEPT_BROAD_CATEGORIES_MODAL')}
+        />
+      ) : null}
       <div className={spacedChildrenClass}>
         <AddCategoryContainer
           onChooseSearchResultCategory={(category) =>

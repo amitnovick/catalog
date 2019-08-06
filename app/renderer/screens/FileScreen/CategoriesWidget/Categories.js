@@ -4,7 +4,7 @@ import { Label } from 'semantic-ui-react';
 
 const Categories = ({ categories, onClickCategory }) => {
   return (
-    <Label.Group tag color="blue" size="big">
+    <Label.Group color="blue" size="big">
       {categories.map((category) => (
         <Label
           key={category.id}

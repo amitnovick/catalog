@@ -11,7 +11,6 @@ const BroaderCategoriesModalContainer = connect((state) => ({
 }))(BroaderCategoriesModal);
 
 BroaderCategoriesModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onClickYes: PropTypes.func.isRequired,
 };

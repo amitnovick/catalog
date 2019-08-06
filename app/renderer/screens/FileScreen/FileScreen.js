@@ -182,10 +182,7 @@ const FileScreen = ({ fileId }) => {
         <Grid.Column width="3" />
         <Grid.Column width="10">
           <Segment style={{ textAlign: 'center' }}>
-            <Header as="h1">
-              <Icon name="file" color="yellow" />
-              File Screen
-            </Header>
+            <Icon name="file" color="yellow" size="huge" />
             <FileNameWidget refetchFileData={() => send('REFETCH_FILE_DATA')} />
             <Divider horizontal />
             <div style={{ border: '1px solid black', borderRadius: 6, padding: 5 }}>

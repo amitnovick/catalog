@@ -67,6 +67,8 @@ const machineWithConfig = machine.withConfig({
     resetNewFileNameToFileName: (_, __) => resetNewFileNameToFileName(),
     updateInputText: (_, event) => updateNewFileName(event.inputText),
     updateErrorMessage: (_, event) => updateErrorMessage(event.data.message),
+    updateErrorMessageInvalidFileName: (_, event) =>
+      updateErrorMessage(`Error: The name ${event.newFileName} is not a valid file name.`),
   },
   guards: {
     isNewFileNameValidFileName: (_, event) => isNewFileNameValidFileName(event.newFileName),
