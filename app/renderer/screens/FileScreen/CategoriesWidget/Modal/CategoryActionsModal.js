@@ -11,7 +11,7 @@ const CategoryActionsModal = ({ isOpen, onClose, category, onClickRemoveCategory
       <Modal.Content>
         <Header>{category === null ? '' : `Category name: ${category.name}`}</Header>
         <Button style={{ margin: 5 }} onClick={() => onClickRemoveCategory(category)}>
-          <Icon name="remove" /> Remove category from file
+          <Icon name="remove" /> Dissociate category from file
         </Button>
         <br />
         <Button as={Link} to={category === null ? '' : `${routes.TREE_EXPLORER}/${category.id}`}>

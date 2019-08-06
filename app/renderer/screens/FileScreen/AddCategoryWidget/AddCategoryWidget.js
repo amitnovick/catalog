@@ -297,7 +297,7 @@ const AddCategoryWidget = ({ errorMessage, narrowerCategoriesOfFile, refetchFile
           }
         />
         <Button
-          title="Associate category with this file"
+          title="Associate category to this file"
           icon="plus"
           color="blue"
           size="medium"
