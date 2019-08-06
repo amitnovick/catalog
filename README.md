@@ -17,8 +17,8 @@ internet connection, nor user's registration to run on desktop devices.
 
 1. Download the latest release for your platform: choose Asset
    [Catalog-X.Y.Z.dmg](https://github.com/amitnovick/catalog/releases)
-2. At the moment the application is not registered with Apple, which means that you might need to
-   explicitly instruct Mac OS to install it or unblock it if it is blocked.
+2. Right-click on the app and select "Open" from the context menu.
+3. An are-you-sure dialog will pop up, asking for permission to run the app.
 
 ### Windows
 
