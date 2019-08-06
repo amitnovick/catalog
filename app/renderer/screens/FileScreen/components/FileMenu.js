@@ -7,8 +7,20 @@ const FileMenu = ({ file, onClickOpenFile, onClickDeleteFile }) => {
   return (
     <>
       <br />
-      <Button icon="external" size="massive" color="green" onClick={() => onClickOpenFile(file)} />
-      <Button icon="trash" size="massive" color="red" onClick={() => onClickDeleteFile(file)} />
+      <Button
+        title="Open externally with preferred application"
+        icon="external"
+        size="massive"
+        color="green"
+        onClick={() => onClickOpenFile(file)}
+      />
+      <Button
+        title="Delete file"
+        icon="trash"
+        size="massive"
+        color="red"
+        onClick={() => onClickDeleteFile(file)}
+      />
     </>
   );
 };

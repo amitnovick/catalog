@@ -7,6 +7,7 @@ const Categories = ({ categories, onClickCategory }) => {
     <Label.Group color="blue" size="big">
       {categories.map((category) => (
         <Label
+          title="More actions"
           key={category.id}
           style={{ cursor: 'pointer' }}
           onClick={() => onClickCategory(category)}>

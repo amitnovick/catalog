@@ -286,6 +286,7 @@ const AddCategoryWidget = ({ errorMessage, narrowerCategoriesOfFile, refetchFile
       ) : null}
       <div className={spacedChildrenClass}>
         <AddCategoryContainer
+          onHitEnterKey={() => send('CLICK_CREATE_NEW_CATEGORY')}
           onChooseSearchResultCategory={(category) =>
             send('CHOOSE_CATEGORY_TO_ASSIGN', {
               category: category,
@@ -296,6 +297,7 @@ const AddCategoryWidget = ({ errorMessage, narrowerCategoriesOfFile, refetchFile
           }
         />
         <Button
+          title="Associate category with this file"
           icon="plus"
           color="blue"
           size="medium"

@@ -17,6 +17,7 @@ const AddCategoryContainer = connect((state) => ({
 AddCategoryContainer.propTypes = {
   onChooseSearchResultCategory: PropTypes.func.isRequired,
   onChangeInputSearchQuery: PropTypes.func.isRequired,
+  onHitEnterKey: PropTypes.func.isRequired,
 };
 
 export default AddCategoryContainer;

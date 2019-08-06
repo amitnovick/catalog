@@ -5,6 +5,7 @@ import { Search } from 'semantic-ui-react';
 const SearchCategory = ({
   inputSearchQuery,
   searchResultCategories,
+  onHitEnterKey,
   onChooseSearchResultCategory: onChangeValue,
   onChangeInputSearchQuery: onSearchQueryChange,
 }) => {
@@ -18,6 +19,7 @@ const SearchCategory = ({
 
   return (
     <Search
+      onKeyUp={({ key }) => (key === 'Enter' ? onHitEnterKey() : null)}
       style={{ display: 'inline' }}
       input={{ icon: 'search', iconPosition: 'left' }}
       onResultSelect={handleChange}

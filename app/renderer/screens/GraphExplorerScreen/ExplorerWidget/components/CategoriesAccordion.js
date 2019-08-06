@@ -34,7 +34,14 @@ const CategoriesAccordion = ({
           ) : null}
         </List>
       )}
-      Controls={() => <Button icon="add" size="large" onClick={() => onClickAddCategoryButton()} />}
+      Controls={() => (
+        <Button
+          icon="add"
+          title="Add category"
+          size="large"
+          onClick={() => onClickAddCategoryButton()}
+        />
+      )}
     />
   );
 };

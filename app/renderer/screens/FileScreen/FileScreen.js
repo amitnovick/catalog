@@ -17,7 +17,7 @@ import openFileByName from '../../utils/openFileByName';
 import AddCategoryWidget from './AddCategoryWidget/AddCategoryWidget';
 import FileNameWidget from './FileNameWidget/FileNameWidget';
 import CategoriesWidget from './CategoriesWidget/CategoriesWidget';
-import { Grid, Divider, Segment, Header, Icon } from 'semantic-ui-react';
+import { Grid, Divider, Segment, Icon } from 'semantic-ui-react';
 import deleteFileFromFs from '../../utils/deleteFile';
 
 const queryCategoriesOfFile = (fileId) => {
