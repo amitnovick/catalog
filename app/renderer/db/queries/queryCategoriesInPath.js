@@ -1,4 +1,4 @@
-import getSqlDriver from '../sqlDriver';
+import getSqlDriver from '../getSqlDriver';
 
 const selectCategoriesInPath = `
 WITH RECURSIVE tc( i, depth )  AS (

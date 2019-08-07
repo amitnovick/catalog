@@ -1,4 +1,4 @@
-import getSqlDriver from '../sqlDriver';
+import getSqlDriver from '../getSqlDriver';
 import { selectCategoryNameAndParentId } from '../screens/CategoryScreen/sqlQueries';
 
 const queryCategoryNameAndParentId = categoryId => {

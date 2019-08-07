@@ -1,4 +1,4 @@
-import getSqlDriver from '../sqlDriver';
+import getSqlDriver from '../getSqlDriver';
 
 const deleteCategoryOfFile = `
 DELETE FROM categories_files

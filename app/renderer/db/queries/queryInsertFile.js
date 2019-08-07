@@ -1,4 +1,4 @@
-import getSqlDriver from '../sqlDriver';
+import getSqlDriver from '../getSqlDriver';
 
 const insertFile = `
 INSERT INTO files (

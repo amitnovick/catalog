@@ -1,4 +1,4 @@
-import getSqlDriver from '../sqlDriver';
+import getSqlDriver from '../getSqlDriver';
 
 const selectChildCategories = `
 SELECT child_categories.id, child_categories.name

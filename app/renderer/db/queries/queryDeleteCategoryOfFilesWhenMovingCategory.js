@@ -1,4 +1,4 @@
-import getSqlDriver from '../sqlDriver';
+import getSqlDriver from '../getSqlDriver';
 
 const deleteCategoryOfFilesWhenMovingCategory = `
 WITH files_categorized_by_parent AS (

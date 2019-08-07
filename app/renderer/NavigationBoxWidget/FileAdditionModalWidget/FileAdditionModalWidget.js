@@ -6,7 +6,7 @@ import machine from './machine';
 import FileAdditionModal from './FileAdditionModal/FileAdditionModal';
 import { assign } from 'xstate';
 import queryInsertFile from '../../db/queries/queryInsertFile';
-import writeFile from '../../utils/writeFile';
+import writeFile from '../../fs/writeFile';
 import queryDeleteFile from '../../db/queries/queryDeleteFile';
 const isValidFilename = require('valid-filename');
 

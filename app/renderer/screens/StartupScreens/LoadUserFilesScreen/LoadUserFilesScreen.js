@@ -9,8 +9,8 @@ import {
   USER_FILES_SUBDIR_FILES_NAME,
   SQLITE_FILE_NAME,
 } from './userFilesConfigurationConstants';
-import writeDirIfNotExists from '../../../utils/writeDirIfNotExists';
-import writeFileIfNotExist from '../../../utils/writeFileIfNotExists';
+import writeDirIfNotExists from '../../../fs/writeDirIfNotExists';
+import writeFileIfNotExist from '../../../fs/writeFileIfNotExists';
 import {
   createFilesTableIfNotExists,
   createCategoriesTableIfNotExists,

@@ -5,9 +5,9 @@ import machine from './machine';
 import ReactContext from './ReactContext';
 import { assign } from 'xstate';
 import store from '../../redux/store';
-import copyFile from '../../utils/copyFile';
+import copyFile from '../../fs/copyFile';
 import queryInsertFile from '../../db/queries/queryInsertFile';
-import deleteFile from '../../utils/deleteFile';
+import deleteFile from '../../fs/deleteFile';
 const path = require('path');
 
 const getUserFilesSubdirPath = (store) =>

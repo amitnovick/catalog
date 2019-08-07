@@ -8,7 +8,7 @@ import store from '../../../redux/store';
 import { RECEIVE_ENTITIES } from '../actionTypes';
 import { Icon, Message } from 'semantic-ui-react';
 import queryUpdateFileName from '../../../db/queries/queryUpdateFileName';
-import renameFile from '../../../utils/renameFile';
+import renameFile from '../../../fs/renameFile';
 const isValidFilename = require('valid-filename');
 
 const isNewFileNameValidFileName = (newFileName) => {

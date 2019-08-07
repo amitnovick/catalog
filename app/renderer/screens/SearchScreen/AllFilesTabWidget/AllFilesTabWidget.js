@@ -3,7 +3,7 @@ import { useMachine } from '@xstate/react';
 import machine from './machine';
 import store from '../../../redux/store';
 import { RECEIVE_ENTITIES } from '../actionTypes';
-import getSqlDriver from '../../../db/sqlDriver';
+import getSqlDriver from '../../../db/getSqlDriver';
 import { selectFilesByName } from '../sqlQueries';
 import AllFilesTab from './AllFilesTab';
 
