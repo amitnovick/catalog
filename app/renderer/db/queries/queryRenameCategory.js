@@ -1,4 +1,4 @@
-import getSqlDriver from '../../../db/getSqlDriver';
+import getSqlDriver from '../getSqlDriver';
 
 const updateCategoryName = `
 UPDATE categories

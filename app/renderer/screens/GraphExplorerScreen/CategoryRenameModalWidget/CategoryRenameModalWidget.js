@@ -3,7 +3,7 @@ import { useMachine } from '@xstate/react';
 
 import machine from './machine';
 import RenameModal from './components/RenameModal';
-import queryRenameCategory from '../query-functions/queryRenameCategory';
+import queryRenameCategory from '../../../db/queries/queryRenameCategory';
 import { assign } from 'xstate';
 import ReactContext from './ReactContext';
 
