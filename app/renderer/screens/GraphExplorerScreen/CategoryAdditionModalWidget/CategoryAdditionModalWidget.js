@@ -5,7 +5,7 @@ import machine from './machine';
 import AdditionModal from './components/AdditionModal';
 import { assign } from 'xstate';
 import ReactContext from './ReactContext';
-import queryAddNewSubcategory from '../../../query-functions/queryAddNewSubcategory';
+import queryAddNewSubcategory from '../../../db/queries/queryAddNewSubcategory';
 
 const attemptToCreateCategory = (parentCategoryId, newCategoryName) => {
   return queryAddNewSubcategory(parentCategoryId, newCategoryName);

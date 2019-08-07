@@ -6,7 +6,7 @@ import ReactContext from './ReactContext';
 import { assign } from 'xstate';
 import store from '../../redux/store';
 import copyFile from '../../utils/copyFile';
-import queryInsertFile from '../../query-functions/queryInsertFile';
+import queryInsertFile from '../../db/queries/queryInsertFile';
 import deleteFile from '../../utils/deleteFile';
 const path = require('path');
 

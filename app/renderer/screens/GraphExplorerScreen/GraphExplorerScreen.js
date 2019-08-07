@@ -4,17 +4,17 @@ import { useMachine } from '@xstate/react';
 import { Grid, Divider, Segment } from 'semantic-ui-react';
 
 import machine from './machine';
-import queryRootCategory from '../../query-functions/queryRootCategory';
-import queryChildCategories from '../../query-functions/queryChildCategories';
+import queryRootCategory from '../../db/queries/queryRootCategory';
+import queryChildCategories from '../../db/queries/queryChildCategories';
 
-import queryCategoriesInPath from '../../query-functions/queryCategoriesInPath';
+import queryCategoriesInPath from '../../db/queries/queryCategoriesInPath';
 import CategoryRenameModalWidget from './CategoryRenameModalWidget/CategoryRenameModalWidget';
 import { assign } from 'xstate';
 import Explorer from './Explorer/Explorer';
 import CategoryDeleteModalWidget from './CategoryDeleteModalWidget/CategoryDeleteModalWidget';
 import CategoryAdditionModalWidget from './CategoryAdditionModalWidget/CategoryAdditionModalWidget';
 import CategoryMoveToModalWidget from './CategoryMoveToModalWidget/CategoryMoveToModalWidget';
-import queryFiles from '../../query-functions/queryFiles';
+import queryFiles from '../../db/queries/queryFiles';
 
 
 const fetchData = async (currentCategoryId) => {

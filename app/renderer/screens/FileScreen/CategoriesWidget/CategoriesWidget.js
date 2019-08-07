@@ -4,7 +4,7 @@ import { useMachine } from '@xstate/react';
 import CategoriesContainer from './CategoriesContainer';
 import machine from './machine';
 import { RECEIVE_ENTITIES } from '../actionTypes';
-import queryDeleteFileCategory from '../../../query-functions/queryDeleteFileCategory';
+import queryDeleteFileCategory from '../../../db/queries/queryDeleteFileCategory';
 import store from '../../../redux/store';
 
 const updateCategoryForActionsModal = (category) => {

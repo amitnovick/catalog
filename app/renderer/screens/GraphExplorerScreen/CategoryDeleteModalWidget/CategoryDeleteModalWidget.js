@@ -4,13 +4,13 @@ import { Header, Modal as SemanticModal, Button } from 'semantic-ui-react';
 import { useMachine } from '@xstate/react';
 
 import machine from './machine';
-import queryChildCategories from '../../../query-functions/queryChildCategories';
+import queryChildCategories from '../../../db/queries/queryChildCategories';
 import SubcategoriesContainers from './containers/SubcategoriesContainer';
 import CategorizedFilesContainer from './containers/CategorizedFilesContainer';
 import ConfirmationContainer from './containers/ConfirmationContainer';
 import { assign } from 'xstate';
-import queryCategorizedFiles from '../../../query-functions/queryCategorizedFilesV2';
-import queryDeleteCategory from '../../../query-functions/queryDeleteCategory';
+import queryCategorizedFiles from '../../../db/queries/queryCategorizedFilesV2';
+import queryDeleteCategory from '../../../db/queries/queryDeleteCategory';
 import Modal from '../../../components/Modal';
 import ReactContext from './ReactContext';
 import LoadingModal from './components/LoadingModal';

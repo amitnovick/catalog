@@ -4,7 +4,7 @@ import machine from './machine,';
 import FilesUnderCategoryTabContainer from '../containers/FilesUnderCategoryTabContainer';
 import store from '../../../redux/store';
 import { RECEIVE_ENTITIES } from '../actionTypes';
-import getSqlDriver from '../../../sqlDriver';
+import getSqlDriver from '../../../db/sqlDriver';
 import { selectFilesUnderCategoryByName } from '../sqlQueries';
 
 const getCategoryName = (store) => {

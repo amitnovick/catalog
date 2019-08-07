@@ -1,4 +1,4 @@
-import store from './redux/store';
+import store from '../redux/store';
 
 const sqlite3 = window
   .require('sqlite3')

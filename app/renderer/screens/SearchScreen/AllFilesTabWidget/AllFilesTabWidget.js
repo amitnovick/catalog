@@ -3,7 +3,7 @@ import { useMachine } from '@xstate/react';
 import machine from './machine';
 import store from '../../../redux/store';
 import { RECEIVE_ENTITIES } from '../actionTypes';
-import getSqlDriver from '../../../sqlDriver';
+import getSqlDriver from '../../../db/sqlDriver';
 import { selectFilesByName } from '../sqlQueries';
 import AllFilesTab from './AllFilesTab';
 
@@ -60,7 +60,7 @@ const machineWithConfig = machine.withConfig({
 });
 
 const AllFilesTabWidget = () => {
-  const [_, send] = useMachine(machineWithConfig);
+  const [, send] = useMachine(machineWithConfig);
   const onChangeSearchText = (searchText) => send('SEARCH_TEXT_CHANGED', { searchText });
   return <AllFilesTab onChangeSearchText={onChangeSearchText} />;
 };

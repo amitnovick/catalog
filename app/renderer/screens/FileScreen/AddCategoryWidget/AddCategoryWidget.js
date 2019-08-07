@@ -6,15 +6,15 @@ import machine from './machine';
 import AddCategoryContainer from './AddCategoryContainer';
 import store from '../../../redux/store';
 import { RECEIVE_ENTITIES } from '../actionTypes';
-import querySelectCategoriesWithMatchingName from '../../../query-functions/querySelectCategoriesWithMatchingName';
-import queryDeleteFileCategory from '../../../query-functions/queryDeleteFileCategory';
+import querySelectCategoriesWithMatchingName from '../../../db/queries/querySelectCategoriesWithMatchingName';
+import queryDeleteFileCategory from '../../../db/queries/queryDeleteFileCategory';
 import { Message, Label, Button } from 'semantic-ui-react';
 import BroaderCategoriesModalContainer from './Modal/BroaderCategoriesModalContainer';
-import addNewCategory from '../../../query-functions/addNewCategory';
-import queryGetCategoryByName from '../../../query-functions/queryGetCategoryByName';
+import addNewCategory from '../../../db/queries/addNewCategory';
+import queryGetCategoryByName from '../../../db/queries/queryGetCategoryByName';
 import { css } from 'emotion';
-import queryCategoryAncestors from '../../../query-functions/queryCategoryAncestors';
-import queryAddCategoryToFile from '../../../query-functions/queryAddCategoryToFIle';
+import queryCategoryAncestors from '../../../db/queries/queryCategoryAncestors';
+import queryAddCategoryToFile from '../../../db/queries/queryAddCategoryToFIle';
 
 const spacedChildrenClass = css`
   & > * {

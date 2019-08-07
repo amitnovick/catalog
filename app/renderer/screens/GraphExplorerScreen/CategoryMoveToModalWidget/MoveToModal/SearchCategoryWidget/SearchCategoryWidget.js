@@ -3,7 +3,7 @@ import SearchCategory from '../../../../../components/SearchCategory';
 import { useMachine } from '@xstate/react';
 import machine from './machine';
 import { assign } from 'xstate';
-import querySelectCategoriesWithMatchingName from '../../../../../query-functions/querySelectCategoriesWithMatchingName';
+import querySelectCategoriesWithMatchingName from '../../../../../db/queries/querySelectCategoriesWithMatchingName';
 
 const fetchSearchResultCategories = (inputSearchQuery) => {
   return querySelectCategoriesWithMatchingName(inputSearchQuery);

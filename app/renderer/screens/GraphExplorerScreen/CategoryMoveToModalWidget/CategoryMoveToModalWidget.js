@@ -2,11 +2,11 @@ import React from 'react';
 import { useMachine } from '@xstate/react';
 import machine from './machine';
 import { assign } from 'xstate';
-import queryDeleteCategoryOfFilesWhenMovingCategory from '../../../query-functions/queryDeleteCategoryOfFilesWhenMovingCategory';
-import queryCategoriesInPath from '../../../query-functions/queryCategoriesInPath';
+import queryDeleteCategoryOfFilesWhenMovingCategory from '../../../db/queries/queryDeleteCategoryOfFilesWhenMovingCategory';
+import queryCategoriesInPath from '../../../db/queries/queryCategoriesInPath';
 import MoveToModal from './MoveToModal/MoveToModal';
 import ReactContext from './ReactContext';
-import queryUpdateCategoryParentId from '../../../query-functions/queryUpdateCategoryParentId';
+import queryUpdateCategoryParentId from '../../../db/queries/queryUpdateCategoryParentId';
 
 const checkIsParentCategoryValid = async (childCategory, parentCategory) => {
   const childCategoryAncestors = await queryCategoriesInPath(parentCategory.id);

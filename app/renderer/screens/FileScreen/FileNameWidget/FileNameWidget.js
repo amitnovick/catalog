@@ -7,7 +7,7 @@ import machine from './machine';
 import store from '../../../redux/store';
 import { RECEIVE_ENTITIES } from '../actionTypes';
 import { Icon, Message } from 'semantic-ui-react';
-import queryUpdateFileName from '../../../query-functions/queryUpdateFileName';
+import queryUpdateFileName from '../../../db/queries/queryUpdateFileName';
 import renameFile from '../../../utils/renameFile';
 const isValidFilename = require('valid-filename');
 

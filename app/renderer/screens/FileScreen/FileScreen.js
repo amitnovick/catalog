@@ -12,10 +12,10 @@ import FileNameWidget from './FileNameWidget/FileNameWidget';
 import CategoriesWidget from './CategoriesWidget/CategoriesWidget';
 import { Grid, Divider, Segment, Icon } from 'semantic-ui-react';
 import deleteFileFromFs from '../../utils/deleteFile';
-import queryCategoriesOfFile from '../../query-functions/getCategoriesOfFile';
-import queryFileName from '../../query-functions/queryFileName';
-import queryRemoveFileFromFilesTable from '../../query-functions/queryRemoveFileFromFilesTable';
-import queryRemoveFileFromCategoriesFilesTable from '../../query-functions/queryRemoveFileFromCategoriesFilesTable';
+import queryCategoriesOfFile from '../../db/queries/getCategoriesOfFile';
+import queryFileName from '../../db/queries/queryFileName';
+import queryRemoveFileFromFilesTable from '../../db/queries/queryRemoveFileFromFilesTable';
+import queryRemoveFileFromCategoriesFilesTable from '../../db/queries/queryRemoveFileFromCategoriesFilesTable';
 
 
 const fetchFileData = async (fileId) => {
