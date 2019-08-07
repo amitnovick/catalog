@@ -1,5 +1,11 @@
 import getSqlDriver from '../sqlDriver';
-import { selectRootCategory } from '../sql_queries';
+
+const selectRootCategory = `
+SELECT categories.id, categories.name
+FROM categories
+WHERE categories.parent_id IS NULL
+LIMIT 1;
+`;
 
 const queryRootCategory = () => {
   return new Promise((resolve, reject) => {

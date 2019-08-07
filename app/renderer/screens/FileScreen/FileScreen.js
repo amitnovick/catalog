@@ -4,13 +4,6 @@ import { useMachine } from '@xstate/react';
 
 import { RECEIVE_ENTITIES } from './actionTypes';
 import machine from './machine';
-import {
-  selectCategoriesOfFile,
-  selectFileName,
-  deleteFileFromFiles,
-  deleteFileFromCategoriesFiles,
-} from '../../sql_queries';
-import getSqlDriver from '../../sqlDriver';
 import store from '../../redux/store';
 import FileMenuContainer from './containers/FileMenuContainer';
 import openFileByName from '../../utils/openFileByName';
@@ -19,46 +12,11 @@ import FileNameWidget from './FileNameWidget/FileNameWidget';
 import CategoriesWidget from './CategoriesWidget/CategoriesWidget';
 import { Grid, Divider, Segment, Icon } from 'semantic-ui-react';
 import deleteFileFromFs from '../../utils/deleteFile';
+import queryCategoriesOfFile from '../../query-functions/getCategoriesOfFile';
+import queryFileName from '../../query-functions/queryFileName';
+import queryRemoveFileFromFilesTable from '../../query-functions/queryRemoveFileFromFilesTable';
+import queryRemoveFileFromCategoriesFilesTable from '../../query-functions/queryRemoveFileFromCategoriesFilesTable';
 
-const queryCategoriesOfFile = (fileId) => {
-  return new Promise((resolve, reject) => {
-    getSqlDriver().all(
-      selectCategoriesOfFile,
-      {
-        $file_id: fileId,
-      },
-      (err, rows) => {
-        if (err) {
-          console.log('err:', err);
-          reject();
-        } else {
-          resolve(rows);
-        }
-      },
-    );
-  });
-};
-
-const queryFileName = (fileId) => {
-  return new Promise((resolve, reject) => {
-    getSqlDriver().all(
-      selectFileName,
-      {
-        $file_id: fileId,
-      },
-      (err, rows) => {
-        if (err) {
-          console.log('err:', err);
-          reject();
-        } else {
-          const fileRow = rows[0];
-          const { name: fileName } = fileRow;
-          resolve(fileName);
-        }
-      },
-    );
-  });
-};
 
 const fetchFileData = async (fileId) => {
   const fileName = await queryFileName(fileId);
@@ -71,50 +29,6 @@ const fetchFileData = async (fileId) => {
     },
   };
   return Promise.resolve(resolvedValue);
-};
-
-const queryRemoveFileFromFilesTable = (fileId) => {
-  return new Promise((resolve, reject) => {
-    getSqlDriver().run(
-      deleteFileFromFiles,
-      {
-        $file_id: fileId,
-      },
-      function(err) {
-        if (err) {
-          console.log('unknown error:', err);
-          reject();
-        } else {
-          const { changes: affectedRowsCount } = this;
-          if (affectedRowsCount !== 1) {
-            console.log('queryRemoveFileFromFilesTable: No affected rows error');
-            reject();
-          } else {
-            resolve();
-          }
-        }
-      },
-    );
-  });
-};
-
-const queryRemoveFileFromCategoriesFilesTable = (fileId) => {
-  return new Promise((resolve, reject) => {
-    getSqlDriver().run(
-      deleteFileFromCategoriesFiles,
-      {
-        $file_id: fileId,
-      },
-      function(err) {
-        if (err) {
-          console.log('unknown error:', err);
-          reject();
-        } else {
-          resolve();
-        }
-      },
-    );
-  });
 };
 
 const deleteFile = async (file) => {

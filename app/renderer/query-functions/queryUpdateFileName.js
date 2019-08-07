@@ -1,5 +1,10 @@
 import getSqlDriver from '../sqlDriver';
-import { updateFileName } from '../sql_queries';
+
+const updateFileName = `
+UPDATE files
+SET name = $file_name
+WHERE files.id = $file_id
+`;
 
 const fileNameAlreadyExistsErrorMessage = `SQLITE_CONSTRAINT: UNIQUE constraint failed: files.name`;
 

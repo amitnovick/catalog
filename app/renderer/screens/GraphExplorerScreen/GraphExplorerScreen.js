@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import { useMachine } from '@xstate/react';
 import { Grid, Divider, Segment } from 'semantic-ui-react';
 
-import getSqlDriver from '../../sqlDriver';
 import machine from './machine';
-import { selectFiles } from '../../sql_queries';
 import queryRootCategory from '../../query-functions/queryRootCategory';
 import queryChildCategories from '../../query-functions/queryChildCategories';
 
@@ -16,25 +14,8 @@ import Explorer from './Explorer/Explorer';
 import CategoryDeleteModalWidget from './CategoryDeleteModalWidget/CategoryDeleteModalWidget';
 import CategoryAdditionModalWidget from './CategoryAdditionModalWidget/CategoryAdditionModalWidget';
 import CategoryMoveToModalWidget from './CategoryMoveToModalWidget/CategoryMoveToModalWidget';
+import queryFiles from '../../query-functions/queryFiles';
 
-const queryFiles = (categoryId) => {
-  return new Promise((resolve, reject) => {
-    getSqlDriver().all(
-      selectFiles,
-      {
-        $category_id: categoryId,
-      },
-      (err, rows) => {
-        if (err) {
-          console.log('err:', err);
-          reject();
-        } else {
-          resolve(rows);
-        }
-      },
-    );
-  });
-};
 
 const fetchData = async (currentCategoryId) => {
   const categoriesInPath =

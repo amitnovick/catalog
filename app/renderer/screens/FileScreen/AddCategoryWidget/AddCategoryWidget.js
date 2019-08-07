@@ -7,14 +7,14 @@ import AddCategoryContainer from './AddCategoryContainer';
 import store from '../../../redux/store';
 import { RECEIVE_ENTITIES } from '../actionTypes';
 import querySelectCategoriesWithMatchingName from '../../../query-functions/querySelectCategoriesWithMatchingName';
-import getSqlDriver from '../../../sqlDriver';
-import { selectCategoryAncestors, insertCategoryOfFile } from '../../../sql_queries';
 import queryDeleteFileCategory from '../../../query-functions/queryDeleteFileCategory';
 import { Message, Label, Button } from 'semantic-ui-react';
 import BroaderCategoriesModalContainer from './Modal/BroaderCategoriesModalContainer';
 import addNewCategory from '../../../query-functions/addNewCategory';
 import queryGetCategoryByName from '../../../query-functions/queryGetCategoryByName';
 import { css } from 'emotion';
+import queryCategoryAncestors from '../../../query-functions/queryCategoryAncestors';
+import queryAddCategoryToFile from '../../../query-functions/queryAddCategoryToFIle';
 
 const spacedChildrenClass = css`
   & > * {
@@ -53,23 +53,7 @@ const updateChosenSearchResultCategory = (category) => {
   });
 };
 
-const queryCategoryAncestors = (categoryId) => {
-  return new Promise((resolve, reject) => {
-    getSqlDriver().all(
-      selectCategoryAncestors,
-      {
-        $category_id: categoryId,
-      },
-      (err, rows) => {
-        if (err) {
-          reject(new Error(`Unknown error: ${err.message}`));
-        } else {
-          resolve(rows);
-        }
-      },
-    );
-  });
-};
+
 
 const getCategories = (store) =>
   store && store.specificTagScreen ? store.specificTagScreen.categories : [];
@@ -116,37 +100,8 @@ const fetchNarrowerCategoriesOfFileInDb = async (category) => {
   return Promise.resolve(narrowerCategoriesOfFile);
 };
 
-const categoryAlreadyExistsErrorMessage = `SQLITE_CONSTRAINT: UNIQUE constraint failed: categories_files.category_id, categories_files.file_id`;
 
-const queryAddCategoryToFile = (fileId, category) => {
-  return new Promise((resolve, reject) => {
-    getSqlDriver().run(
-      insertCategoryOfFile,
-      {
-        $category_id: category.id,
-        $file_id: fileId,
-      },
-      function(err) {
-        if (err) {
-          if (err.message === categoryAlreadyExistsErrorMessage) {
-            const errorMessage = `Category ${category.name} already exists on file`;
-            reject(new Error(errorMessage));
-          } else {
-            const errorMessage = `Unknown error:, ${err.message}`;
-            reject(new Error(errorMessage));
-          }
-        } else {
-          const { changes: affectedRowsCount } = this;
-          if (affectedRowsCount !== 1) {
-            reject(new Error('No affected rows error'));
-          } else {
-            resolve();
-          }
-        }
-      },
-    );
-  });
-};
+
 
 const fetchNarrowerCategoriesOfFile = async () => {
   const chosenSearchResultCategory = getChosenSearchResultCategory(store.getState());
