@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { Icon, Button } from 'semantic-ui-react';
+
 import styled from 'styled-components';
 
 import routes from '../../../../routes';
+import CategoryIcon from '../../../../components/CategoryIcon';
 
 const StyledListItem = styled.li``;
 
@@ -34,7 +36,7 @@ const CategoryListItem = ({
         <StyledDiv
           onDoubleClick={() => onDoubleClickRow('double!')}
           style={{ display: 'inline-block', width: '100%', cursor: 'pointer' }}>
-          <Icon name="folder" color="blue" size="big" />
+          <CategoryIcon size="lg" style={{ marginRight: '0.5em' }} />
           <Link
             title="Navigate to category"
             to={`${routes.TREE_EXPLORER}/${category.id}`}

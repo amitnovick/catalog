@@ -1,22 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Header } from 'semantic-ui-react';
+import { Header, List, Modal as SemanticModal } from 'semantic-ui-react';
 
 import routes from '../../../../routes';
+import CategoryIcon from '../../../../components/CategoryIcon';
 
 const Subcategories = ({ subcategories }) => {
   return (
-    <>
-      <Header>Subcategories:</Header>
-      <ul>
-        {subcategories.map((subcategory) => (
-          <li key={subcategory.id}>
-            <Link to={`${routes.CATEGORY}/${subcategory.id}`}>{subcategory.name}</Link>
-          </li>
-        ))}
-      </ul>
-    </>
+    <SemanticModal.Content image>
+      <div className="image">
+        <CategoryIcon size="10x" />
+      </div>
+      <SemanticModal.Description>
+        <Header>Subcategories:</Header>
+        <List>
+          {subcategories.map((subcategory) => (
+            <li key={subcategory.id}>
+              <Link to={`${routes.CATEGORY}/${subcategory.id}`}>{subcategory.name}</Link>
+            </li>
+          ))}
+        </List>
+      </SemanticModal.Description>
+    </SemanticModal.Content>
   );
 };
 

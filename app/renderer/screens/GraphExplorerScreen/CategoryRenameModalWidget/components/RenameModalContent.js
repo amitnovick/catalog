@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Input, Message, Icon } from 'semantic-ui-react';
+import { Modal, Input, Message } from 'semantic-ui-react';
+import CategoryIcon from '../../../../components/CategoryIcon';
 
 const RenameModalContent = ({
   inputText,
@@ -12,7 +13,7 @@ const RenameModalContent = ({
   return (
     <Modal.Content image>
       <div className="image">
-        <Icon name="folder" color="blue" />
+        <CategoryIcon size="10x" />
       </div>
       <Modal.Description>
         <p>Enter the new name:</p>

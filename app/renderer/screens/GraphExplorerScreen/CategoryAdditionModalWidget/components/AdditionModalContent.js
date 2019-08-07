@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Input, Message, Icon, Header } from 'semantic-ui-react';
+import { Modal, Input, Message, Header } from 'semantic-ui-react';
+import CategoryIcon from '../../../../components/CategoryIcon';
 
 const AdditionModalContent = ({
   inputText,
@@ -12,7 +13,7 @@ const AdditionModalContent = ({
   return (
     <Modal.Content image>
       <div className="image">
-        <Icon name="folder" color="blue" />
+        <CategoryIcon size="10x" />
       </div>
       <Modal.Description>
         <Header as="h3">Enter a name for the new category:</Header>

@@ -1,13 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Header, Label } from 'semantic-ui-react';
+import { Header, Label, Modal as SemanticModal } from 'semantic-ui-react';
+import CategoryIcon from '../../../../components/CategoryIcon';
 
 const Confirmation = ({ category }) => {
   return (
-    <>
-      <Label size="big">{category.name}</Label>
-      <Header as="h2">Are you sure you want to delete this category?</Header>
-    </>
+    <SemanticModal.Content image>
+      <div className="image">
+        <CategoryIcon size="10x" />
+      </div>
+      <SemanticModal.Description>
+        <Label size="big">{category.name}</Label>
+        <Header as="h2">Are you sure you want to delete this category?</Header>
+      </SemanticModal.Description>
+    </SemanticModal.Content>
   );
 };
 
