@@ -7,14 +7,14 @@ const sqlite3 = window
 const getSqliteFilePath = (store) =>
   store && store.startupScreen ? store.startupScreen.sqliteFilePath : '';
 
-let getSqlDriver = undefined;
+let sqlDriver = undefined;
 
 function getSqlDriver() {
-  if (getSqlDriver === undefined) {
+  if (sqlDriver === undefined) {
     const sqliteFilePath = getSqliteFilePath(store.getState());
-    getSqlDriver = new sqlite3.Database(sqliteFilePath);
+    sqlDriver = new sqlite3.Database(sqliteFilePath);
   }
-  return getSqlDriver;
+  return sqlDriver;
 }
 
 export default getSqlDriver;
