@@ -11,17 +11,11 @@ import {
 } from './userFilesConfigurationConstants';
 import writeDirIfNotExists from '../../../fs/writeDirIfNotExists';
 import writeFileIfNotExist from '../../../fs/writeFileIfNotExists';
-import {
-  createFilesTableIfNotExists,
-  createCategoriesTableIfNotExists,
-  createCategoriesFilesTableIfNotExists,
-  insertRootCategoryIfNotExists,
-} from './sqlQueries';
 import { RECEIVE_ENTITIES } from '../actionTypes';
 import routes from '../../../routes';
+import buildSchema from '../../../db/buildSchema';
 const fs = require('fs');
 const path = require('path');
-const sqlite3 = require('sqlite3');
 
 const getChosenInstancePath = (store) =>
   store && store.startupScreen ? store.startupScreen.chosenInstancePath : '';
@@ -48,36 +42,6 @@ const writeFilesSubdirIfNotExists = async () => {
   return await writeDirIfNotExists(userFilesDirPath);
 };
 
-const initializeDatabaseIfNotInitialized = (sqliteFilePath) => {
-  return new Promise((resolve, reject) => {
-    const sqlDriver = new sqlite3.Database(sqliteFilePath);
-    sqlDriver.serialize(function() {
-      sqlDriver.run(createFilesTableIfNotExists, function(err) {
-        if (err) {
-          reject();
-        }
-      });
-      sqlDriver.run(createCategoriesTableIfNotExists, function(err) {
-        if (err) {
-          reject();
-        }
-      });
-      sqlDriver.run(createCategoriesFilesTableIfNotExists, function(err) {
-        if (err) {
-          reject();
-        }
-      });
-      sqlDriver.run(insertRootCategoryIfNotExists, {}, function(err) {
-        if (err) {
-          reject();
-        } else {
-          resolve();
-        }
-      });
-    });
-  });
-};
-
 const writeSqliteFileAndInitializingIfNotExists = async () => {
   const chosenInstancePath = getChosenInstancePath(store.getState());
   const sqliteFilePath = path.join(chosenInstancePath, USER_FILES_DIR, SQLITE_FILE_NAME);
@@ -95,7 +59,7 @@ const writeSqliteFileAndInitializingIfNotExists = async () => {
       return Promise.reject();
     }
   }
-  return await initializeDatabaseIfNotInitialized(sqliteFilePath);
+  return await buildSchema();
 };
 
 const updateErrorMessage = (errorMessage) => {

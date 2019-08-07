@@ -3,31 +3,11 @@ import { useMachine } from '@xstate/react';
 import machine from './machine';
 import store from '../../../redux/store';
 import { RECEIVE_ENTITIES } from '../actionTypes';
-import getSqlDriver from '../../../db/getSqlDriver';
-import { selectFilesByName } from '../sqlQueries';
 import AllFilesTab from './AllFilesTab';
+import queryFilesByName from '../../../db/queries/queryFilesByName';
 
 const getSearchText = (store) => {
   return store && store.searchScreen ? store.searchScreen.searchText : '';
-};
-
-const queryFilesByName = async (fileName) => {
-  return new Promise((resolve, reject) => {
-    getSqlDriver().all(
-      selectFilesByName,
-      {
-        $file_name: `%${fileName}%`,
-      },
-      (err, rows) => {
-        if (err) {
-          console.log('err:', err);
-          reject();
-        } else {
-          resolve(rows);
-        }
-      },
-    );
-  });
 };
 
 const fetchAllFiles = async () => {

@@ -4,31 +4,10 @@ import machine from './machine,';
 import FilesUnderCategoryTabContainer from '../containers/FilesUnderCategoryTabContainer';
 import store from '../../../redux/store';
 import { RECEIVE_ENTITIES } from '../actionTypes';
-import getSqlDriver from '../../../db/getSqlDriver';
-import { selectFilesUnderCategoryByName } from '../sqlQueries';
+import queryFilesUnderCategoryByName from '../../../db/queries/queryFilesUnderCategoryByName';
 
 const getCategoryName = (store) => {
   return store && store.searchScreen ? store.searchScreen.categoryName : '';
-};
-
-const queryFilesUnderCategoryByName = (fileName, categoryName) => {
-  return new Promise((resolve, reject) => {
-    getSqlDriver().all(
-      selectFilesUnderCategoryByName,
-      {
-        $file_name: `%${fileName}%`,
-        $category_name: categoryName,
-      },
-      (err, rows) => {
-        if (err) {
-          console.log('err:', err);
-          reject();
-        } else {
-          resolve(rows);
-        }
-      },
-    );
-  });
 };
 
 const getSearchText = (store) => {
@@ -66,7 +45,7 @@ const machineWithConfig = machine.withConfig({
 });
 
 const FilesUnderCategoryTabWidget = () => {
-  const [_, send] = useMachine(machineWithConfig);
+  const [, send] = useMachine(machineWithConfig);
   const onChangeSearchText = (searchText) => send('SEARCH_TEXT_CHANGED', { searchText });
   return <FilesUnderCategoryTabContainer onChangeSearchText={onChangeSearchText} />;
 };
