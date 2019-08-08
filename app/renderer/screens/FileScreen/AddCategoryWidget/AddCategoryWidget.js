@@ -10,7 +10,7 @@ import querySelectCategoriesWithMatchingName from '../../../db/queries/querySele
 import queryDeleteFileCategory from '../../../db/queries/queryDeleteFileCategory';
 import { Message, Label, Button } from 'semantic-ui-react';
 import BroaderCategoriesModalContainer from './Modal/BroaderCategoriesModalContainer';
-import addNewCategory from '../../../db/queries/addNewCategory';
+import addNewCategoryUnderRoot from '../../../db/queries/addNewCategoryUnderRoot';
 import queryGetCategoryByName from '../../../db/queries/queryGetCategoryByName';
 import { css } from 'emotion';
 import queryCategoryAncestors from '../../../db/queries/queryCategoryAncestors';
@@ -52,8 +52,6 @@ const updateChosenSearchResultCategory = (category) => {
     },
   });
 };
-
-
 
 const getCategories = (store) =>
   store && store.specificTagScreen ? store.specificTagScreen.categories : [];
@@ -99,9 +97,6 @@ const fetchNarrowerCategoriesOfFileInDb = async (category) => {
   }
   return Promise.resolve(narrowerCategoriesOfFile);
 };
-
-
-
 
 const fetchNarrowerCategoriesOfFile = async () => {
   const chosenSearchResultCategory = getChosenSearchResultCategory(store.getState());
@@ -173,7 +168,7 @@ const isInputCategoryNameWhitespace = () => {
 
 const createNewCategory = async () => {
   const newCategoryName = getInputSearchQuery(store.getState());
-  await addNewCategory(newCategoryName);
+  await addNewCategoryUnderRoot(newCategoryName);
   const newCategoryId = await queryGetCategoryByName(newCategoryName);
   const newCategory = {
     name: newCategoryName,

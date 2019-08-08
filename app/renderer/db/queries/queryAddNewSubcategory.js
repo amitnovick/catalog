@@ -3,10 +3,9 @@ import getSqlDriver from '../getSqlDriver';
 const insertCategory = `
 INSERT INTO categories (
   parent_id,
-  name,
-  added_at
+  name
 )
-VALUES ($parent_category_id , $category_name, datetime("now"))
+VALUES ($parent_category_id , $category_name)
 `;
 
 const categoryNameAlreadyExistsErrorMessage =

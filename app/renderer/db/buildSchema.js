@@ -4,7 +4,7 @@ const createFilesTableIfNotExists = `
 CREATE TABLE IF NOT EXISTS files (
   id INTEGER PRIMARY KEY,
   name TEXT UNIQUE NOT NULL,
-  added_at TEXT NOT NULL
+  added_at DATE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 `;
 
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS categories (
   id INTEGER PRIMARY KEY,
   parent_id INTEGER,
   name TEXT UNIQUE NOT NULL,
-  added_at TEXT NOT NULL,
+  added_at DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   FOREIGN KEY(parent_id)
   REFERENCES categories(id)
@@ -49,10 +49,9 @@ WITH existing_root AS (
 )
 INSERT INTO categories (
   parent_id,
-  name,
-  added_at
+  name
 )
-SELECT NULL,"Root", datetime("now")
+SELECT NULL,"Root"
 WHERE NOT EXISTS (SELECT 1 FROM existing_root);
   `;
 

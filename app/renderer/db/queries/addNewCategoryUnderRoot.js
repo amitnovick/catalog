@@ -3,10 +3,9 @@ import getSqlDriver from '../getSqlDriver';
 const insertCategory = `
 INSERT INTO categories (
   parent_id,
-  name,
-  added_at
+  name
 )
-SELECT categories.id , $category_name, datetime("now")
+SELECT categories.id , $category_name
 FROM categories
 WHERE categories.parent_id IS NULL;
 ;
@@ -15,7 +14,7 @@ WHERE categories.parent_id IS NULL;
 const categoryNameAlreadyExistsErrorMessage =
   'SQLITE_CONSTRAINT: UNIQUE constraint failed: categories.name';
 
-const addNewCategory = async (categoryName) => {
+const addNewCategoryUnderRoot = async (categoryName) => {
   return new Promise((resolve, reject) => {
     getSqlDriver().run(
       insertCategory,
@@ -44,4 +43,4 @@ const addNewCategory = async (categoryName) => {
   });
 };
 
-export default addNewCategory;
+export default addNewCategoryUnderRoot;
