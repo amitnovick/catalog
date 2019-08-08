@@ -14,7 +14,10 @@ CREATE TABLE IF NOT EXISTS categories (
   parent_id INTEGER,
   name TEXT UNIQUE NOT NULL,
   added_at TEXT NOT NULL,
-  FOREIGN KEY(parent_id) REFERENCES categories(id)
+
+  FOREIGN KEY(parent_id)
+  REFERENCES categories(id)
+  ON DELETE CASCADE
 );
 `;
 
@@ -22,11 +25,20 @@ const createCategoriesFilesTableIfNotExists = `
 CREATE TABLE IF NOT EXISTS categories_files (
   category_id INTEGER,
   file_id INTEGER,
-  FOREIGN KEY(category_id) REFERENCES categories(id),
-  FOREIGN KEY(file_id) REFERENCES files(id)
+
+  FOREIGN KEY(category_id)
+  REFERENCES categories(id)
+  ON DELETE CASCADE,
+
+  FOREIGN KEY(file_id)
+  REFERENCES files(id)
+  ON DELETE CASCADE,
+
   PRIMARY KEY (category_id, file_id)
 );
 `;
+
+const enableForeignKeySupport = `PRAGMA foreign_keys = ON`;
 
 const insertRootCategoryIfNotExists = `
 WITH existing_root AS (
@@ -58,6 +70,11 @@ const buildSchema = () => {
         }
       });
       getSqlDriver().run(createCategoriesFilesTableIfNotExists, function(err) {
+        if (err) {
+          reject();
+        }
+      });
+      getSqlDriver().run(enableForeignKeySupport, function(err) {
         if (err) {
           reject();
         }

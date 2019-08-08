@@ -15,8 +15,6 @@ import deleteFileFromFs from '../../fs/deleteFile';
 import queryCategoriesOfFile from '../../db/queries/getCategoriesOfFile';
 import queryFileName from '../../db/queries/queryFileName';
 import queryRemoveFileFromFilesTable from '../../db/queries/queryRemoveFileFromFilesTable';
-import queryRemoveFileFromCategoriesFilesTable from '../../db/queries/queryRemoveFileFromCategoriesFilesTable';
-
 
 const fetchFileData = async (fileId) => {
   const fileName = await queryFileName(fileId);
@@ -33,7 +31,6 @@ const fetchFileData = async (fileId) => {
 
 const deleteFile = async (file) => {
   await queryRemoveFileFromFilesTable(file.id);
-  await queryRemoveFileFromCategoriesFilesTable(file.id);
   try {
     await deleteFileFromFs(file.name);
   } catch (error) {
