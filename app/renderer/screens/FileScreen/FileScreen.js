@@ -15,6 +15,7 @@ import deleteFileFromFs from '../../fs/deleteFile';
 import queryCategoriesOfFile from '../../db/queries/getCategoriesOfFile';
 import queryFileName from '../../db/queries/queryFileName';
 import queryRemoveFileFromFilesTable from '../../db/queries/queryRemoveFileFromFilesTable';
+import WebclipWidget from './WebclipWidget/WebclipWidget';
 
 const fetchFileData = async (fileId) => {
   const fileName = await queryFileName(fileId);
@@ -100,6 +101,8 @@ const FileScreen = ({ fileId }) => {
               <CategoriesWidget />
               <AddCategoryWidget refetchFileData={() => send('REFETCH_FILE_DATA')} />
             </div>
+            <Divider horizontal />
+            <WebclipWidget fileId={fileId} />
             <FileMenuContainer
               onClickOpenFile={openFile}
               onClickDeleteFile={(file) =>

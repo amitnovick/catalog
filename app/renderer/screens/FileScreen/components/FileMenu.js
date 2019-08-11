@@ -6,7 +6,6 @@ import { Button } from 'semantic-ui-react';
 const FileMenu = ({ file, onClickOpenFile, onClickDeleteFile }) => {
   return (
     <>
-      <br />
       <Button
         title="Open externally with preferred application"
         icon="external"
