@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getSqlDriver from '../../db/getSqlDriver';
 
 const insertFile = `
 INSERT INTO files (
@@ -9,11 +9,11 @@ VALUES (
 );
 `;
 
-const selectInsertedFileId = `SELECT last_insert_rowid() AS id`;
+const insertWebclipResource = `INSERT INTO webclip_resources ( id, page_url, page_title ) VALUES ( last_insert_rowid(), $page_url, $page_title )`;
 
 const fileNameAlreadyExistsErrorMessage = 'SQLITE_CONSTRAINT: UNIQUE constraint failed: files.name';
 
-const queryInsertFile = async (fileName) => {
+const queryInsertWebclipResource = async (fileName, pageUrl, pageTitle) => {
   return new Promise((resolve, reject) => {
     getSqlDriver().serialize(function() {
       getSqlDriver().run('BEGIN TRANSACTION');
@@ -39,16 +39,21 @@ const queryInsertFile = async (fileName) => {
               const errorMessage = `Unknown error: affected ${affectedRowsCount} rows, expected to affect 1 file row`;
               reject(new Error(errorMessage));
             } else {
-              getSqlDriver().all(selectInsertedFileId, (err, rows) => {
-                getSqlDriver().run('COMMIT');
-                if (err) {
-                  reject(err);
-                } else {
-                  const insertedFileRow = rows[0];
-                  const { id: fileId } = insertedFileRow;
-                  resolve(fileId);
-                }
-              });
+              getSqlDriver().run(
+                insertWebclipResource,
+                {
+                  $page_url: pageUrl,
+                  $page_title: pageTitle,
+                },
+                (err) => {
+                  getSqlDriver().run('COMMIT');
+                  if (err) {
+                    reject(err);
+                  } else {
+                    resolve();
+                  }
+                },
+              );
             }
           }
         },
@@ -57,4 +62,4 @@ const queryInsertFile = async (fileName) => {
   });
 };
 
-export default queryInsertFile;
+export default queryInsertWebclipResource;

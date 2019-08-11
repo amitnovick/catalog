@@ -8,7 +8,7 @@ import { assign } from 'xstate';
 import queryInsertFile from '../../db/queries/queryInsertFile';
 import writeFile from '../../fs/writeFile';
 import queryDeleteFile from '../../db/queries/queryDeleteFile';
-const isValidFilename = require('valid-filename');
+import isFileNameValid from '../../utils/isFileNameValid';
 
 const attemptToCreateFile = async (fileName) => {
   const fileId = await queryInsertFile(fileName);
@@ -19,10 +19,6 @@ const attemptToCreateFile = async (fileName) => {
     await queryDeleteFile(fileName); // clean up after `insertFileToDb`
     return Promise.reject(error);
   }
-};
-
-const isFileNameValid = (fileName) => {
-  return isValidFilename(fileName) && fileName.trim() !== '';
 };
 
 const machineWithConfig = machine.withConfig({

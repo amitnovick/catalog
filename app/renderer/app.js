@@ -3,9 +3,12 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistStore } from 'redux-persist';
+import initHttpServer from './http-server/initHttpServer';
 
 import store from './redux/store';
 import RouteController from './RouteController';
+
+initHttpServer();
 
 const rootElement = document.querySelector(document.currentScript.getAttribute('data-container'));
 

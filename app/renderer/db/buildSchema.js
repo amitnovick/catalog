@@ -8,6 +8,20 @@ CREATE TABLE IF NOT EXISTS files (
 );
 `;
 
+const createWebClipResourcesIfNotExists = `
+CREATE TABLE IF NOT EXISTS webclip_resources (
+  id INTEGER,
+  page_url TEXT NOT NULL,
+  page_title TEXT NOT NULL,
+
+  FOREIGN KEY (id)
+  REFERENCES files (id)
+  ON DELETE CASCADE,
+
+  PRIMARY KEY (id)
+);
+`;
+
 const createCategoriesTableIfNotExists = `
 CREATE TABLE IF NOT EXISTS categories (
   id INTEGER PRIMARY KEY,
@@ -59,6 +73,11 @@ const buildSchema = () => {
   return new Promise((resolve, reject) => {
     getSqlDriver().serialize(function() {
       getSqlDriver().run(createFilesTableIfNotExists, function(err) {
+        if (err) {
+          reject();
+        }
+      });
+      getSqlDriver().run(createWebClipResourcesIfNotExists, function(err) {
         if (err) {
           reject();
         }
