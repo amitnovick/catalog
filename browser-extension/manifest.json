@@ -1,0 +1,22 @@
+{
+  "manifest_version": 2,
+  "name": "Catalog Web Clipper (dev)",
+  "version": "0.0.1",
+  "description": "Save web clippings to Catalog app",
+  "icons": {
+    "48": "icons/border-48.png"
+  },
+  "homepage_url": "https://github.com/amitnovick/catalog",
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "http://*/",
+    "https://*/",
+    "<all_urls>",
+    "contextMenus"
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  }
+}
