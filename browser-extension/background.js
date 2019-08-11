@@ -1,3 +1,5 @@
+/* eslint no-undef: 0 */
+
 async function takeScreenshot() {
   const dataUri = await browser.tabs.captureVisibleTab(null, { format: 'png' });
 
@@ -11,7 +13,7 @@ const SERVER_URL = `http://localhost:${SERVER_PORT}`;
 const commsConstants = {
   IMAGE_DATA_URI: 'imageDataUri',
   PAGE_URL: 'pageUrl',
-  PAGE_TITLE: 'pageTitle'
+  PAGE_TITLE: 'pageTitle',
 };
 
 async function sendScreenshot(pageUrl, tabTitle) {
@@ -20,22 +22,22 @@ async function sendScreenshot(pageUrl, tabTitle) {
   const payload = {
     [commsConstants.IMAGE_DATA_URI]: dataUri,
     [commsConstants.PAGE_URL]: pageUrl,
-    [commsConstants.PAGE_TITLE]: tabTitle
+    [commsConstants.PAGE_TITLE]: tabTitle,
   };
 
   window.fetch(SERVER_URL, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   });
 }
 
 browser.contextMenus.create({
   id: 'catalog-save-screenshot',
   title: 'Clip screenshot to Catalog',
-  contexts: ['page']
+  contexts: ['page'],
 });
 
 browser.contextMenus.onClicked.addListener(async (info, tab) => {

@@ -73,5 +73,8 @@ npm run develop
 
 ## License
 
+Logo uses modified version of the "Sitemap" SVG asset by Font Awesome, as made avilable for public
+use by the [Creative Commons Attribution 4.0 license](https://creativecommons.org/licenses/by/4.0/)
+
 Copyright © 2019 [Amit Novick](https://amitnovick.netlify.com/). Distributed under the GNU AFFERO
 PUBLIC LICENSE, Version 3. See separate LICENSE file.

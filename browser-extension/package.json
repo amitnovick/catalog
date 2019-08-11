@@ -1,0 +1,14 @@
+{
+  "name": "catalog-web-extension",
+  "version": "0.3.0",
+  "description": "A WebClipper web extension",
+  "author": {
+    "name": "Amit Novick",
+    "email": "axnovick@gmail.com"
+  },
+  "repository": "https://github.com/amitnovick/catalog",
+  "license": "AGPL-3.0-only",
+  "dependencies": {
+    "webextension-polyfill": "^0.4.0"
+  }
+}
