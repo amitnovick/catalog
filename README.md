@@ -11,6 +11,11 @@ internet connection, nor user's registration to run on desktop devices.
   <img src="docs/app-screenshot.png" width="350" alt="Catalog App Screenshot">
 </div>
 
+## Features
+
+- Desktop application
+- Web Clipper browser extension (installation instructions)
+
 ## Installation
 
 ### Mac OS X
@@ -71,10 +76,12 @@ Finally: Install a binary on `/dist` that should be named `Catalog...`
 npm run develop
 ```
 
-## License
+## Attribution
 
 Logo uses modified version of the "Sitemap" SVG asset by Font Awesome, as made avilable for public
 use by the [Creative Commons Attribution 4.0 license](https://creativecommons.org/licenses/by/4.0/)
+
+## License
 
 Copyright © 2019 [Amit Novick](https://amitnovick.netlify.com/). Distributed under the GNU AFFERO
 PUBLIC LICENSE, Version 3. See separate LICENSE file.
