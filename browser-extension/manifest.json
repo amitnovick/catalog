@@ -1,17 +1,27 @@
 {
   "manifest_version": 2,
-  "name": "Catalog Web Clipper (dev)",
-  "version": "0.0.1",
+  "name": "Catalog Web Clipper",
+  "version": "0.3.0",
   "description": "Save web clippings to Catalog app",
   "icons": {
     "32": "icons/32.png",
     "48": "icons/48.png",
     "96": "icons/96.png"
   },
+  "browser_action": {
+    "default_icon": "icons/32.png",
+    "default_title": "Catalog Web Clipper"
+  },
   "homepage_url": "https://github.com/amitnovick/catalog",
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "permissions": ["activeTab", "tabs", "http://*/", "https://*/", "<all_urls>", "contextMenus"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["lib/browser-polyfill.js", "lib/toast.js", "content.js"]
+    }
+  ],
   "background": {
-    "scripts": ["node_modules/webextension-polyfill/dist/browser-polyfill.js", "background.js"]
+    "scripts": ["lib/browser-polyfill.js", "background.js"]
   }
 }

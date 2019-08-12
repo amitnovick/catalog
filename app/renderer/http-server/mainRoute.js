@@ -117,7 +117,7 @@ const mainRoute = {
     [swaggerKeys.NOTES]: 'Add Webclip resource of a screenshot file',
     [swaggerKeys.TAGS]: ['api'],
     payload: {
-      maxBytes: 1000 * 1000 * 5, // 5 Mb
+      maxBytes: 1000 * 1000 * 50, // 50 Mb
       parse: true,
     },
     [joiKeys.VALIDATE]: {
