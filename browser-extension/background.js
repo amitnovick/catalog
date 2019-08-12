@@ -70,11 +70,14 @@ async function takeScreenshot(rectangleDimensions) {
   const activeTab = await getActiveTab();
 
   const zoom = await browser.tabs.getZoom(activeTab.id);
+
+  const finalZoom = zoom * window.devicePixelRatio;
+
   const newArea = Object.assign({}, rectangleDimensions);
-  newArea.x *= zoom;
-  newArea.y *= zoom;
-  newArea.width *= zoom;
-  newArea.height *= zoom;
+  newArea.x *= finalZoom;
+  newArea.y *= finalZoom;
+  newArea.width *= finalZoom;
+  newArea.height *= finalZoom;
 
   const dataUrl = await browser.tabs.captureVisibleTab(null, { format: 'png' });
 
