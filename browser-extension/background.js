@@ -8,6 +8,7 @@ const commsConstants = {
   IMAGE_DATA_URI: 'imageDataUri',
   PAGE_URL: 'pageUrl',
   PAGE_TITLE: 'pageTitle',
+  FILE_NAME: 'fileName',
 };
 
 async function getActiveTab() {
@@ -101,7 +102,7 @@ async function sendScreenshot(pageUrl, tabTitle) {
       [commsConstants.PAGE_TITLE]: tabTitle,
     };
 
-    await window.fetch(SERVER_URL, {
+    const response = await window.fetch(SERVER_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -109,7 +110,16 @@ async function sendScreenshot(pageUrl, tabTitle) {
       body: JSON.stringify(payload),
     });
 
-    await sendMessageToActiveTab({ name: 'catalog-notify-saved-screenshot-successfully' });
+    const responseBodyPayload = await response.json();
+
+    const { [commsConstants.FILE_NAME]: fileName } = responseBodyPayload;
+
+    console.log('fileName:', fileName);
+
+    await sendMessageToActiveTab({
+      name: 'catalog-notify-saved-screenshot-successfully',
+      payload: { fileName },
+    });
   }
 }
 

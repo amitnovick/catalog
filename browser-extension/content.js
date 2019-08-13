@@ -168,6 +168,8 @@ browser.runtime.onMessage.addListener(async (message) => {
   if (message.name === 'catalog-get-rectangle-dimensions') {
     return getRectangleDimensions();
   } else if (message.name === 'catalog-notify-saved-screenshot-successfully') {
+    const { fileName } = message.payload;
+
     const toastHtmlContentWrapper = document.createElement('span');
 
     const checkmarkSpan = document.createElement('span');
@@ -185,7 +187,18 @@ browser.runtime.onMessage.addListener(async (message) => {
     successTextSpan.style.display = 'inline-flex';
     successTextSpan.style.verticalAlign = 'middle';
 
-    successTextSpan.textContent = 'Saved successfully';
+    const CAP_LENGTH = 40;
+
+    const SUFFIX_LENGTH = '.png'.length;
+
+    const fileNameCappedLength =
+      fileName.length > CAP_LENGTH
+        ? `${fileName.substring(0, CAP_LENGTH - SUFFIX_LENGTH)} ... ${fileName.substring(
+            fileName.length - SUFFIX_LENGTH,
+          )}`
+        : fileName;
+
+    successTextSpan.textContent = `SAVED: ${fileNameCappedLength}`;
 
     toastHtmlContentWrapper.appendChild(checkmarkSpan);
     toastHtmlContentWrapper.appendChild(successTextSpan);

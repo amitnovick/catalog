@@ -1,17 +1,18 @@
 import formatFilePathRaw from './fs/formatFilePathRaw';
 import queryInsertWebclipResource from './db/queryInsertWebclipResource';
 import deleteFileRaw from './fs/deleteFileRaw';
-import isFileNameValid from '../utils/isFileNameValid';
 import store from '../redux/store';
+
+const isValidFilename = require('valid-filename');
+const filenamify = require('filenamify');
+const Joi = require('@hapi/joi');
+const { promisify } = require('util');
+const fs = require('fs');
 
 const getFilesSubdirPathIfExists = (store) =>
   store && store.startupScreen && store.startupScreen.userFilesSubdirFilesPath
     ? store.startupScreen.userFilesSubdirFilesPath
     : null;
-
-const Joi = require('@hapi/joi');
-const { promisify } = require('util');
-const fs = require('fs');
 
 const writeFile = promisify(fs.writeFile);
 
@@ -81,6 +82,20 @@ const commsConstants = {
   PAGE_URL: 'pageUrl',
   PAGE_TITLE: 'pageTitle',
   ERROR: 'error',
+  FILE_NAME: 'fileName',
+};
+
+const formatValidFileName = (fileName) => {
+  if (isValidFilename(fileName)) {
+    if (fileName.trim() === '') {
+      return 'New Webclip';
+    } else {
+      return fileName;
+    }
+  } else {
+    const renamedFileName = filenamify(fileName, { replacement: '-' });
+    return renamedFileName;
+  }
 };
 
 const mainRoute = {
@@ -95,14 +110,14 @@ const mainRoute = {
       } = request.payload;
 
       const imageDataUriStripped = stripEncodingString(imageDataUri);
-      const safeFileName = isFileNameValid(pageTitle) ? pageTitle : 'New Webclip';
+      const safeFileName = formatValidFileName(pageTitle);
 
       try {
         const fileName = await writeFileWithNonExistingName(safeFileName, imageDataUriStripped);
         try {
           await queryInsertWebclipResource(fileName, pageUrl, pageTitle);
           console.log('Added web clip:', fileName);
-          return h.response().code(200);
+          return h.response({ [commsConstants.FILE_NAME]: fileName }).code(200);
         } catch (error) {
           await deleteFileRaw(
             fileName,
@@ -139,7 +154,12 @@ const mainRoute = {
     },
     response: {
       status: {
-        200: sJoi.any(),
+        200: sJoi.object({
+          [commsConstants.FILE_NAME]: sJoi
+            .string()
+            .allow('')
+            .required(),
+        }),
         404: sJoi.object({
           [commsConstants.ERROR]: sJoi.string().required(),
         }),

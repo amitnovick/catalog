@@ -20,6 +20,7 @@
     "@hapi/vision": "^5.5.2",
     "@xstate/react": "^0.7.0",
     "emotion": "^10.0.14",
+    "filenamify": "^4.1.0",
     "hapi-swagger": "^10.0.2",
     "paths.macro": "^2.0.2",
     "prop-types": "^15.7.2",
