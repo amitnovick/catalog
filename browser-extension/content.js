@@ -162,6 +162,47 @@ function getRectangleDimensions() {
   });
 }
 
+const notifyFileWasSavedSuccessfully = (fileName) => {
+  const toastHtmlContentWrapper = document.createElement('span');
+
+  const checkmarkSpan = document.createElement('span');
+
+  checkmarkSpan.style.fontSize = '20px';
+  checkmarkSpan.style.color = 'lightgreen';
+  checkmarkSpan.style.marginRight = '26px';
+  checkmarkSpan.style.display = 'inline-flex';
+  checkmarkSpan.style.verticalAlign = 'middle';
+
+  checkmarkSpan.textContent = '✓';
+
+  const successTextSpan = document.createElement('span');
+
+  successTextSpan.style.display = 'inline-flex';
+  successTextSpan.style.verticalAlign = 'middle';
+
+  const CAP_LENGTH = 40;
+
+  const SUFFIX_LENGTH = '.png'.length;
+
+  const fileNameCappedLength =
+    fileName.length > CAP_LENGTH
+      ? `${fileName.substring(0, CAP_LENGTH - SUFFIX_LENGTH)} ... ${fileName.substring(
+          fileName.length - SUFFIX_LENGTH,
+        )}`
+      : fileName;
+
+  successTextSpan.textContent = `SAVED: ${fileNameCappedLength}`;
+
+  toastHtmlContentWrapper.appendChild(checkmarkSpan);
+  toastHtmlContentWrapper.appendChild(successTextSpan);
+
+  iqwerty.toast.Toast(toastHtmlContentWrapper, {
+    settings: {
+      duration: 3000,
+    },
+  });
+};
+
 browser.runtime.onMessage.addListener(async (message) => {
   console.info('Message: ' + message.name);
 
@@ -169,45 +210,7 @@ browser.runtime.onMessage.addListener(async (message) => {
     return getRectangleDimensions();
   } else if (message.name === 'catalog-notify-saved-screenshot-successfully') {
     const { fileName } = message.payload;
-
-    const toastHtmlContentWrapper = document.createElement('span');
-
-    const checkmarkSpan = document.createElement('span');
-
-    checkmarkSpan.style.fontSize = '20px';
-    checkmarkSpan.style.color = 'lightgreen';
-    checkmarkSpan.style.marginRight = '26px';
-    checkmarkSpan.style.display = 'inline-flex';
-    checkmarkSpan.style.verticalAlign = 'middle';
-
-    checkmarkSpan.textContent = '✓';
-
-    const successTextSpan = document.createElement('span');
-
-    successTextSpan.style.display = 'inline-flex';
-    successTextSpan.style.verticalAlign = 'middle';
-
-    const CAP_LENGTH = 40;
-
-    const SUFFIX_LENGTH = '.png'.length;
-
-    const fileNameCappedLength =
-      fileName.length > CAP_LENGTH
-        ? `${fileName.substring(0, CAP_LENGTH - SUFFIX_LENGTH)} ... ${fileName.substring(
-            fileName.length - SUFFIX_LENGTH,
-          )}`
-        : fileName;
-
-    successTextSpan.textContent = `SAVED: ${fileNameCappedLength}`;
-
-    toastHtmlContentWrapper.appendChild(checkmarkSpan);
-    toastHtmlContentWrapper.appendChild(successTextSpan);
-
-    iqwerty.toast.Toast(toastHtmlContentWrapper, {
-      settings: {
-        duration: 3000,
-      },
-    });
+    notifyFileWasSavedSuccessfully(fileName);
   } else {
     throw new Error('Unknown command: ' + JSON.stringify(message));
   }
