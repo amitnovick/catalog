@@ -28,6 +28,12 @@ const NavigationBox = ({ path, onClickAddButton, onClickFileImportButton }) => {
       <Menu.Item active={path === routes.TREE_EXPLORER} as={Link} to={routes.TREE_EXPLORER}>
         <Icon name="wpexplorer" size="big" />
       </Menu.Item>
+      <Menu.Item
+        active={path === routes.RESOURCES_ADDITION_TIMELINE}
+        as={Link}
+        to={routes.RESOURCES_ADDITION_TIMELINE}>
+        <Icon name="calendar times outline" size="big" />
+      </Menu.Item>
     </Menu>
   );
 };

@@ -7,6 +7,10 @@ by adding categories to files. Users get the same user interface to manage their
 platforms. Catalog is compatible with Windows, Linux and Mac. The application requires neither
 internet connection, nor user's registration to run on desktop devices.
 
+In addition to the desktop application, a companion Web Clipper browser extension is available for
+[Firefox](https://addons.mozilla.org/en-US/firefox/addon/catalog-web-clipper/) and
+[Chrome](https://github.com/amitnovick/catalog/blob/master/docs/browser-extension.md).
+
 <div align="center">
   <img src="docs/app-screenshot.png" width="350" alt="Catalog App Screenshot">
 </div>
@@ -14,7 +18,7 @@ internet connection, nor user's registration to run on desktop devices.
 ## Features
 
 - Desktop application
-- Web Clipper browser extension (installation instructions)
+- [Web Clipper browser extension](https://github.com/amitnovick/catalog/blob/master/docs/browser-extension.md)
 
 ## Installation
 

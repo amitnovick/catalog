@@ -8,6 +8,7 @@ import routes from './routes';
 import HomeScreen from './screens/HomeScreen';
 import NavigationBoxWidget from './NavigationBoxWidget/NavigationBoxWidget';
 import LoadConfigFileScreenContainer from './screens/StartupScreens/LoadConfigFileScreen/LoadConfigFileScreen';
+import ResourceAdditionTimelineScreen from './screens/ResourceAdditionTimelineScreen/ResourceAdditionTimelineScreen';
 
 const Layout = ({ BodyComponent, HeaderComponent }) => {
   return (
@@ -77,6 +78,32 @@ const RouteController = () => {
             />
           )}
         />
+        <Route
+          exact
+          path={routes.RESOURCES_ADDITION_TIMELINE}
+          render={({ match }) => (
+            <Layout
+              key="first"
+              BodyComponent={<ResourceAdditionTimelineScreen pageNumber={1} />}
+              HeaderComponent={<NavigationBoxWidget path={match.path} />}
+            />
+          )}
+        />
+
+        <Route
+          exact
+          path={`${routes.RESOURCES_ADDITION_TIMELINE}/:pageNumber`}
+          render={({ match }) => (
+            <Layout
+              key={match.params.pageNumber}
+              BodyComponent={
+                <ResourceAdditionTimelineScreen pageNumber={Number(match.params.pageNumber)} />
+              }
+              HeaderComponent={<NavigationBoxWidget />}
+            />
+          )}
+        />
+
         <Route render={() => <h2>Unknown route</h2>} />
       </Switch>
     </Router>
