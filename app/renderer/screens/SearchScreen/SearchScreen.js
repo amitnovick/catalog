@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tab, Grid } from 'semantic-ui-react';
+import { Tab } from 'semantic-ui-react';
 
 import { RECEIVE_ENTITIES } from './actionTypes';
 import { connect } from 'react-redux';
@@ -30,15 +30,7 @@ const SearchScreen = ({ resetFormStates }) => {
     },
   ];
 
-  return (
-    <Grid>
-      <Grid.Column width="3" />
-      <Grid.Column width="10">
-        <Tab panes={panes} menu={{ secondary: true, attached: true }} renderActiveOnly />
-      </Grid.Column>
-      <Grid.Column width="3" />
-    </Grid>
-  );
+  return <Tab panes={panes} menu={{ secondary: true, attached: true }} renderActiveOnly />;
 };
 
 const resetFormStates = () => ({

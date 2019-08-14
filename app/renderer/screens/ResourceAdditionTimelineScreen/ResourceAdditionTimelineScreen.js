@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import machine from './machine';
 import { assign } from 'xstate';
-import { List, Button, Header } from 'semantic-ui-react';
+import { List, Button, Segment } from 'semantic-ui-react';
 import querySelectFilesOrderByDateAdded from '../../db/queries/querySelectFilesOrderByDateAdded';
 import querySelectCountFiles from '../../db/queries/querySelectCountFiles';
 import routes from '../../routes';
@@ -15,24 +15,63 @@ import {
   differenceInCalendarYears,
   differenceInCalendarMonths,
 } from 'date-fns';
+import { css } from 'emotion';
 
 const ITEMS_PER_PAGE = 20;
 
+const SEMANTIC_UI_BLUE = '#0E6EB8';
+
+const threeDotsClass = css`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const flexParentClass = css`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const flexExpandingChildClass = css`
+  display: inline-block;
+  width: 100%;
+`;
+
+const hoveredButtonClass = css`
+  background-color: white !important;
+  color: ${SEMANTIC_UI_BLUE} !important;
+  border: 2px solid ${SEMANTIC_UI_BLUE} !important;
+  margin: -2px !important;
+
+  :hover {
+    background-color: ${SEMANTIC_UI_BLUE} !important;
+    color: white !important;
+  }
+`;
+
+const segmentClass = css`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
 const formatDate = (isoDateString) => {
+  const inputDateInLocalTime = new Date(`${isoDateString} UTC`);
   const currentDate = new Date();
-  const yearsDifference = differenceInCalendarYears(currentDate, isoDateString);
+  const yearsDifference = differenceInCalendarYears(currentDate, inputDateInLocalTime);
   if (yearsDifference >= 1) {
     return `${yearsDifference} years ago`;
   } else {
-    const monthsDifference = differenceInCalendarMonths(currentDate, isoDateString);
+    const monthsDifference = differenceInCalendarMonths(currentDate, inputDateInLocalTime);
     if (monthsDifference > 3) {
       return `${monthsDifference} months ago`;
     } else {
-      const weeksDifference = differenceInCalendarWeeks(currentDate, isoDateString);
+      const weeksDifference = differenceInCalendarWeeks(currentDate, inputDateInLocalTime);
       if (weeksDifference >= 1) {
         return `${weeksDifference} weeks ago`;
       } else {
-        const daysDifference = differenceInCalendarDays(currentDate, isoDateString);
+        const daysDifference = differenceInCalendarDays(currentDate, inputDateInLocalTime);
         if (daysDifference === 0) {
           return 'Today';
         } else if (daysDifference === 1) {
@@ -78,7 +117,7 @@ const ResourceAdditionTimelineScreen = ({ pageNumber }) => {
   );
 
   if (current.matches('fetchingPaginatedResources')) {
-    return <h2>Loading...</h2>;
+    return <Segment className={segmentClass} />;
   } else if (current.matches('success')) {
     const { paginatedResources, countOfFiles } = current.context;
     const countOfPages = Math.ceil(countOfFiles / ITEMS_PER_PAGE);
@@ -104,31 +143,44 @@ const ResourceAdditionTimelineScreen = ({ pageNumber }) => {
     }
 
     return (
-      <>
-        <div>
+      <Segment className={segmentClass}>
+        <List size="big" style={{ height: '100%', overflowY: 'scroll' }}>
           {Array.from(dateGroupResources.keys()).map((dataGroupNane) => (
-            <div key={dataGroupNane}>
-              <Header>{dataGroupNane}</Header>
-              <List>
+            <List.Item key={dataGroupNane}>
+              <div className={flexParentClass}>
+                <List.Icon name="calendar alternate outline" />
+                <List.Header className={flexExpandingChildClass}>{dataGroupNane}</List.Header>
+              </div>
+              <List.List>
                 {dateGroupResources.get(dataGroupNane).map((paginatedResource) => (
-                  <li key={paginatedResource.id}>{`${paginatedResource.name}`}</li>
+                  <List.Item key={paginatedResource.id}>
+                    <div className={flexParentClass}>
+                      <List.Icon name="file" color="yellow" />
+                      <List.Header className={`${threeDotsClass} ${flexExpandingChildClass}`}>
+                        {`${paginatedResource.name}`}
+                      </List.Header>
+                    </div>
+                  </List.Item>
                 ))}
-              </List>
-            </div>
+              </List.List>
+            </List.Item>
           ))}
+        </List>
+        <div style={{ textAlign: 'center', width: '100%' }}>
+          <Button.Group size="big">
+            <Button
+              disabled={isTherePreviousPage === false}
+              className={hoveredButtonClass}
+              as={Link}
+              to={`${routes.RESOURCES_ADDITION_TIMELINE}/${pageNumber - 1}`}>{`Newer`}</Button>
+            <Button
+              disabled={isThereNextPage === false}
+              className={hoveredButtonClass}
+              as={Link}
+              to={`${routes.RESOURCES_ADDITION_TIMELINE}/${pageNumber + 1}`}>{`Older`}</Button>
+          </Button.Group>
         </div>
-        <h3>{`Page: ${pageNumber}`}</h3>
-        {isTherePreviousPage ? (
-          <Button
-            as={Link}
-            to={`${routes.RESOURCES_ADDITION_TIMELINE}/${pageNumber - 1}`}>{`Previous`}</Button>
-        ) : null}
-        {isThereNextPage ? (
-          <Button
-            as={Link}
-            to={`${routes.RESOURCES_ADDITION_TIMELINE}/${pageNumber + 1}`}>{`Next`}</Button>
-        ) : null}
-      </>
+      </Segment>
     );
   } else if (current.matches('failure')) {
     const { errorMessage } = current.context;

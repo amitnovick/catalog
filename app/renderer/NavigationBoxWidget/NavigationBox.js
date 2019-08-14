@@ -32,7 +32,7 @@ const NavigationBox = ({ path, onClickAddButton, onClickFileImportButton }) => {
         active={path === routes.RESOURCES_ADDITION_TIMELINE}
         as={Link}
         to={routes.RESOURCES_ADDITION_TIMELINE}>
-        <Icon name="calendar times outline" size="big" />
+        <Icon name="calendar alternate" size="big" />
       </Menu.Item>
     </Menu>
   );

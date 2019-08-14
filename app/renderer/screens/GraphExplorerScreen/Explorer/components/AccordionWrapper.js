@@ -1,31 +1,34 @@
 import React from 'react';
-import { Accordion, Header } from 'semantic-ui-react';
+import { Accordion, Header, Icon } from 'semantic-ui-react';
+import { css } from 'emotion';
 
-const AccordionWrapper = ({ title, Content, shouldDefaultToActive, Controls }) => {
-  const panels = [
-    {
-      key: title,
-      title: {
-        content: (
-          <div style={{ display: 'inline-flex', justifyContent: 'space-between', width: '95%' }}>
-            <Header as="h4" style={{ margin: 'auto 0' }}>
-              {title}
-            </Header>
-            {Controls !== undefined ? <Controls /> : null}
-          </div>
-        ),
-      },
-      content: {
-        content: <Content />,
-      },
-    },
-  ];
+const accordionClass = css`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
 
+const AccordionWrapper = ({ title, Content, shouldDefaultToActive, Controls, ...props }) => {
   return (
     <Accordion
-      defaultActiveIndex={shouldDefaultToActive === true ? 0 : undefined}
-      panels={panels}
-    />
+      className={accordionClass}
+      {...props}
+      // defaultActiveIndex={shouldDefaultToActive === true ? 0 : undefined}
+    >
+      <Accordion.Title active={true} index={0}>
+        {/* <Icon name="dropdown" /> */}
+        <div style={{ display: 'inline-flex', justifyContent: 'space-between', width: '95%' }}>
+          <Header as="h4" style={{ margin: 'auto 0' }}>
+            {title}
+          </Header>
+          {Controls !== undefined ? <Controls /> : null}
+        </div>
+      </Accordion.Title>
+      <Accordion.Content active={true} style={{ height: '100%', overflowY: 'scroll' }}>
+        <Content />
+      </Accordion.Content>
+    </Accordion>
   );
 };
 

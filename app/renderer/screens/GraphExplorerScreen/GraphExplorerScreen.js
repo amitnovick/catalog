@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useMachine } from '@xstate/react';
-import { Grid, Divider, Segment } from 'semantic-ui-react';
+import { Segment } from 'semantic-ui-react';
 
 import machine from './machine';
 import queryRootCategory from '../../db/queries/queryRootCategory';
@@ -15,7 +15,6 @@ import CategoryDeleteModalWidget from './CategoryDeleteModalWidget/CategoryDelet
 import CategoryAdditionModalWidget from './CategoryAdditionModalWidget/CategoryAdditionModalWidget';
 import CategoryMoveToModalWidget from './CategoryMoveToModalWidget/CategoryMoveToModalWidget';
 import queryFiles from '../../db/queries/queryFiles';
-
 
 const fetchData = async (currentCategoryId) => {
   const categoriesInPath =
@@ -86,34 +85,31 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
   ) {
     return (
       <>
-        <Divider horizontal />
-        <Grid>
-          <Grid.Column width="3" />
-          <Grid.Column width="10">
-            <Segment style={{ minHeight: '85vh' }}>
-              {current.matches('idle.idle') ? (
-                <Explorer
-                  categories={childCategories}
-                  files={files}
-                  categoriesInPath={categoriesInPath}
-                  onClickRenameButton={(category) =>
-                    send('CLICK_CATEGORY_RENAME_BUTTON', {
-                      categoryRenamingModalCategory: category,
-                    })
-                  }
-                  onClickMoveToButton={(category) =>
-                    send('CLICK_CATEGORY_MOVE_TO__BUTTON', { category })
-                  }
-                  onClickDeleteButton={(category) =>
-                    send('CLICK_CATEGORY_DELETE_BUTTON', { category })
-                  }
-                  onClickAddCategoryButton={() => send('CLICK_ADD_CATEGORY_BUTTON')}
-                />
-              ) : null}
-            </Segment>
-          </Grid.Column>
-          <Grid.Column width="3" />
-        </Grid>
+        <Segment
+          style={{
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'space-between',
+            flexDirection: 'column',
+          }}>
+          {current.matches('idle.idle') ? (
+            <Explorer
+              categories={childCategories}
+              files={files}
+              categoriesInPath={categoriesInPath}
+              onClickRenameButton={(category) =>
+                send('CLICK_CATEGORY_RENAME_BUTTON', {
+                  categoryRenamingModalCategory: category,
+                })
+              }
+              onClickMoveToButton={(category) =>
+                send('CLICK_CATEGORY_MOVE_TO__BUTTON', { category })
+              }
+              onClickDeleteButton={(category) => send('CLICK_CATEGORY_DELETE_BUTTON', { category })}
+              onClickAddCategoryButton={() => send('CLICK_ADD_CATEGORY_BUTTON')}
+            />
+          ) : null}
+        </Segment>
         {current.matches('categoryRenamingModal') ? (
           <CategoryRenameModalWidget
             category={categoryRenamingModalCategory}

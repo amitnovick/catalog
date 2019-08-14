@@ -9,6 +9,7 @@ const FilesAccordion = ({ files }) => {
     <AccordionWrapper
       title="Files"
       shouldDefaultToActive={files.length === 0}
+      style={{ height: '100%' }}
       Content={() => (
         <List size="big">
           {files.length > 0 ? (

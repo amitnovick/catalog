@@ -5,6 +5,14 @@ import PropTypes from 'prop-types';
 import PathCategoriesMenu from './components/PathCategoriesMenu';
 import CategoriesAccordion from './components/CategoriesAccordion';
 import FilesAccordion from './components/FilesAccordion';
+import { css } from 'emotion';
+
+const listClass = css`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
 
 const Explorer = ({
   categories,
@@ -18,8 +26,8 @@ const Explorer = ({
   return (
     <>
       <PathCategoriesMenu categoriesInPath={categoriesInPath} />
-      <List celled>
-        <List.Item>
+      <List celled className={listClass}>
+        <List.Item style={{ height: '50%' }}>
           <CategoriesAccordion
             onClickAddCategoryButton={onClickAddCategoryButton}
             onClickMoveToButton={onClickMoveToButton}
@@ -28,7 +36,7 @@ const Explorer = ({
             onClickRenameButton={onClickRenameButton}
           />
         </List.Item>
-        <List.Item>
+        <List.Item style={{ height: '50%' }}>
           <FilesAccordion files={files} />
         </List.Item>
       </List>

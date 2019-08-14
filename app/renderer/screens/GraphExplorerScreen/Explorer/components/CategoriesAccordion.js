@@ -16,6 +16,7 @@ const CategoriesAccordion = ({
     <AccordionWrapper
       title="Categories"
       shouldDefaultToActive={true}
+      style={{ height: '100%' }}
       Content={() => (
         <List size="big">
           {categories.map((childCategory) => (

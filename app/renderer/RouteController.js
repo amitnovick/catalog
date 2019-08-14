@@ -9,12 +9,19 @@ import HomeScreen from './screens/HomeScreen';
 import NavigationBoxWidget from './NavigationBoxWidget/NavigationBoxWidget';
 import LoadConfigFileScreenContainer from './screens/StartupScreens/LoadConfigFileScreen/LoadConfigFileScreen';
 import ResourceAdditionTimelineScreen from './screens/ResourceAdditionTimelineScreen/ResourceAdditionTimelineScreen';
+import BodyLayout from './components/BodyLayout';
 
 const Layout = ({ BodyComponent, HeaderComponent }) => {
   return (
-    <div>
-      {HeaderComponent}
-      {BodyComponent}
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        height: '100vh',
+      }}>
+      <HeaderComponent />
+      <BodyLayout>{BodyComponent}</BodyLayout>
     </div>
   );
 };
@@ -29,8 +36,8 @@ const RouteController = () => {
           path={routes.HOME}
           render={({ match }) => (
             <Layout
-              BodyComponent={<HomeScreen />}
-              HeaderComponent={<NavigationBoxWidget path={match.path} />}
+              BodyComponent={() => <HomeScreen />}
+              HeaderComponent={() => <NavigationBoxWidget path={match.path} />}
             />
           )}
         />
@@ -39,8 +46,8 @@ const RouteController = () => {
           path={routes.SEARCH}
           render={({ match }) => (
             <Layout
-              BodyComponent={<SearchScreen />}
-              HeaderComponent={<NavigationBoxWidget path={match.path} />}
+              BodyComponent={() => <SearchScreen />}
+              HeaderComponent={() => <NavigationBoxWidget path={match.path} />}
             />
           )}
         />
@@ -50,8 +57,8 @@ const RouteController = () => {
           render={({ match }) => (
             <Layout
               key="root"
-              BodyComponent={<GraphExplorerScreen initialCategoryId={null} />}
-              HeaderComponent={<NavigationBoxWidget path={match.path} />}
+              BodyComponent={() => <GraphExplorerScreen initialCategoryId={null} />}
+              HeaderComponent={() => <NavigationBoxWidget path={match.path} />}
             />
           )}
         />
@@ -62,8 +69,8 @@ const RouteController = () => {
           render={({ match }) => (
             <Layout
               key={match.params.id}
-              BodyComponent={<GraphExplorerScreen initialCategoryId={match.params.id} />}
-              HeaderComponent={<NavigationBoxWidget />}
+              BodyComponent={() => <GraphExplorerScreen initialCategoryId={match.params.id} />}
+              HeaderComponent={() => <NavigationBoxWidget />}
             />
           )}
         />
@@ -73,8 +80,8 @@ const RouteController = () => {
           render={({ match }) => (
             <Layout
               key={match.params.id}
-              BodyComponent={<FileScreen fileId={Number(match.params.id)} />}
-              HeaderComponent={<NavigationBoxWidget />}
+              BodyComponent={() => <FileScreen fileId={Number(match.params.id)} />}
+              HeaderComponent={() => <NavigationBoxWidget />}
             />
           )}
         />
@@ -84,8 +91,8 @@ const RouteController = () => {
           render={({ match }) => (
             <Layout
               key="first"
-              BodyComponent={<ResourceAdditionTimelineScreen pageNumber={1} />}
-              HeaderComponent={<NavigationBoxWidget path={match.path} />}
+              BodyComponent={() => <ResourceAdditionTimelineScreen pageNumber={1} />}
+              HeaderComponent={() => <NavigationBoxWidget path={match.path} />}
             />
           )}
         />
@@ -96,10 +103,10 @@ const RouteController = () => {
           render={({ match }) => (
             <Layout
               key={match.params.pageNumber}
-              BodyComponent={
+              BodyComponent={() => (
                 <ResourceAdditionTimelineScreen pageNumber={Number(match.params.pageNumber)} />
-              }
-              HeaderComponent={<NavigationBoxWidget />}
+              )}
+              HeaderComponent={() => <NavigationBoxWidget />}
             />
           )}
         />
