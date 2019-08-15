@@ -3,14 +3,14 @@
 function getRectangleDimensions() {
   return new Promise((resolve, reject) => {
     const overlay = document.createElement('div');
-    overlay.style.opacity = '0.6';
-    overlay.style.background = 'black';
+    overlay.style.background = 'rgba(64, 64, 64, 0.5)';
     overlay.style.width = '100%';
     overlay.style.height = '100%';
     overlay.style.zIndex = 99999999;
     overlay.style.top = 0;
     overlay.style.left = 0;
     overlay.style.position = 'fixed';
+    overlay.style.cursor = 'crosshair';
 
     document.body.appendChild(overlay);
 
@@ -39,14 +39,17 @@ function getRectangleDimensions() {
     instructionsMessageContainer.textContent = INSTRUCTIONS_MESSAGE;
 
     const selection = document.createElement('div');
-    selection.style.opacity = '0.5';
-    selection.style.border = '1px solid red';
-    selection.style.background = 'white';
-    selection.style.border = '2px solid black';
+    selection.style.opacity = '1';
+    selection.style.border = '5px solid red';
+    selection.style.background = 'transparent';
     selection.style.zIndex = overlay.style.zIndex - 1;
     selection.style.top = 0;
     selection.style.left = 0;
+    selection.style.right = 0;
+    selection.style.bottom = 0;
     selection.style.position = 'fixed';
+    selection.style.borderColor = 'rgba(0,0,0,0.20)';
+    selection.style.borderStyle = 'solid';
 
     document.body.appendChild(selection);
 
@@ -55,14 +58,18 @@ function getRectangleDimensions() {
     let rectangleDimensions = {};
 
     function updateSelection() {
-      selection.style.left = rectangleDimensions.x + 'px';
-      selection.style.top = rectangleDimensions.y + 'px';
-      selection.style.width = rectangleDimensions.width + 'px';
-      selection.style.height = rectangleDimensions.height + 'px';
+      console.log('x:', rectangleDimensions.x, 'y:', rectangleDimensions.y);
+      console.log('width:', rectangleDimensions.width, 'height:', rectangleDimensions.height);
+
+      selection.style.borderTopWidth = `${rectangleDimensions.y}px`;
+      selection.style.borderLeftWidth = `${rectangleDimensions.x}px`;
+      selection.style.borderRightWidth = `calc(100vw - ${rectangleDimensions.x}px - ${rectangleDimensions.width}px)`;
+      selection.style.borderBottomWidth = `calc(100vh - ${rectangleDimensions.y}px - ${rectangleDimensions.height}px)`;
     }
 
     function updateOverlay() {
-      overlay.style.opacity = '0.3';
+      overlay.style.background = 'transparent';
+      overlay.style.cursor = 'nwse-resize';
     }
 
     function setSelectionSizeFromMouse(event) {
