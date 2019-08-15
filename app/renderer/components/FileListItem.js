@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { css } from 'emotion';
 
-import routes from '../../../../routes';
-import FileIcon from '../../../../components/FileIcon';
+import routes from '../routes';
+import FileIcon from './FileIcon';
 
 const BLUE = '#2196F3';
 
@@ -17,6 +17,16 @@ const liClass = css`
   width: 100%;
 `;
 
+const spanClass = css`
+  display: inline-block;
+`;
+
+const threeDotsClass = css`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
 const FileListItem = ({ file, isSelected, onClickRow, onDoubleClickRow }) => {
   return (
     <li
@@ -26,7 +36,9 @@ const FileListItem = ({ file, isSelected, onClickRow, onDoubleClickRow }) => {
       onDoubleClick={() => onDoubleClickRow()}
       title="Open in file screen">
       <FileIcon size="lg" style={{ marginRight: '0.5em', marginLeft: '0.2em' }} />
-      <span style={{ display: 'inline-block', color: isSelected ? 'white' : 'black' }}>
+      <span
+        className={`${spanClass} ${threeDotsClass}`}
+        style={{ color: isSelected ? 'white' : 'black' }}>
         {file.name}
       </span>
     </li>

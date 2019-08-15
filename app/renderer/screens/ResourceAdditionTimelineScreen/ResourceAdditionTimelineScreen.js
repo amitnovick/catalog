@@ -1,14 +1,6 @@
 import React from 'react';
 import { useMachine } from '@xstate/react';
 import { Link } from 'react-router-dom';
-
-import PropTypes from 'prop-types';
-import machine from './machine';
-import { assign } from 'xstate';
-import { List, Button } from 'semantic-ui-react';
-import querySelectFilesOrderByDateAdded from '../../db/queries/querySelectFilesOrderByDateAdded';
-import querySelectCountFiles from '../../db/queries/querySelectCountFiles';
-import routes from '../../routes';
 import {
   differenceInCalendarDays,
   differenceInCalendarWeeks,
@@ -16,16 +8,19 @@ import {
   differenceInCalendarMonths,
 } from 'date-fns';
 import { css } from 'emotion';
+import { List, Button } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
+import { assign } from 'xstate';
+
+import machine from './machine';
+import querySelectFilesOrderByDateAdded from '../../db/queries/querySelectFilesOrderByDateAdded';
+import querySelectCountFiles from '../../db/queries/querySelectCountFiles';
+import routes from '../../routes';
+import FileListItem from '../../components/FileListItem';
 
 const ITEMS_PER_PAGE = 20;
 
 const SEMANTIC_UI_BLUE = '#0E6EB8';
-
-const threeDotsClass = css`
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
 
 const flexParentClass = css`
   display: flex;
@@ -97,11 +92,14 @@ const machineWithConfig = machine.withConfig({
     updateErrorMessage: assign({
       errorMessage: (_, event) => event.data.message,
     }),
+    updateSelectedResource: assign({
+      selectedResource: (_, event) => event.resource,
+    }),
   },
 });
 
 const ResourceAdditionTimelineScreen = ({ pageNumber }) => {
-  const [current] = useMachine(
+  const [current, send] = useMachine(
     machineWithConfig.withContext({
       ...machine.initialState.context,
       pageNumber: pageNumber,
@@ -112,7 +110,7 @@ const ResourceAdditionTimelineScreen = ({ pageNumber }) => {
   if (current.matches('fetchingPaginatedResources')) {
     return null;
   } else if (current.matches('success')) {
-    const { paginatedResources, countOfFiles } = current.context;
+    const { paginatedResources, countOfFiles, selectedResource } = current.context;
     const countOfPages = Math.ceil(countOfFiles / ITEMS_PER_PAGE);
     const isThereNextPage = pageNumber < countOfPages;
     const isTherePreviousPage = pageNumber > 1;
@@ -146,14 +144,14 @@ const ResourceAdditionTimelineScreen = ({ pageNumber }) => {
               </div>
               <List.List>
                 {dateGroupResources.get(dataGroupNane).map((paginatedResource) => (
-                  <List.Item key={paginatedResource.id}>
-                    <div className={flexParentClass}>
-                      <List.Icon name="file" color="yellow" />
-                      <List.Header className={`${threeDotsClass} ${flexExpandingChildClass}`}>
-                        {`${paginatedResource.name}`}
-                      </List.Header>
-                    </div>
-                  </List.Item>
+                  <FileListItem
+                    key={paginatedResource.id}
+                    file={paginatedResource}
+                    isSelected={
+                      selectedResource !== null && selectedResource.id === paginatedResource.id
+                    }
+                    onClickRow={() => send('SELECT_RESOURCE_ROW', { resource: paginatedResource })}
+                  />
                 ))}
               </List.List>
             </List.Item>

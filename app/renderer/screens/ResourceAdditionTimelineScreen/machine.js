@@ -8,6 +8,7 @@ const machine = Machine({
     paginatedResources: [], // Default value
     countOfFiles: null, // Default value
     errorMessage: '',
+    selectedResource: null,
   },
   initial: 'fetchingPaginatedResources',
   states: {
@@ -24,7 +25,13 @@ const machine = Machine({
         },
       },
     },
-    success: {},
+    success: {
+      on: {
+        SELECT_RESOURCE_ROW: {
+          actions: 'updateSelectedResource',
+        },
+      },
+    },
     failure: {},
   },
 });
