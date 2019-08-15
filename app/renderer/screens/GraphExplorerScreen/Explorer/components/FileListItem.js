@@ -8,6 +8,9 @@ import routes from '../../../../routes';
 const StyledListItem = styled.li``;
 
 const StyledDiv = styled.div`
+  padding-top: 4px;
+  padding-bottom: 4px;
+
   ${StyledListItem}:hover & {
     background-color: #f0f0f0;
   }
@@ -15,12 +18,12 @@ const StyledDiv = styled.div`
 
 const FileListItem = ({ file, onDoubleClickRow }) => {
   return (
-    <StyledListItem style={{ marginTop: 4, marginBottom: 4 }}>
+    <StyledListItem>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <StyledDiv
           onDoubleClick={() => onDoubleClickRow('double!')}
           style={{ display: 'inline-block', width: '100%', cursor: 'pointer' }}>
-          <Icon name="file" color="yellow" size="big" />
+          <Icon name="file" color="yellow" size="big" style={{ marginTop: 2, marginBottom: 2 }} />
           <Link
             title="Open in file screen"
             to={`${routes.FILE}/${file.id}`}

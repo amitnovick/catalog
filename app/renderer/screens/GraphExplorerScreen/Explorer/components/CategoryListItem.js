@@ -11,6 +11,9 @@ import CategoryIcon from '../../../../components/CategoryIcon';
 const StyledListItem = styled.li``;
 
 const StyledDiv = styled.div`
+  padding-top: 4px;
+  padding-bottom: 4px;
+
   ${StyledListItem}:hover & {
     background-color: #f0f0f0;
   }
@@ -31,12 +34,12 @@ const CategoryListItem = ({
   onClickDeleteButton,
 }) => {
   return (
-    <StyledListItem style={{ marginTop: 4, marginBottom: 4 }}>
+    <StyledListItem>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <StyledDiv
           onDoubleClick={() => onDoubleClickRow('double!')}
           style={{ display: 'inline-block', width: '100%', cursor: 'pointer' }}>
-          <CategoryIcon size="lg" style={{ marginRight: '0.5em' }} />
+          <CategoryIcon size="lg" style={{ marginRight: '0.5em', marginTop: 2, marginBottom: 2 }} />
           <Link
             title="Navigate to category"
             to={`${routes.TREE_EXPLORER}/${category.id}`}
