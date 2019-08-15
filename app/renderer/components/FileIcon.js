@@ -1,8 +1,11 @@
 import React from 'react';
-import { Icon } from 'semantic-ui-react';
+import { faFile } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const FileIcon = (props) => {
-  return <Icon {...props} name="file" color="yellow" />;
+const SEMANTIC_YELLOW = '#fbbd08';
+
+const FileIcon = ({ style, ...rest }) => {
+  return <FontAwesomeIcon {...rest} icon={faFile} style={{ ...style, color: SEMANTIC_YELLOW }} />;
 };
 
 export default FileIcon;
