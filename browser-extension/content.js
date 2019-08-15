@@ -3,7 +3,8 @@
 function getRectangleDimensions() {
   return new Promise((resolve, reject) => {
     const overlay = document.createElement('div');
-    overlay.style.background = 'rgba(64, 64, 64, 0.5)';
+    overlay.style.background = 'rgba(64, 64, 64)';
+    overlay.style.opacity = '0.5';
     overlay.style.width = '100%';
     overlay.style.height = '100%';
     overlay.style.zIndex = 99999999;
@@ -18,7 +19,6 @@ function getRectangleDimensions() {
 
     const messageCompWidth = 450;
     instructionsMessageContainer.style.position = 'fixed';
-    instructionsMessageContainer.style.opacity = '0.95';
     instructionsMessageContainer.style.fontSize = '14px';
     instructionsMessageContainer.style.width = messageCompWidth + 'px';
     instructionsMessageContainer.style.maxWidth = messageCompWidth + 'px';
@@ -39,8 +39,7 @@ function getRectangleDimensions() {
     instructionsMessageContainer.textContent = INSTRUCTIONS_MESSAGE;
 
     const selection = document.createElement('div');
-    selection.style.opacity = '1';
-    selection.style.border = '5px solid red';
+
     selection.style.background = 'transparent';
     selection.style.zIndex = overlay.style.zIndex - 1;
     selection.style.top = 0;
@@ -66,6 +65,7 @@ function getRectangleDimensions() {
 
     function updateOverlay() {
       overlay.style.background = 'transparent';
+      overlay.style.opacity = '1';
       overlay.style.cursor = 'nwse-resize';
     }
 
