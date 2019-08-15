@@ -2,89 +2,50 @@
 import { Machine } from 'xstate';
 
 const machine = Machine({
-  initial: 'filterClosed',
+  id: 'search-screen',
   context: {
-    inputText: '',
-    chosenCategory: null,
-    resultFiles: [],
+    data: null,
   },
+  type: 'parallel',
   states: {
-    filterClosed: {
+    processing: {
+      id: 'processing',
       initial: 'idle',
       states: {
         idle: {},
-        searchingWithoutFilter: {
+        fetchingData: {
           invoke: {
-            src: 'searchWithoutFilter',
+            src: 'fetchData',
             onDone: {
               target: 'idle',
-              actions: 'updateResultFiles',
+              actions: 'updateData',
             },
           },
         },
       },
-      on: {
-        CHANGE_INPUT_TEXT: {
-          target: 'searchingWithoutFilter',
-          actions: 'updateInputText',
-        },
-      },
     },
-    filterOpen: {
-      initial: 'choosing',
+    filtering: {
+      type: 'parallel',
       states: {
-        choosing: {
-          initial: 'idle',
+        filterByName: {
+          initial: 'enabled',
           states: {
-            idle: {
-              on: {
-                CHOOSE_CATEGORY: {
-                  target: 'chosen',
-                  actions: 'updateChosenCategory',
-                },
-              },
-            },
-            searchingWithoutFilter: {
-              invoke: {
-                src: 'searchWithoutFilter',
-                onDone: {
-                  target: 'idle',
-                  actions: 'updateResultFiles',
-                },
-              },
-            },
-          },
-          on: {
-            CHANGE_INPUT_TEXT: {
-              target: 'searchingWithoutFilter',
-              actions: 'updateInputText',
-            },
+            enabled: {},
+            disabled: {},
           },
         },
-        chosen: {
-          initial: 'searchingWithFilter',
+        filterByAncestorCategory: {
+          initial: 'disabled',
           states: {
-            searchingWithFilter: {
-              invoke: {
-                src: 'searchWithFilter',
-                onDone: {
-                  target: 'idle',
-                  actions: 'updateResultFiles',
-                },
-              },
-            },
-            idle: {
-              on: {
-                CHANGE_INPUT_TEXT: {
-                  target: 'searchingWithFilter',
-                  actions: 'updateInputText',
-                },
-              },
-            },
+            enabled: {},
+            disabled: {},
           },
         },
       },
     },
+  },
+  on: {
+    FETCH_DATA: '#processing.fetchingData',
   },
 });
 
