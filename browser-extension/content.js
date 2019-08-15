@@ -58,9 +58,6 @@ function getRectangleDimensions() {
     let rectangleDimensions = {};
 
     function updateSelection() {
-      console.log('x:', rectangleDimensions.x, 'y:', rectangleDimensions.y);
-      console.log('width:', rectangleDimensions.width, 'height:', rectangleDimensions.height);
-
       selection.style.borderTopWidth = `${rectangleDimensions.y}px`;
       selection.style.borderLeftWidth = `${rectangleDimensions.x}px`;
       selection.style.borderRightWidth = `calc(100vw - ${rectangleDimensions.x}px - ${rectangleDimensions.width}px)`;
