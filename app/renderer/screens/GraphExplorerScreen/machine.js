@@ -12,6 +12,7 @@ const machine = Machine({
     categoryMoveToModalCategory: null,
     categoryDeletionModalCategory: null,
     selectedCategoryRow: null,
+    selectedFileRow: null,
   },
   initial: 'idle',
   states: {
@@ -48,6 +49,9 @@ const machine = Machine({
             },
             SELECTED_CATEGORY_ROW: {
               actions: 'updateSelectedCategoryRow',
+            },
+            SELECTED_FILE_ROW: {
+              actions: 'updateSelectedFileRow',
             },
           },
         },

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import PathCategoriesMenu from './components/PathCategoriesMenu';
 import CategoriesAccordionContainer from './containers/CategoriesAccordionContainer';
-import FilesAccordion from './components/FilesAccordion';
+import FilesAccordionContainer from './containers/FilesAccordionContainer';
 import { css } from 'emotion';
 
 const listClass = css`
@@ -14,7 +14,7 @@ const listClass = css`
   justify-content: space-between;
 `;
 
-const Explorer = ({ files, categoriesInPath }) => {
+const Explorer = ({ categoriesInPath }) => {
   return (
     <>
       <PathCategoriesMenu categoriesInPath={categoriesInPath} />
@@ -23,7 +23,7 @@ const Explorer = ({ files, categoriesInPath }) => {
           <CategoriesAccordionContainer />
         </List.Item>
         <List.Item style={{ height: '50%' }}>
-          <FilesAccordion files={files} />
+          <FilesAccordionContainer />
         </List.Item>
       </List>
     </>
@@ -31,7 +31,6 @@ const Explorer = ({ files, categoriesInPath }) => {
 };
 
 Explorer.propTypes = {
-  files: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   categoriesInPath: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
 };
 

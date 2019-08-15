@@ -1,47 +1,53 @@
 import React from 'react';
-import { withRouter, Link } from 'react-router-dom';
-import { Icon } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 
 import routes from '../../../../routes';
+import FileIcon from '../../../../components/FileIcon';
 
-const StyledListItem = styled.li``;
+const BLUE = '#2196F3';
 
-const StyledDiv = styled.div`
-  padding-top: 4px;
-  padding-bottom: 4px;
-
-  ${StyledListItem}:hover & {
-    background-color: #f0f0f0;
-  }
+const StyledListItem = styled.li`
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  width: 100%;
 `;
 
-const FileListItem = ({ file, onDoubleClickRow }) => {
+const FileListItem = ({ file, isSelected, onClickRow, onDoubleClickRow }) => {
   return (
-    <StyledListItem>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <StyledDiv
-          onDoubleClick={() => onDoubleClickRow('double!')}
-          style={{ display: 'inline-block', width: '100%', cursor: 'pointer' }}>
-          <Icon name="file" color="yellow" size="big" style={{ marginTop: 2, marginBottom: 2 }} />
-          <Link
-            title="Open in file screen"
-            to={`${routes.FILE}/${file.id}`}
-            style={{ display: 'inline-block' }}>
-            {file.name}
-          </Link>
-        </StyledDiv>
-      </div>
+    <StyledListItem
+      style={{ backgroundColor: isSelected ? BLUE : 'transparent' }}
+      onClick={() => (isSelected ? undefined : onClickRow(file))}
+      onDoubleClick={() => onDoubleClickRow()}
+      title="Open in file screen">
+      <FileIcon size="big" style={{ marginRight: '0.5em', marginLeft: '0.2em' }} />
+      <span style={{ display: 'inline-block', color: isSelected ? 'white' : 'black' }}>
+        {file.name}
+      </span>
     </StyledListItem>
   );
 };
 
-const FileListItemWrapper = ({ file, history }) => {
+const FileListItemWrapper = ({ file, history, ...props }) => {
   return (
-    <FileListItem file={file} onDoubleClickRow={() => history.push(`${routes.FILE}/${file.id}`)} />
+    <FileListItem
+      {...props}
+      file={file}
+      onDoubleClickRow={() => history.push(`${routes.FILE}/${file.id}`)}
+    />
   );
 };
 
 const FileListItemWrapperHistoryWrapper = withRouter(FileListItemWrapper);
+
+FileListItemWrapperHistoryWrapper.propTypes = {
+  file: PropTypes.any,
+  isSelected: PropTypes.bool.isRequired,
+  onClickRow: PropTypes.func.isRequired,
+};
 
 export default FileListItemWrapperHistoryWrapper;

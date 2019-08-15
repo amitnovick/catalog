@@ -25,21 +25,24 @@ const CategoriesAccordion = ({
       style={{ height: '100%' }}
       Content={() => (
         <List size="big" style={{ padding: categories.length === 0 ? '0.5em' : 0 }}>
-          {categories.map((childCategory) => (
-            <CategoryListItem
-              category={childCategory}
-              isSelected={
-                selectedCategoryRow !== null && selectedCategoryRow.id === childCategory.id
-              }
-              key={childCategory.id}
-              onClickRow={onClickRow}
-            />
-          ))}
-          {categories.length === 0 ? (
-            <Message info>
-              <Message.Header>No Categories</Message.Header>
-            </Message>
-          ) : null}
+          {categories.length > 0 ? (
+            categories.map((childCategory) => (
+              <CategoryListItem
+                category={childCategory}
+                isSelected={
+                  selectedCategoryRow !== null && selectedCategoryRow.id === childCategory.id
+                }
+                key={childCategory.id}
+                onClickRow={onClickRow}
+              />
+            ))
+          ) : (
+            <List.Item>
+              <Message info>
+                <Message.Header>No Categories</Message.Header>
+              </Message>
+            </List.Item>
+          )}
         </List>
       )}
       Controls={() => (

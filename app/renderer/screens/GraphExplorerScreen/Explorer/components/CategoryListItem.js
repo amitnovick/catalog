@@ -14,8 +14,8 @@ const StyledListItem = styled.li`
   padding-bottom: 0.5em;
   display: flex;
   align-items: center;
-  width: 100%;
   cursor: pointer;
+  width: 100%;
 `;
 
 const CategoryListItem = ({ category, isSelected, onClickRow, onDoubleClickRow }) => {

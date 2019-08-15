@@ -1,10 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { List, Message } from 'semantic-ui-react';
 
 import AccordionWrapper from './AccordionWrapper';
-import FileListItemWrapperHistoryWrapper from './FileListItem';
+import FileListItem from './FileListItem';
 
-const FilesAccordion = ({ files }) => {
+const FilesAccordion = ({ files, selectedFileRow, onClickRow }) => {
   return (
     <AccordionWrapper
       title="Files"
@@ -13,7 +14,14 @@ const FilesAccordion = ({ files }) => {
       Content={() => (
         <List size="big" style={{ padding: files.length === 0 ? '0.5em' : 0 }}>
           {files.length > 0 ? (
-            files.map((file) => <FileListItemWrapperHistoryWrapper key={file.id} file={file} />)
+            files.map((file) => (
+              <FileListItem
+                key={file.id}
+                file={file}
+                isSelected={selectedFileRow !== null && selectedFileRow.id === file.id}
+                onClickRow={onClickRow}
+              />
+            ))
           ) : (
             <List.Item>
               <Message info>
@@ -25,6 +33,12 @@ const FilesAccordion = ({ files }) => {
       )}
     />
   );
+};
+
+FilesAccordion.propTypes = {
+  files: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  selectedFileRow: PropTypes.object,
+  onClickRow: PropTypes.func.isRequired,
 };
 
 export default FilesAccordion;

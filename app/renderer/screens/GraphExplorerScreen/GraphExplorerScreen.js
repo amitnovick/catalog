@@ -57,6 +57,9 @@ const machineWithServices = machine.withConfig({
     updateSelectedCategoryRow: assign({
       selectedCategoryRow: (_, event) => event.category,
     }),
+    updateSelectedFileRow: assign({
+      selectedFileRow: (_, event) => event.file,
+    }),
   },
 });
 
@@ -72,7 +75,6 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
     categoryRenamingModalCategory,
     categoryDeletionModalCategory,
     categoryMoveToModalCategory,
-    files,
     categoriesInPath,
   } = current.context;
 
@@ -89,9 +91,7 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
   ) {
     return (
       <ReactContext.Provider value={service}>
-        {current.matches('idle.idle') ? (
-          <Explorer files={files} categoriesInPath={categoriesInPath} />
-        ) : null}
+        {current.matches('idle.idle') ? <Explorer categoriesInPath={categoriesInPath} /> : null}
         {current.matches('categoryRenamingModal') ? (
           <CategoryRenameModalWidget
             category={categoryRenamingModalCategory}
