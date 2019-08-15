@@ -1,17 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Message, List, Button } from 'semantic-ui-react';
+import { Message, List, Button, Icon } from 'semantic-ui-react';
 
 import AccordionWrapper from './AccordionWrapper';
 import CategoryListItem from './CategoryListItem';
 
 const CategoriesAccordion = ({
   categories,
+  onClickAddCategoryButton,
   onClickRenameButton,
   onClickMoveToButton,
   onClickDeleteButton,
-  onClickAddCategoryButton,
+  onClickRow,
+  selectedCategoryRow,
 }) => {
+  const isRenameButtonDisabled = selectedCategoryRow === null;
+  const isMoveToButtonDisabled = selectedCategoryRow === null;
+  const isDeleteButtonDisabled = selectedCategoryRow === null;
+
   return (
     <AccordionWrapper
       title="Categories"
@@ -22,10 +28,11 @@ const CategoriesAccordion = ({
           {categories.map((childCategory) => (
             <CategoryListItem
               category={childCategory}
+              isSelected={
+                selectedCategoryRow !== null && selectedCategoryRow.id === childCategory.id
+              }
               key={childCategory.id}
-              onClickRenameButton={onClickRenameButton}
-              onClickMoveToButton={onClickMoveToButton}
-              onClickDeleteButton={onClickDeleteButton}
+              onClickRow={onClickRow}
             />
           ))}
           {categories.length === 0 ? (
@@ -36,12 +43,35 @@ const CategoriesAccordion = ({
         </List>
       )}
       Controls={() => (
-        <Button
-          icon="add"
-          title="Add category"
-          size="large"
-          onClick={() => onClickAddCategoryButton()}
-        />
+        <div>
+          <Button
+            color="blue"
+            title="Add category"
+            icon={<Icon name="add" style={{ color: 'white' }} />}
+            onClick={() => onClickAddCategoryButton()}
+          />
+          <Button
+            disabled={isRenameButtonDisabled}
+            color={isRenameButtonDisabled ? 'grey' : 'yellow'}
+            title="Rename category"
+            icon={<Icon name="edit" style={{ color: 'white' }} />}
+            onClick={() => onClickRenameButton()}
+          />
+          <Button
+            disabled={isMoveToButtonDisabled}
+            color={isMoveToButtonDisabled ? 'grey' : 'teal'}
+            title="Move to"
+            icon={<Icon name="arrow circle right" style={{ color: 'white' }} />}
+            onClick={() => onClickMoveToButton()}
+          />
+          <Button
+            disabled={isDeleteButtonDisabled}
+            color={isDeleteButtonDisabled ? 'grey' : 'red'}
+            title="Delete category"
+            icon={<Icon name="trash" style={{ color: 'white' }} />}
+            onClick={() => onClickDeleteButton()}
+          />
+        </div>
       )}
     />
   );
@@ -49,10 +79,12 @@ const CategoriesAccordion = ({
 
 CategoriesAccordion.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  selectedCategoryRow: PropTypes.object,
+  onClickAddCategoryButton: PropTypes.func.isRequired,
+  onClickRow: PropTypes.func.isRequired,
   onClickRenameButton: PropTypes.func.isRequired,
   onClickMoveToButton: PropTypes.func.isRequired,
   onClickDeleteButton: PropTypes.func.isRequired,
-  onClickAddCategoryButton: PropTypes.func.isRequired,
 };
 
 export default CategoriesAccordion;

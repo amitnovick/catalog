@@ -1,5 +1,5 @@
 import React from 'react';
-import { Accordion, Header, Icon } from 'semantic-ui-react';
+import { Accordion, Header } from 'semantic-ui-react';
 import { css } from 'emotion';
 
 const accordionClass = css`
@@ -18,7 +18,7 @@ const AccordionWrapper = ({ title, Content, shouldDefaultToActive, Controls, ...
     >
       <Accordion.Title active={true} index={0}>
         {/* <Icon name="dropdown" /> */}
-        <div style={{ display: 'inline-flex', justifyContent: 'space-between', width: '95%' }}>
+        <div style={{ display: 'inline-flex', justifyContent: 'space-between', width: '100%' }}>
           <Header as="h4" style={{ margin: 'auto 0' }}>
             {title}
           </Header>

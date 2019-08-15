@@ -14,6 +14,7 @@ import CategoryDeleteModalWidget from './CategoryDeleteModalWidget/CategoryDelet
 import CategoryAdditionModalWidget from './CategoryAdditionModalWidget/CategoryAdditionModalWidget';
 import CategoryMoveToModalWidget from './CategoryMoveToModalWidget/CategoryMoveToModalWidget';
 import queryFiles from '../../db/queries/queryFiles';
+import ReactContext from './ReactContext';
 
 const fetchData = async (currentCategoryId) => {
   const categoriesInPath =
@@ -45,7 +46,7 @@ const machineWithServices = machine.withConfig({
       childCategories: (_, event) => event.data.childCategories,
     }),
     updateCategoryRenamingModalCategory: assign({
-      categoryRenamingModalCategory: (_, event) => event.categoryRenamingModalCategory,
+      categoryRenamingModalCategory: (_, event) => event.category,
     }),
     updateCategoryDeletionModalCategory: assign({
       categoryDeletionModalCategory: (_, event) => event.category,
@@ -53,20 +54,24 @@ const machineWithServices = machine.withConfig({
     updateCategoryMoveToModalCategory: assign({
       categoryMoveToModalCategory: (_, event) => event.category,
     }),
+    updateSelectedCategoryRow: assign({
+      selectedCategoryRow: (_, event) => event.category,
+    }),
   },
 });
 
 const GraphExplorerScreen = ({ initialCategoryId }) => {
-  const [current, send] = useMachine(
+  const [current, send, service] = useMachine(
     machineWithServices.withContext({
+      ...machineWithServices.initialState.context,
       initialCategoryId: initialCategoryId,
     }),
+    { devTools: true },
   );
   const {
     categoryRenamingModalCategory,
     categoryDeletionModalCategory,
     categoryMoveToModalCategory,
-    childCategories,
     files,
     categoriesInPath,
   } = current.context;
@@ -83,21 +88,9 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
     current.matches('categoryMoveToModal')
   ) {
     return (
-      <>
+      <ReactContext.Provider value={service}>
         {current.matches('idle.idle') ? (
-          <Explorer
-            categories={childCategories}
-            files={files}
-            categoriesInPath={categoriesInPath}
-            onClickRenameButton={(category) =>
-              send('CLICK_CATEGORY_RENAME_BUTTON', {
-                categoryRenamingModalCategory: category,
-              })
-            }
-            onClickMoveToButton={(category) => send('CLICK_CATEGORY_MOVE_TO__BUTTON', { category })}
-            onClickDeleteButton={(category) => send('CLICK_CATEGORY_DELETE_BUTTON', { category })}
-            onClickAddCategoryButton={() => send('CLICK_ADD_CATEGORY_BUTTON')}
-          />
+          <Explorer files={files} categoriesInPath={categoriesInPath} />
         ) : null}
         {current.matches('categoryRenamingModal') ? (
           <CategoryRenameModalWidget
@@ -127,7 +120,7 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
             onFinish={() => send('CATEGORY_MOVE_TO_MODAL_SUBMIT')}
           />
         ) : null}
-      </>
+      </ReactContext.Provider>
     );
   } else if (current.matches('idle.failure')) {
     return <h2>Failure</h2>;

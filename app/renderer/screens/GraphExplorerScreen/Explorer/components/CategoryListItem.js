@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter, Link } from 'react-router-dom';
-import { Icon, Button } from 'semantic-ui-react';
+import { withRouter } from 'react-router-dom';
 
 import styled from 'styled-components';
 
 import routes from '../../../../routes';
 import CategoryIcon from '../../../../components/CategoryIcon';
+
+const BLUE = '#2196F3';
 
 const StyledListItem = styled.li``;
 
@@ -14,75 +15,38 @@ const StyledDiv = styled.div`
   padding-top: 4px;
   padding-bottom: 4px;
 
-  ${StyledListItem}:hover & {
+  /* ${StyledListItem}:hover & {
     background-color: #f0f0f0;
-  }
+  } */
 `;
 
-const HoveredButton = styled(Button)`
-  visibility: hidden;
-  ${StyledListItem}:hover & {
-    visibility: visible;
-  }
-`;
-
-const CategoryListItem = ({
-  category,
-  onDoubleClickRow,
-  onClickRenameButton,
-  onClickMoveToButton,
-  onClickDeleteButton,
-}) => {
+const CategoryListItem = ({ category, isSelected, onClickRow, onDoubleClickRow }) => {
   return (
-    <StyledListItem>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <StyledDiv
-          onDoubleClick={() => onDoubleClickRow('double!')}
-          style={{ display: 'inline-block', width: '100%', cursor: 'pointer' }}>
-          <CategoryIcon size="lg" style={{ marginRight: '0.5em', marginTop: 2, marginBottom: 2 }} />
-          <Link
-            title="Navigate to category"
-            to={`${routes.TREE_EXPLORER}/${category.id}`}
-            style={{ display: 'inline-block' }}>
-            {category.name}
-          </Link>
-        </StyledDiv>
-        <HoveredButton
-          color="grey"
-          title="Rename category"
-          icon={<Icon name="edit" style={{ color: 'white' }} />}
-          onClick={() => onClickRenameButton(category)}
+    <StyledListItem
+      style={{ backgroundColor: isSelected ? BLUE : 'transparent' }}
+      onClick={() => (isSelected ? undefined : onClickRow(category))}
+      onDoubleClick={() => onDoubleClickRow()}
+      title="Navigate to category">
+      <StyledDiv style={{ display: 'inline-block', width: '100%', cursor: 'pointer' }}>
+        <CategoryIcon
+          color={isSelected ? 'white' : 'black'}
+          size="lg"
+          style={{ marginRight: '0.5em', marginLeft: '0.2em', marginTop: 2, marginBottom: 2 }}
         />
-        <HoveredButton
-          color="teal"
-          title="Move to"
-          icon={<Icon name="arrow circle right" style={{ color: 'white' }} />}
-          onClick={() => onClickMoveToButton(category)}
-        />
-        <HoveredButton
-          color="red"
-          title="Delete category"
-          icon={<Icon name="trash" style={{ color: 'white' }} />}
-          onClick={() => onClickDeleteButton(category)}
-        />
-      </div>
+        <span style={{ display: 'inline-block', color: isSelected ? 'white' : 'black' }}>
+          {category.name}
+        </span>
+      </StyledDiv>
     </StyledListItem>
   );
 };
 
-const CategoryListItemWrapper = ({
-  category,
-  onClickRenameButton,
-  onClickMoveToButton,
-  onClickDeleteButton,
-  history,
-}) => {
+const CategoryListItemWrapper = ({ category, isSelected, onClickRow, history }) => {
   return (
     <CategoryListItem
       category={category}
-      onClickRenameButton={onClickRenameButton}
-      onClickDeleteButton={onClickDeleteButton}
-      onClickMoveToButton={onClickMoveToButton}
+      isSelected={isSelected}
+      onClickRow={onClickRow}
       onDoubleClickRow={() => history.push(`${routes.TREE_EXPLORER}/${category.id}`)}
     />
   );
@@ -92,9 +56,8 @@ const CategoryListItemWrapperHistoryWrapper = withRouter(CategoryListItemWrapper
 
 CategoryListItemWrapperHistoryWrapper.propTypes = {
   category: PropTypes.any,
-  onClickRenameButton: PropTypes.func.isRequired,
-  onClickMoveToButton: PropTypes.func.isRequired,
-  onClickDeleteButton: PropTypes.func.isRequired,
+  isSelected: PropTypes.bool.isRequired,
+  onClickRow: PropTypes.func.isRequired,
 };
 
 export default CategoryListItemWrapperHistoryWrapper;

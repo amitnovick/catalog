@@ -3,7 +3,7 @@ import { List } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import PathCategoriesMenu from './components/PathCategoriesMenu';
-import CategoriesAccordion from './components/CategoriesAccordion';
+import CategoriesAccordionContainer from './containers/CategoriesAccordionContainer';
 import FilesAccordion from './components/FilesAccordion';
 import { css } from 'emotion';
 
@@ -14,27 +14,13 @@ const listClass = css`
   justify-content: space-between;
 `;
 
-const Explorer = ({
-  categories,
-  files,
-  categoriesInPath,
-  onClickRenameButton,
-  onClickMoveToButton,
-  onClickDeleteButton,
-  onClickAddCategoryButton,
-}) => {
+const Explorer = ({ files, categoriesInPath }) => {
   return (
     <>
       <PathCategoriesMenu categoriesInPath={categoriesInPath} />
       <List celled className={listClass}>
         <List.Item style={{ height: '50%' }}>
-          <CategoriesAccordion
-            onClickAddCategoryButton={onClickAddCategoryButton}
-            onClickMoveToButton={onClickMoveToButton}
-            onClickDeleteButton={onClickDeleteButton}
-            categories={categories}
-            onClickRenameButton={onClickRenameButton}
-          />
+          <CategoriesAccordionContainer />
         </List.Item>
         <List.Item style={{ height: '50%' }}>
           <FilesAccordion files={files} />
@@ -45,13 +31,8 @@ const Explorer = ({
 };
 
 Explorer.propTypes = {
-  categories: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   files: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   categoriesInPath: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
-  onClickRenameButton: PropTypes.func.isRequired,
-  onClickMoveToButton: PropTypes.func.isRequired,
-  onClickDeleteButton: PropTypes.func.isRequired,
-  onClickAddCategoryButton: PropTypes.func.isRequired,
 };
 
 export default Explorer;

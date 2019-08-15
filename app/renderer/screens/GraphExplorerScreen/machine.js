@@ -9,8 +9,9 @@ const machine = Machine({
     files: [],
     childCategories: [],
     categoryRenamingModalCategory: null,
-    categoryDeletionModalCategory: null,
     categoryMoveToModalCategory: null,
+    categoryDeletionModalCategory: null,
+    selectedCategoryRow: null,
   },
   initial: 'idle',
   states: {
@@ -44,6 +45,9 @@ const machine = Machine({
             CLICK_CATEGORY_MOVE_TO__BUTTON: {
               target: '#explorer-screen.categoryMoveToModal',
               actions: 'updateCategoryMoveToModalCategory',
+            },
+            SELECTED_CATEGORY_ROW: {
+              actions: 'updateSelectedCategoryRow',
             },
           },
         },
