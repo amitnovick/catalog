@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useMachine } from '@xstate/react';
-import { Segment } from 'semantic-ui-react';
 
 import machine from './machine';
 import queryRootCategory from '../../db/queries/queryRootCategory';
@@ -85,31 +84,21 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
   ) {
     return (
       <>
-        <Segment
-          style={{
-            height: '100%',
-            display: 'flex',
-            justifyContent: 'space-between',
-            flexDirection: 'column',
-          }}>
-          {current.matches('idle.idle') ? (
-            <Explorer
-              categories={childCategories}
-              files={files}
-              categoriesInPath={categoriesInPath}
-              onClickRenameButton={(category) =>
-                send('CLICK_CATEGORY_RENAME_BUTTON', {
-                  categoryRenamingModalCategory: category,
-                })
-              }
-              onClickMoveToButton={(category) =>
-                send('CLICK_CATEGORY_MOVE_TO__BUTTON', { category })
-              }
-              onClickDeleteButton={(category) => send('CLICK_CATEGORY_DELETE_BUTTON', { category })}
-              onClickAddCategoryButton={() => send('CLICK_ADD_CATEGORY_BUTTON')}
-            />
-          ) : null}
-        </Segment>
+        {current.matches('idle.idle') ? (
+          <Explorer
+            categories={childCategories}
+            files={files}
+            categoriesInPath={categoriesInPath}
+            onClickRenameButton={(category) =>
+              send('CLICK_CATEGORY_RENAME_BUTTON', {
+                categoryRenamingModalCategory: category,
+              })
+            }
+            onClickMoveToButton={(category) => send('CLICK_CATEGORY_MOVE_TO__BUTTON', { category })}
+            onClickDeleteButton={(category) => send('CLICK_CATEGORY_DELETE_BUTTON', { category })}
+            onClickAddCategoryButton={() => send('CLICK_ADD_CATEGORY_BUTTON')}
+          />
+        ) : null}
         {current.matches('categoryRenamingModal') ? (
           <CategoryRenameModalWidget
             category={categoryRenamingModalCategory}

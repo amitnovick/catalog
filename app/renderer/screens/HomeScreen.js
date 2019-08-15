@@ -1,14 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Header, Label, Segment } from 'semantic-ui-react';
+import { Header, Label } from 'semantic-ui-react';
 
 const HomeScreen = ({ chosenInstancePath }) => {
   return (
-    <Segment style={{ textAlign: 'center' }}>
+    <div style={{ textAlign: 'center' }}>
       <Header as="h1">Welcome Home!</Header>
       <Header as="h2">Chosen instance:</Header>
       <Label size="massive">{chosenInstancePath}</Label>
-    </Segment>
+    </div>
   );
 };
 

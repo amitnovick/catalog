@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import machine from './machine';
 import { assign } from 'xstate';
-import { List, Button, Segment } from 'semantic-ui-react';
+import { List, Button } from 'semantic-ui-react';
 import querySelectFilesOrderByDateAdded from '../../db/queries/querySelectFilesOrderByDateAdded';
 import querySelectCountFiles from '../../db/queries/querySelectCountFiles';
 import routes from '../../routes';
@@ -47,13 +47,6 @@ const hoveredButtonClass = css`
     background-color: ${SEMANTIC_UI_BLUE} !important;
     color: white !important;
   }
-`;
-
-const segmentClass = css`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 `;
 
 const formatDate = (isoDateString) => {
@@ -117,7 +110,7 @@ const ResourceAdditionTimelineScreen = ({ pageNumber }) => {
   );
 
   if (current.matches('fetchingPaginatedResources')) {
-    return <Segment className={segmentClass} />;
+    return null;
   } else if (current.matches('success')) {
     const { paginatedResources, countOfFiles } = current.context;
     const countOfPages = Math.ceil(countOfFiles / ITEMS_PER_PAGE);
@@ -143,7 +136,7 @@ const ResourceAdditionTimelineScreen = ({ pageNumber }) => {
     }
 
     return (
-      <Segment className={segmentClass}>
+      <>
         <List size="big" style={{ height: '100%', overflowY: 'scroll' }}>
           {Array.from(dateGroupResources.keys()).map((dataGroupNane) => (
             <List.Item key={dataGroupNane}>
@@ -180,7 +173,7 @@ const ResourceAdditionTimelineScreen = ({ pageNumber }) => {
               to={`${routes.RESOURCES_ADDITION_TIMELINE}/${pageNumber + 1}`}>{`Older`}</Button>
           </Button.Group>
         </div>
-      </Segment>
+      </>
     );
   } else if (current.matches('failure')) {
     const { errorMessage } = current.context;

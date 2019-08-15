@@ -10,7 +10,7 @@ import openFileByName from '../../fs/openFileByName';
 import AddCategoryWidget from './AddCategoryWidget/AddCategoryWidget';
 import FileNameWidget from './FileNameWidget/FileNameWidget';
 import CategoriesWidget from './CategoriesWidget/CategoriesWidget';
-import { Grid, Divider, Segment, Icon } from 'semantic-ui-react';
+import { Divider, Icon } from 'semantic-ui-react';
 import deleteFileFromFs from '../../fs/deleteFile';
 import queryCategoriesOfFile from '../../db/queries/getCategoriesOfFile';
 import queryFileName from '../../db/queries/queryFileName';
@@ -90,33 +90,27 @@ const FileScreen = ({ fileId }) => {
   );
   if (current.matches('idle') || current.matches('loading')) {
     return (
-      <Grid>
-        <Grid.Column width="3" />
-        <Grid.Column width="10">
-          <Segment style={{ textAlign: 'center' }}>
-            <Icon name="file" color="yellow" size="huge" />
-            <FileNameWidget refetchFileData={() => send('REFETCH_FILE_DATA')} />
-            <Divider horizontal />
-            <div style={{ border: '1px solid black', borderRadius: 6, padding: 5 }}>
-              <CategoriesWidget />
-              <AddCategoryWidget refetchFileData={() => send('REFETCH_FILE_DATA')} />
-            </div>
-            <Divider horizontal />
-            <WebclipWidget fileId={fileId} />
-            <FileMenuContainer
-              onClickOpenFile={openFile}
-              onClickDeleteFile={(file) =>
-                send('CLICK_DELETE_FILE', {
-                  file: file,
-                })
-              }
-            />
-            {current.matches('idle.success') ? <h2 style={{ color: 'green' }}>Succeeded</h2> : null}
-            {current.matches('idle.failure') ? <h2 style={{ color: 'red' }}>Failed</h2> : null}
-          </Segment>
-        </Grid.Column>
-        <Grid.Column width="3" />
-      </Grid>
+      <div style={{ textAlign: 'center' }}>
+        <Icon name="file" color="yellow" size="huge" />
+        <FileNameWidget refetchFileData={() => send('REFETCH_FILE_DATA')} />
+        <Divider horizontal />
+        <div style={{ border: '1px solid black', borderRadius: 6, padding: 5 }}>
+          <CategoriesWidget />
+          <AddCategoryWidget refetchFileData={() => send('REFETCH_FILE_DATA')} />
+        </div>
+        <Divider horizontal />
+        <WebclipWidget fileId={fileId} />
+        <FileMenuContainer
+          onClickOpenFile={openFile}
+          onClickDeleteFile={(file) =>
+            send('CLICK_DELETE_FILE', {
+              file: file,
+            })
+          }
+        />
+        {current.matches('idle.success') ? <h2 style={{ color: 'green' }}>Succeeded</h2> : null}
+        {current.matches('idle.failure') ? <h2 style={{ color: 'red' }}>Failed</h2> : null}
+      </div>
     );
   } else if (current.matches('deletedFile')) {
     return <h2 style={{ color: 'green' }}>File has been deleted successfully</h2>;
