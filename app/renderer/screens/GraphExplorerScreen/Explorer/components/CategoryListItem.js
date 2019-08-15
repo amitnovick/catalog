@@ -1,15 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-
-import styled from 'styled-components';
+import { css } from 'emotion';
 
 import routes from '../../../../routes';
 import CategoryIcon from '../../../../components/CategoryIcon';
 
 const BLUE = '#2196F3';
 
-const StyledListItem = styled.li`
+const liClass = css`
   padding-top: 0.5em;
   padding-bottom: 0.5em;
   display: flex;
@@ -20,7 +19,8 @@ const StyledListItem = styled.li`
 
 const CategoryListItem = ({ category, isSelected, onClickRow, onDoubleClickRow }) => {
   return (
-    <StyledListItem
+    <li
+      className={liClass}
       style={{ backgroundColor: isSelected ? BLUE : 'transparent' }}
       onClick={() => (isSelected ? undefined : onClickRow(category))}
       onDoubleClick={() => onDoubleClickRow()}
@@ -37,7 +37,7 @@ const CategoryListItem = ({ category, isSelected, onClickRow, onDoubleClickRow }
         }}>
         {category.name}
       </span>
-    </StyledListItem>
+    </li>
   );
 };
 

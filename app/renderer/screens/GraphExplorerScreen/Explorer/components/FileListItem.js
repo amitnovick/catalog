@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import styled from 'styled-components';
+import { css } from 'emotion';
 
 import routes from '../../../../routes';
 import FileIcon from '../../../../components/FileIcon';
 
 const BLUE = '#2196F3';
 
-const StyledListItem = styled.li`
+const liClass = css`
   padding-top: 0.5em;
   padding-bottom: 0.5em;
   display: flex;
@@ -19,7 +19,8 @@ const StyledListItem = styled.li`
 
 const FileListItem = ({ file, isSelected, onClickRow, onDoubleClickRow }) => {
   return (
-    <StyledListItem
+    <li
+      className={liClass}
       style={{ backgroundColor: isSelected ? BLUE : 'transparent' }}
       onClick={() => (isSelected ? undefined : onClickRow(file))}
       onDoubleClick={() => onDoubleClickRow()}
@@ -28,7 +29,7 @@ const FileListItem = ({ file, isSelected, onClickRow, onDoubleClickRow }) => {
       <span style={{ display: 'inline-block', color: isSelected ? 'white' : 'black' }}>
         {file.name}
       </span>
-    </StyledListItem>
+    </li>
   );
 };
 
