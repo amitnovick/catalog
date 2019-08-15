@@ -11,7 +11,7 @@ const FilesAccordion = ({ files }) => {
       shouldDefaultToActive={files.length === 0}
       style={{ height: '100%' }}
       Content={() => (
-        <List size="big">
+        <List size="big" style={{ padding: files.length === 0 ? '0.5em' : 0 }}>
           {files.length > 0 ? (
             files.map((file) => <FileListItemWrapperHistoryWrapper key={file.id} file={file} />)
           ) : (

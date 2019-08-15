@@ -25,7 +25,15 @@ const AccordionWrapper = ({ title, Content, shouldDefaultToActive, Controls, ...
           {Controls !== undefined ? <Controls /> : null}
         </div>
       </Accordion.Title>
-      <Accordion.Content active={true} style={{ height: '100%', overflowY: 'scroll' }}>
+      <Accordion.Content
+        active={true}
+        style={{
+          height: '100%',
+          overflowY: 'scroll',
+          border: '1px solid grey',
+          paddingTop: 0,
+          paddingBottom: 0,
+        }}>
         <Content />
       </Accordion.Content>
     </Accordion>

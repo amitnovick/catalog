@@ -24,7 +24,7 @@ const CategoriesAccordion = ({
       shouldDefaultToActive={true}
       style={{ height: '100%' }}
       Content={() => (
-        <List size="big">
+        <List size="big" style={{ padding: categories.length === 0 ? '0.5em' : 0 }}>
           {categories.map((childCategory) => (
             <CategoryListItem
               category={childCategory}

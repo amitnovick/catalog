@@ -9,15 +9,13 @@ import CategoryIcon from '../../../../components/CategoryIcon';
 
 const BLUE = '#2196F3';
 
-const StyledListItem = styled.li``;
-
-const StyledDiv = styled.div`
-  padding-top: 4px;
-  padding-bottom: 4px;
-
-  /* ${StyledListItem}:hover & {
-    background-color: #f0f0f0;
-  } */
+const StyledListItem = styled.li`
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
 `;
 
 const CategoryListItem = ({ category, isSelected, onClickRow, onDoubleClickRow }) => {
@@ -27,16 +25,18 @@ const CategoryListItem = ({ category, isSelected, onClickRow, onDoubleClickRow }
       onClick={() => (isSelected ? undefined : onClickRow(category))}
       onDoubleClick={() => onDoubleClickRow()}
       title="Navigate to category">
-      <StyledDiv style={{ display: 'inline-block', width: '100%', cursor: 'pointer' }}>
-        <CategoryIcon
-          color={isSelected ? 'white' : 'black'}
-          size="lg"
-          style={{ marginRight: '0.5em', marginLeft: '0.2em', marginTop: 2, marginBottom: 2 }}
-        />
-        <span style={{ display: 'inline-block', color: isSelected ? 'white' : 'black' }}>
-          {category.name}
-        </span>
-      </StyledDiv>
+      <CategoryIcon
+        color={isSelected ? 'white' : 'black'}
+        size="lg"
+        style={{ marginRight: '0.5em', marginLeft: '0.2em' }}
+      />
+      <span
+        style={{
+          display: 'inline-block',
+          color: isSelected ? 'white' : 'black',
+        }}>
+        {category.name}
+      </span>
     </StyledListItem>
   );
 };
