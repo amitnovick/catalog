@@ -42,7 +42,7 @@ const CategoryAdditionModalWidget = ({ onClose, refetchCategoryData, parentCateg
     }),
     {
       actions: {
-        refetchCategoryData: (_, __) => refetchCategoryData(),
+        refetchCategoryData: (context, _) => refetchCategoryData(context.inputText),
       },
     },
   );

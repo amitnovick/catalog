@@ -13,6 +13,7 @@ const machine = Machine({
     categoryDeletionModalCategory: null,
     selectedCategoryRow: null,
     selectedFileRow: null,
+    newCategoryName: null,
   },
   initial: 'idle',
   states: {
@@ -26,6 +27,16 @@ const machine = Machine({
             onDone: {
               target: '#explorer-screen-idle.idle',
               actions: 'updateState',
+            },
+            onError: '#explorer-screen-idle.failure',
+          },
+        },
+        fetchingNewCategoryDataAndAssigningSelectedCategoryRow: {
+          invoke: {
+            src: 'fetchData',
+            onDone: {
+              target: '#explorer-screen-idle.idle',
+              actions: ['updateState', 'assignSelectedCategoryRow'],
             },
             onError: '#explorer-screen-idle.failure',
           },
@@ -67,19 +78,28 @@ const machine = Machine({
     categoryDeletionModal: {
       on: {
         CATEGORY_DELETION_MODAL_CANCEL: 'idle.idle',
-        CATEGORY_DELETION_MODAL_SUBMIT: 'idle.fetchingData',
+        CATEGORY_DELETION_MODAL_SUBMIT: {
+          target: 'idle.fetchingData',
+          actions: 'clearSelectedCategoryRow',
+        },
       },
     },
     categoryAdditionModal: {
       on: {
         CATEGORY_ADDITION_MODAL_CANCEL: 'idle.idle',
-        CATEGORY_ADDITION_MODAL_SUBMIT: 'idle.fetchingData',
+        CATEGORY_ADDITION_MODAL_SUBMIT: {
+          target: 'idle.fetchingNewCategoryDataAndAssigningSelectedCategoryRow',
+          actions: 'updateNewCategoryName',
+        },
       },
     },
     categoryMoveToModal: {
       on: {
         CATEGORY_MOVE_TO_MODAL_CANCEL: 'idle.idle',
-        CATEGORY_MOVE_TO_MODAL_SUBMIT: 'idle.fetchingData',
+        CATEGORY_MOVE_TO_MODAL_SUBMIT: {
+          target: 'idle.fetchingData',
+          actions: 'clearSelectedCategoryRow',
+        },
       },
     },
   },

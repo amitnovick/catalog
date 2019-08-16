@@ -18,10 +18,16 @@ const SearchCategory = ({
     onSearchQueryChange(value);
   };
 
+  const handleKeyUp = (key) => {
+    if (key === 'Enter' && typeof onHitEnterKey === 'function') {
+      onHitEnterKey();
+    }
+  };
+
   return (
     <Search
       autoFocus={autoFocus !== undefined ? autoFocus : undefined}
-      onKeyUp={({ key }) => (key === 'Enter' ? onHitEnterKey() : null)}
+      onKeyUp={({ key }) => handleKeyUp(key)}
       style={{ display: 'inline' }}
       input={{ icon: 'search', iconPosition: 'left' }}
       onResultSelect={handleChange}
@@ -40,6 +46,8 @@ SearchCategory.propTypes = {
   inputSearchQuery: PropTypes.string.isRequired,
   onChangeInputSearchQuery: PropTypes.func.isRequired,
   onChooseSearchResultCategory: PropTypes.func.isRequired,
+  onHitEnterKey: PropTypes.func,
+  autoFocus: PropTypes.bool,
 };
 
 export default SearchCategory;

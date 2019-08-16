@@ -35,6 +35,16 @@ const fetchData = async (currentCategoryId) => {
   });
 };
 
+const selectCategoryRow = (newCategoryName, categories) => {
+  const categoriesWithSameName = categories.filter((category) => category.name === newCategoryName);
+  if (categoriesWithSameName.length > 0) {
+    const newCategory = categoriesWithSameName[0];
+    return newCategory;
+  } else {
+    return null;
+  }
+};
+
 const machineWithServices = machine.withConfig({
   services: {
     fetchData: (context, _) => fetchData(context.initialCategoryId),
@@ -59,6 +69,16 @@ const machineWithServices = machine.withConfig({
     }),
     updateSelectedFileRow: assign({
       selectedFileRow: (_, event) => event.file,
+    }),
+    clearSelectedCategoryRow: assign({
+      selectedCategoryRow: (_, __) => null,
+    }),
+    assignSelectedCategoryRow: assign({
+      selectedCategoryRow: (context, event) =>
+        selectCategoryRow(context.newCategoryName, event.data.childCategories),
+    }),
+    updateNewCategoryName: assign({
+      newCategoryName: (_, event) => event.newCategoryName,
     }),
   },
 });
@@ -110,7 +130,9 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
           <CategoryAdditionModalWidget
             parentCategoryId={currentCategory.id}
             onClose={() => send('CATEGORY_ADDITION_MODAL_CANCEL')}
-            refetchCategoryData={() => send('CATEGORY_ADDITION_MODAL_SUBMIT')}
+            refetchCategoryData={(newCategoryName) =>
+              send('CATEGORY_ADDITION_MODAL_SUBMIT', { newCategoryName })
+            }
           />
         ) : null}
         {current.matches('categoryMoveToModal') ? (
