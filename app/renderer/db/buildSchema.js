@@ -219,16 +219,16 @@ const buildSchema = () => {
             reject(err);
           } else {
             const rowsCount = rows.length;
-            if (rowsCount === 0) {
-              /* no rows implies: `webclips_category` table doesn't exist */
+            const doesWebclipsCategoryTableExist = rowsCount > 0;
+            if (doesWebclipsCategoryTableExist) {
+              resolve();
+            } else {
               try {
                 setupWebclipsNecessities();
                 resolve();
               } catch (error) {
                 reject(error);
               }
-            } else {
-              resolve();
             }
           }
         });
