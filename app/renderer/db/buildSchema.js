@@ -90,7 +90,7 @@ CREATE TABLE webclips_category (
 )
 `;
 
-const insertWebclipsCategoryToCategories = `
+const insertWebclipsCategoryToCategoriesTable = `
 INSERT INTO categories (
   parent_id,
   name
@@ -100,7 +100,7 @@ FROM categories
 WHERE categories.parent_id IS NULL
 `;
 
-const insertWebclipsCategoryToWebclipsCategory = `
+const insertWebclipsCategoryToWebclipsCategoryTable = `
 INSERT INTO webclips_category (
   id
 )
@@ -109,84 +109,134 @@ VALUES (
 )
 `;
 
-const buildSchema = () => {
-  return new Promise((resolve, reject) => {
-    getSqlDriver().serialize(function() {
-      getSqlDriver().run(createFilesTableIfNotExists, function(err) {
-        if (err) {
-          reject(err);
-        }
-      });
-      getSqlDriver().run(createWebClipResourcesIfNotExists, function(err) {
-        if (err) {
-          reject(err);
-        }
-      });
-      getSqlDriver().run(createCategoriesTableIfNotExists, function(err) {
-        if (err) {
-          reject(err);
-        }
-      });
-      getSqlDriver().run(createCategoriesFilesTableIfNotExists, function(err) {
-        if (err) {
-          reject(err);
-        }
-      });
-      getSqlDriver().run(enableForeignKeySupport, function(err) {
-        if (err) {
-          reject(err);
-        }
-      });
-      getSqlDriver().run(insertRootCategoryIfNotExists, function(err) {
-        if (err) {
-          reject(err);
-        }
-      });
-      getSqlDriver().all(selectWebclipsCategoryTable, async function(err, rows) {
+const setupWebclipsNecessities = async () => {
+  const db = await createDbConnection();
+  db.run('BEGIN TRANSACTION');
+  try {
+    await new Promise((resolve, reject) => {
+      db.run(createWebclipsCategoryTable, function(err) {
         if (err) {
           reject(err);
         } else {
-          const rowsCount = rows.length;
-          if (rowsCount === 0) {
-            try {
-              const db = await createDbConnection();
-              db.serialize(function() {
-                db.run('BEGIN TRANSACTION');
-                try {
-                  db.run(createWebclipsCategoryTable, function(err) {
-                    if (err) {
-                      throw err;
-                    }
-                  });
-                  db.run(insertWebclipsCategoryToCategories, function(err) {
-                    if (err) {
-                      throw err;
-                    }
-                  });
-                  db.run(insertWebclipsCategoryToWebclipsCategory, function(err) {
-                    if (err) {
-                      throw err;
-                    } else {
-                      db.run('COMMIT');
-                      db.close();
-                      resolve();
-                    }
-                  });
-                } catch (error) {
-                  db.run('ROLLBACK');
-                  db.close();
-                  reject(error);
-                }
-              });
-            } catch (error) {
-              throw error;
-            }
-          } else {
-            resolve();
-          }
+          resolve();
         }
       });
     });
+    await new Promise((resolve, reject) => {
+      db.run(insertWebclipsCategoryToCategoriesTable, function(err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+    await new Promise((resolve, reject) => {
+      db.run(insertWebclipsCategoryToWebclipsCategoryTable, function(err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+    db.run('COMMIT');
+    db.close();
+    return Promise.resolve();
+  } catch (error) {
+    db.run('ROLLBACK');
+    db.close();
+    return Promise.reject(error);
+  }
+};
+
+const buildSchema = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await new Promise((resolve, reject) => {
+        getSqlDriver().run(createFilesTableIfNotExists, function(err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      });
+
+      await new Promise((resolve, reject) => {
+        getSqlDriver().run(createWebClipResourcesIfNotExists, function(err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      });
+
+      await new Promise((resolve, reject) => {
+        getSqlDriver().run(createCategoriesTableIfNotExists, function(err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      });
+
+      await new Promise((resolve, reject) => {
+        getSqlDriver().run(createCategoriesFilesTableIfNotExists, function(err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      });
+
+      await new Promise((resolve, reject) => {
+        getSqlDriver().run(enableForeignKeySupport, function(err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      });
+
+      await new Promise((resolve, reject) => {
+        getSqlDriver().run(insertRootCategoryIfNotExists, function(err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      });
+
+      await new Promise((resolve, reject) => {
+        getSqlDriver().all(selectWebclipsCategoryTable, async function(err, rows) {
+          if (err) {
+            reject(err);
+          } else {
+            const rowsCount = rows.length;
+            if (rowsCount === 0) {
+              /* no rows implies: `webclips_category` table doesn't exist */
+              try {
+                setupWebclipsNecessities();
+                resolve();
+              } catch (error) {
+                reject(error);
+              }
+            } else {
+              resolve();
+            }
+          }
+        });
+      });
+      resolve();
+    } catch (error) {
+      reject(error);
+    }
   });
 };
 
