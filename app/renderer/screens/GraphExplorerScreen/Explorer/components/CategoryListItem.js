@@ -24,6 +24,7 @@ const CategoryListItem = ({ category, isSelected, onClickRow, onDoubleClickRow }
       style={{ backgroundColor: isSelected ? BLUE : 'transparent' }}
       onClick={() => (isSelected ? undefined : onClickRow(category))}
       onDoubleClick={() => onDoubleClickRow()}
+      onMouseDown={(event) => event.preventDefault()}
       title="Navigate to category">
       <CategoryIcon
         color={isSelected ? 'white' : 'black'}

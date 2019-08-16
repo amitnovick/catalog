@@ -35,7 +35,7 @@ const deleteFile = async (file) => {
   try {
     await deleteFileFromFs(file.name);
   } catch (error) {
-    console.log('Error: failed to delete file from filesystem');
+    console.log(`Error: failed to delete file from filesystem: {error}`);
   }
 };
 

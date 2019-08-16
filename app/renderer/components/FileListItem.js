@@ -34,6 +34,7 @@ const FileListItem = ({ file, isSelected, onClickRow, onDoubleClickRow }) => {
       style={{ backgroundColor: isSelected ? BLUE : 'transparent' }}
       onClick={() => (isSelected ? undefined : onClickRow(file))}
       onDoubleClick={() => onDoubleClickRow()}
+      onMouseDown={(event) => event.preventDefault()}
       title="Open in file screen">
       <FileIcon size="lg" style={{ marginRight: '0.5em', marginLeft: '0.2em' }} />
       <span

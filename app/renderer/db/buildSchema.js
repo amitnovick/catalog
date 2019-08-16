@@ -37,8 +37,8 @@ CREATE TABLE IF NOT EXISTS categories (
 
 const createCategoriesFilesTableIfNotExists = `
 CREATE TABLE IF NOT EXISTS categories_files (
-  category_id INTEGER,
-  file_id INTEGER,
+  category_id INTEGER NOT NULL,
+  file_id INTEGER NOT NULL,
 
   FOREIGN KEY(category_id)
   REFERENCES categories(id)

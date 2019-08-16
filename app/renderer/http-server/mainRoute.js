@@ -8,6 +8,7 @@ const filenamify = require('filenamify');
 const Joi = require('@hapi/joi');
 const { promisify } = require('util');
 const fs = require('fs');
+const path = require('path');
 
 const getFilesSubdirPathIfExists = (store) =>
   store && store.startupScreen && store.startupScreen.userFilesSubdirFilesPath
@@ -119,12 +120,15 @@ const mainRoute = {
           console.log('Added web clip:', fileName);
           return h.response({ [commsConstants.FILE_NAME]: fileName }).code(200);
         } catch (error) {
+          const filesSubdirPathValue = getFilesSubdirPathIfExists(store.getState());
+          const filePath = path.join(filesSubdirPathValue, fileName);
           await deleteFileRaw(
-            fileName,
+            filePath,
           ); /* Handling case where file doesn't exist on fs but exists in db, doing this would clean up the fail and fail, hopefully leading user to delete the file when they notice the corresponding file doesn't exist in fs */
           throw error;
         }
       } catch (error) {
+        console.log('WebClipper: mainRoute: error:', error);
         return h.response({ [commsConstants.ERROR]: error.message }).code(404);
       }
     },
