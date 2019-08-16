@@ -1,17 +1,14 @@
 const fs = require('fs');
 
-const FILE_EXISTS_ERROR_CODE = 'EEXIST';
+/* Error objeect shape: 
+  Should have key `code` 
+  which may or may not equal 'EEXIST' */
 
-const writeFileIfNotExist = filePath => {
+const writeFileIfNotExist = (filePath, data = '') => {
   return new Promise((resolve, reject) => {
-    fs.writeFile(filePath, '', { flag: 'wx' }, err => {
+    fs.writeFile(filePath, data, { flag: 'wx' }, (err) => {
       if (err) {
-        if (err.code === FILE_EXISTS_ERROR_CODE) {
-          reject();
-        } else {
-          console.log('unknown error occurred:', err);
-          reject();
-        }
+        reject(err);
       } else {
         console.log('The file has been saved!');
         resolve();

@@ -19,14 +19,20 @@ const machine = Machine({
       invoke: {
         src: 'writeUserFilesDirIfNotExists',
         onDone: 'writingFilesSubdirIfNotExists',
-        onError: 'failure',
+        onError: {
+          target: 'failure',
+          actions: 'updateErrorMessage',
+        },
       },
     },
     writingFilesSubdirIfNotExists: {
       invoke: {
         src: 'writeFilesSubdirIfNotExists',
         onDone: 'writingSqliteFileAndInitializingIfNotExists',
-        onError: 'failure',
+        onError: {
+          target: 'failure',
+          actions: 'updateErrorMessage',
+        },
       },
     },
     writingSqliteFileAndInitializingIfNotExists: {
@@ -35,7 +41,10 @@ const machine = Machine({
         onDone: {
           actions: 'navigateToHomeScreen',
         },
-        onError: 'failure',
+        onError: {
+          target: 'failure',
+          actions: 'updateErrorMessage',
+        },
       },
     },
     failure: {},

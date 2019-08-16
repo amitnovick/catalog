@@ -9,30 +9,27 @@ import { Header } from 'semantic-ui-react';
 import { remote } from 'electron';
 import InstancesMenuScreen from '../InstancesMenuScreen/InstancesMenuScreen';
 import { CONFIG_FILE_KEY, CONFIG_FILE_NAME } from '../configConstants';
+import readJSONfile from '../../../fs/readJSONfile';
 const fs = require('fs');
 const path = require('path');
 
-const attemptToReadConfigFile = () => {
-  return new Promise((resolve, reject) => {
-    const configDirectoryPath = remote.app.getPath('userData');
-    const configFilePath = path.join(configDirectoryPath, CONFIG_FILE_NAME);
-    fs.readFile(configFilePath, 'utf8', (err, data) => {
-      if (err) {
-        const rejectedValue = {
-          configDirectoryPath,
-        };
-        reject(rejectedValue);
-      } else {
-        const parsedData = JSON.parse(data);
-        const { [CONFIG_FILE_KEY]: instancesPaths } = parsedData;
-        const resolvedValue = {
-          instancesPaths,
-          configDirectoryPath,
-        };
-        resolve(resolvedValue);
-      }
-    });
-  });
+const attemptToReadConfigFile = async () => {
+  const configDirectoryPath = remote.app.getPath('userData');
+  const configFilePath = path.join(configDirectoryPath, CONFIG_FILE_NAME);
+  try {
+    const parsedData = await readJSONfile(configFilePath);
+    const { [CONFIG_FILE_KEY]: instancesPaths } = parsedData;
+    const resolvedValue = {
+      instancesPaths,
+      configDirectoryPath,
+    };
+    return Promise.resolve(resolvedValue);
+  } catch (error) {
+    const rejectedValue = {
+      configDirectoryPath,
+    };
+    return Promise.reject(rejectedValue);
+  }
 };
 
 const getConfigDirectoryPath = (store) =>

@@ -67,41 +67,115 @@ INSERT INTO categories (
 )
 SELECT NULL,"Root"
 WHERE NOT EXISTS (SELECT 1 FROM existing_root);
-  `;
+`;
+
+const selectWebclipsCategoryTable = `
+SELECT name
+FROM sqlite_master
+WHERE type = "table" 
+AND name = "webclips_category"
+LIMIT 1
+`;
+
+const createWebclipsCategoryTable = `
+CREATE TABLE webclips_category (
+  id INTEGER,
+  
+  FOREIGN KEY (id)
+  REFERENCES categories (id)
+  ON DELETE CASCADE,
+
+  PRIMARY KEY (id)
+)
+`;
+
+const insertWebclipsCategoryToCategories = `
+INSERT INTO categories (
+  parent_id,
+  name
+)
+SELECT categories.id, "WebClips"
+FROM categories
+WHERE categories.parent_id IS NULL
+`;
+
+const insertWebclipsCategoryToWebclipsCategory = `
+INSERT INTO webclips_category (
+  id
+)
+VALUES (
+  last_insert_rowid()
+)
+`;
 
 const buildSchema = () => {
   return new Promise((resolve, reject) => {
     getSqlDriver().serialize(function() {
       getSqlDriver().run(createFilesTableIfNotExists, function(err) {
         if (err) {
-          reject();
+          reject(err);
         }
       });
       getSqlDriver().run(createWebClipResourcesIfNotExists, function(err) {
         if (err) {
-          reject();
+          reject(err);
         }
       });
       getSqlDriver().run(createCategoriesTableIfNotExists, function(err) {
         if (err) {
-          reject();
+          reject(err);
         }
       });
       getSqlDriver().run(createCategoriesFilesTableIfNotExists, function(err) {
         if (err) {
-          reject();
+          reject(err);
         }
       });
       getSqlDriver().run(enableForeignKeySupport, function(err) {
         if (err) {
-          reject();
+          reject(err);
         }
       });
-      getSqlDriver().run(insertRootCategoryIfNotExists, {}, function(err) {
+      getSqlDriver().run(insertRootCategoryIfNotExists, function(err) {
         if (err) {
-          reject();
+          reject(err);
+        }
+      });
+      getSqlDriver().all(selectWebclipsCategoryTable, function(err, rows) {
+        if (err) {
+          reject(err);
         } else {
-          resolve();
+          const rowsCount = rows.length;
+          if (rowsCount === 0) {
+            getSqlDriver().serialize(function() {
+              getSqlDriver().run('BEGIN TRANSACTION');
+              try {
+                getSqlDriver().run(createWebclipsCategoryTable, function(err) {
+                  if (err) {
+                    throw err;
+                  }
+                });
+                getSqlDriver().run(insertWebclipsCategoryToCategories, function(err) {
+                  if (err) {
+                    throw err;
+                  }
+                });
+                getSqlDriver().run(insertWebclipsCategoryToWebclipsCategory, function(err) {
+                  if (err) {
+                    throw err;
+                  } else {
+                    getSqlDriver().run('COMMIT');
+                    resolve();
+                  }
+                });
+              } catch (error) {
+                getSqlDriver().run('ROLLBACK');
+                reject(error);
+              }
+            });
+          } else {
+            resolve();
+          }
         }
       });
     });

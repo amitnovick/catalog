@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import machine from './machine';
 import { useMachine } from '@xstate/react';
 import { connect } from 'react-redux';
+
 import store from '../../../redux/store';
 import {
   USER_FILES_DIR,
@@ -14,6 +15,7 @@ import writeFileIfNotExist from '../../../fs/writeFileIfNotExists';
 import { RECEIVE_ENTITIES } from '../actionTypes';
 import routes from '../../../routes';
 import buildSchema from '../../../db/buildSchema';
+
 const fs = require('fs');
 const path = require('path');
 
@@ -55,10 +57,11 @@ const writeSqliteFileAndInitializingIfNotExists = async () => {
   try {
     await writeFileIfNotExist(sqliteFilePath);
   } catch (error) {
-    if (error) {
-      return Promise.reject();
+    if (error.code !== 'EEXIST') {
+      return Promise.reject(error);
     }
   }
+
   return await buildSchema();
 };
 
@@ -98,7 +101,7 @@ const machineWithConfig = machine.withConfig({
     writeSqliteFileAndInitializingIfNotExists: () => writeSqliteFileAndInitializingIfNotExists(),
   },
   actions: {
-    updateErrorMessage: (_, event) => updateErrorMessage(event.data),
+    updateErrorMessage: (_, event) => updateErrorMessage(event.data.message),
   },
 });
 
@@ -109,6 +112,7 @@ const LoadUserFilesScreen = ({ loadUserFilesErrorMessage, history }) => {
         navigateToHomeScreen: (_, __) => history.push(routes.HOME),
       },
     }),
+    { devTools: true },
   );
   if (
     current.matches('checkingUserFilesDirExists') ||

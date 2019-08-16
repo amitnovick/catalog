@@ -8,7 +8,6 @@ INSERT INTO categories (
 SELECT categories.id , $category_name
 FROM categories
 WHERE categories.parent_id IS NULL;
-;
 `;
 
 const categoryNameAlreadyExistsErrorMessage =
