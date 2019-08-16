@@ -1,4 +1,5 @@
 import getSqlDriver from './getSqlDriver';
+import createDbConnection from './createDbConnection';
 
 const createFilesTableIfNotExists = `
 CREATE TABLE IF NOT EXISTS files (
@@ -141,38 +142,45 @@ const buildSchema = () => {
           reject(err);
         }
       });
-      getSqlDriver().all(selectWebclipsCategoryTable, function(err, rows) {
+      getSqlDriver().all(selectWebclipsCategoryTable, async function(err, rows) {
         if (err) {
           reject(err);
         } else {
           const rowsCount = rows.length;
           if (rowsCount === 0) {
-            getSqlDriver().serialize(function() {
-              getSqlDriver().run('BEGIN TRANSACTION');
-              try {
-                getSqlDriver().run(createWebclipsCategoryTable, function(err) {
-                  if (err) {
-                    throw err;
-                  }
-                });
-                getSqlDriver().run(insertWebclipsCategoryToCategories, function(err) {
-                  if (err) {
-                    throw err;
-                  }
-                });
-                getSqlDriver().run(insertWebclipsCategoryToWebclipsCategory, function(err) {
-                  if (err) {
-                    throw err;
-                  } else {
-                    getSqlDriver().run('COMMIT');
-                    resolve();
-                  }
-                });
-              } catch (error) {
-                getSqlDriver().run('ROLLBACK');
-                reject(error);
-              }
-            });
+            try {
+              const db = await createDbConnection();
+              db.serialize(function() {
+                db.run('BEGIN TRANSACTION');
+                try {
+                  db.run(createWebclipsCategoryTable, function(err) {
+                    if (err) {
+                      throw err;
+                    }
+                  });
+                  db.run(insertWebclipsCategoryToCategories, function(err) {
+                    if (err) {
+                      throw err;
+                    }
+                  });
+                  db.run(insertWebclipsCategoryToWebclipsCategory, function(err) {
+                    if (err) {
+                      throw err;
+                    } else {
+                      db.run('COMMIT');
+                      db.close();
+                      resolve();
+                    }
+                  });
+                } catch (error) {
+                  db.run('ROLLBACK');
+                  db.close();
+                  reject(error);
+                }
+              });
+            } catch (error) {
+              throw error;
+            }
           } else {
             resolve();
           }
