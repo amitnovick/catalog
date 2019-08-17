@@ -35,10 +35,22 @@ const fetchData = async (currentCategoryId) => {
   });
 };
 
-const selectCategoryRow = (newCategoryName, categories) => {
+const selectCategoryRowByName = (newCategoryName, categories) => {
   const categoriesWithSameName = categories.filter((category) => category.name === newCategoryName);
   if (categoriesWithSameName.length > 0) {
     const newCategory = categoriesWithSameName[0];
+    return newCategory;
+  } else {
+    return null;
+  }
+};
+
+const selectCategoryRowById = (category, fetchedCategories) => {
+  const categoriesWithSameId = fetchedCategories.filter(
+    (fetchedCategory) => fetchedCategory.id === category.id,
+  );
+  if (categoriesWithSameId.length > 0) {
+    const newCategory = categoriesWithSameId[0];
     return newCategory;
   } else {
     return null;
@@ -73,9 +85,16 @@ const machineWithServices = machine.withConfig({
     clearSelectedCategoryRow: assign({
       selectedCategoryRow: (_, __) => null,
     }),
-    assignSelectedCategoryRow: assign({
+    assignSelectedCategoryRowByName: assign({
       selectedCategoryRow: (context, event) =>
-        selectCategoryRow(context.newCategoryName, event.data.childCategories),
+        selectCategoryRowByName(
+          context.categoryRenamingModalChosenNewCategoryName,
+          event.data.childCategories,
+        ),
+    }),
+    assignSelectedCategoryRowById: assign({
+      selectedCategoryRow: (context, event) =>
+        selectCategoryRowById(context.categoryRenamingModalCategory, event.data.childCategories),
     }),
     updateNewCategoryName: assign({
       newCategoryName: (_, event) => event.newCategoryName,

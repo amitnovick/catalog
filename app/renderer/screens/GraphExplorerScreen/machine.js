@@ -9,11 +9,11 @@ const machine = Machine({
     files: [],
     childCategories: [],
     categoryRenamingModalCategory: null,
+    categoryRenamingModalChosenNewCategoryName: null,
     categoryMoveToModalCategory: null,
     categoryDeletionModalCategory: null,
     selectedCategoryRow: null,
     selectedFileRow: null,
-    newCategoryName: null,
   },
   initial: 'idle',
   states: {
@@ -36,7 +36,17 @@ const machine = Machine({
             src: 'fetchData',
             onDone: {
               target: '#explorer-screen-idle.idle',
-              actions: ['updateState', 'assignSelectedCategoryRow'],
+              actions: ['updateState', 'assignSelectedCategoryRowByName'],
+            },
+            onError: '#explorer-screen-idle.failure',
+          },
+        },
+        fetchingRenamedCategoryDataAndAssigningSelectedCategoryRow: {
+          invoke: {
+            src: 'fetchData',
+            onDone: {
+              target: '#explorer-screen-idle.idle',
+              actions: ['updateState', 'assignSelectedCategoryRowById'],
             },
             onError: '#explorer-screen-idle.failure',
           },
@@ -72,7 +82,8 @@ const machine = Machine({
     categoryRenamingModal: {
       on: {
         CATEGORY_RENAMING_MODAL_CANCEL: 'idle.idle',
-        CATEGORY_RENAMING_MODAL_SUBMIT: 'idle.fetchingData',
+        CATEGORY_RENAMING_MODAL_SUBMIT:
+          'idle.fetchingRenamedCategoryDataAndAssigningSelectedCategoryRow',
       },
     },
     categoryDeletionModal: {
