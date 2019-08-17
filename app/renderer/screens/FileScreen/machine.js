@@ -15,6 +15,8 @@ const machine = Machine({
   initial: 'loading',
   context: {
     fileId: null,
+    file: null,
+    categories: null,
   },
   states: {
     idle: {

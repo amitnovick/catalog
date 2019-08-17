@@ -4,10 +4,8 @@ import { useMachine } from '@xstate/react';
 import { connect } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 
-import { RECEIVE_ENTITIES } from './actionTypes';
 import machine from './machine';
-import store from '../../redux/store';
-import FileMenuContainer from './containers/FileMenuContainer';
+import FileMenu from './components/FileMenu';
 import openFileByName from '../../fs/openFileByName';
 import AddCategoryWidget from './AddCategoryWidget/AddCategoryWidget';
 import FileNameWidget from './FileNameWidget/FileNameWidget';
@@ -18,6 +16,7 @@ import queryCategoriesOfFile from '../../db/queries/getCategoriesOfFile';
 import queryFileName from '../../db/queries/queryFileName';
 import queryRemoveFileFromFilesTable from '../../db/queries/queryRemoveFileFromFilesTable';
 import WebclipWidget from './WebclipWidget/WebclipWidget';
+import { assign } from 'xstate';
 
 const fetchFileData = async (fileId) => {
   const fileName = await queryFileName(fileId);
@@ -41,32 +40,14 @@ const deleteFile = async (file) => {
   }
 };
 
-const updateCategories = (categories) => {
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      categories: categories,
-    },
-  });
-};
-
-const updateFile = (file) => {
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      file: file,
-    },
-  });
-};
-
 const machineWithConfig = machine.withConfig({
   services: {
     fetchFileData: (context, _) => fetchFileData(context.fileId),
     deleteFile: (_, event) => deleteFile(event.file),
   },
   actions: {
-    updateCategories: (_, event) => updateCategories(event.data.categories),
-    updateFile: (_, event) => updateFile(event.data.file),
+    updateCategories: assign({ categories: (_, event) => event.data.categories }),
+    updateFile: assign({ file: (_, event) => event.data.file }),
   },
 });
 
@@ -74,12 +55,15 @@ const openFile = (file) => {
   openFileByName(file.name);
 };
 
-const FileScreen = ({ fileId, file, categories, notifySuccess }) => {
+const FileScreen = ({ fileId, notifySuccess }) => {
   const [current, send] = useMachine(
     machineWithConfig.withContext({
       fileId: fileId,
     }),
   );
+
+  const { file, categories } = current.context;
+
   if (current.matches('idle')) {
     return (
       <div style={{ textAlign: 'center' }}>
@@ -104,7 +88,8 @@ const FileScreen = ({ fileId, file, categories, notifySuccess }) => {
         </div>
         <Divider horizontal />
         <WebclipWidget fileId={fileId} />
-        <FileMenuContainer
+        <FileMenu
+          file={file}
           onClickOpenFile={openFile}
           onClickDeleteFile={(file) =>
             send('CLICK_DELETE_FILE', {
@@ -127,8 +112,6 @@ const FileScreen = ({ fileId, file, categories, notifySuccess }) => {
 
 FileScreen.propTypes = {
   fileId: PropTypes.number.isRequired,
-  file: PropTypes.object,
-  categories: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   notifySuccess: PropTypes.func.isRequired,
 };
 
