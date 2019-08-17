@@ -1,30 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import FileNameContainer from './FileNameContainer';
+import FileName from './FileName';
 import { useMachine } from '@xstate/react';
 import machine from './machine';
-import store from '../../../redux/store';
-import { RECEIVE_ENTITIES } from '../actionTypes';
 import { Icon, Message } from 'semantic-ui-react';
 import queryUpdateFileName from '../../../db/queries/queryUpdateFileName';
 import renameFile from '../../../fs/renameFile';
+import { assign } from 'xstate';
 const isValidFilename = require('valid-filename');
 
 const isNewFileNameValidFileName = (newFileName) => {
   return isValidFilename(newFileName) && newFileName.trim() !== '';
-};
-
-const getFile = (store) => (store && store.specificTagScreen ? store.specificTagScreen.file : '');
-
-const resetNewFileNameToFileName = () => {
-  const file = getFile(store.getState());
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      newFileName: file.name,
-    },
-  });
 };
 
 const attemptToRenameFile = async (file, newFileName) => {
@@ -41,49 +27,43 @@ const attemptToRenameFile = async (file, newFileName) => {
   }
 };
 
-const updateNewFileName = (inputText) => {
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      newFileName: inputText,
-    },
-  });
-};
-
-const updateErrorMessage = (errorMessage) => {
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      fileNameWidgetErrorMessage: errorMessage,
-    },
-  });
-};
-
 const machineWithConfig = machine.withConfig({
   services: {
     attemptToRenameFile: (_, event) => attemptToRenameFile(event.file, event.newFileName),
   },
   actions: {
-    resetNewFileNameToFileName: (_, __) => resetNewFileNameToFileName(),
-    updateInputText: (_, event) => updateNewFileName(event.inputText),
-    updateErrorMessage: (_, event) => updateErrorMessage(event.data.message),
-    updateErrorMessageInvalidFileName: (_, event) =>
-      updateErrorMessage(`Error: The name ${event.newFileName} is not a valid file name.`),
+    resetNewFileNameToFileName: assign({ newFileName: (context, _) => context.file.name }),
+    updateInputText: assign({ newFileName: (_, event) => event.inputText }),
+    updateErrorMessage: assign({ errorMessage: (_, event) => event.data.message }),
+    updateErrorMessageInvalidFileName: assign({
+      errorMessage: (_, event) => `Error: The name ${event.newFileName} is not a valid file name.`,
+    }),
   },
   guards: {
     isNewFileNameValidFileName: (_, event) => isNewFileNameValidFileName(event.newFileName),
   },
 });
 
-const FileNameWidget = ({ refetchFileData, errorMessage }) => {
-  const [current, send] = useMachine(machineWithConfig, {
-    actions: {
-      refetchFileData: (_, __) => refetchFileData(),
+const FileNameWidget = ({ refetchFileData, notifySuccess, file }) => {
+  const [current, send] = useMachine(
+    machineWithConfig.withContext({
+      ...machineWithConfig.initialState.context,
+      file: file,
+      newFileName: file.name,
+    }),
+    {
+      actions: {
+        refetchFileData: (_, __) => refetchFileData(),
+        notifySuccess: (_, __) => notifySuccess(),
+      },
     },
-  });
+  );
+
+  const { errorMessage, newFileName } = current.context;
+
   return (
     <>
-      <FileNameContainer
+      <FileName
         onChangeInputText={(inputText) => send('CHANGE_INPUT_TEXT', { inputText })}
         onClickRenameFile={(file, newFileName) =>
           send('CLICK_RENAME_FILE', {
@@ -91,6 +71,8 @@ const FileNameWidget = ({ refetchFileData, errorMessage }) => {
             newFileName: newFileName,
           })
         }
+        file={file}
+        newFileName={newFileName}
       />
       {current.matches('idle.success') ? <Icon size="big" name="checkmark" color="green" /> : null}
       {current.matches('idle.failure') ? (
@@ -105,11 +87,8 @@ const FileNameWidget = ({ refetchFileData, errorMessage }) => {
 
 FileNameWidget.propTypes = {
   refetchFileData: PropTypes.func.isRequired,
+  notifySuccess: PropTypes.func.isRequired,
+  file: PropTypes.object.isRequired,
 };
 
-const getErrorMessage = (store) =>
-  store && store.specificTagScreen ? store.specificTagScreen.fileNameWidgetErrorMessage : '';
-
-export default connect((state) => ({
-  errorMessage: getErrorMessage(state),
-}))(FileNameWidget);
+export default FileNameWidget;

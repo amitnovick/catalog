@@ -3,6 +3,11 @@ import { Machine } from 'xstate';
 
 const machine = Machine({
   id: 'file-name-widget',
+  context: {
+    file: null,
+    errorMessage: null,
+    newFileName: null,
+  },
   initial: 'idle',
   states: {
     idle: {
@@ -10,7 +15,6 @@ const machine = Machine({
       states: {
         idle: {},
         failure: {},
-        success: {},
       },
       on: {
         CLICK_RENAME_FILE: [
@@ -33,8 +37,7 @@ const machine = Machine({
       invoke: {
         src: 'attemptToRenameFile',
         onDone: {
-          target: 'idle.success',
-          actions: 'refetchFileData',
+          actions: ['notifySuccess', 'refetchFileData'],
         },
         onError: {
           target: 'idle.failure',

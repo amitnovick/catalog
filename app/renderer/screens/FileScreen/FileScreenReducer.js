@@ -11,7 +11,6 @@ const initialState = {
   chosenSearchResultCategory: {},
   genericErrorAddCategoryWidget: '',
   narrowerCategoriesOfFile: [],
-  fileNameWidgetErrorMessage: '',
 };
 
 export default function(state = initialState, action) {
