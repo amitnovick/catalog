@@ -18,7 +18,6 @@ import queryCategoriesOfFile from '../../db/queries/getCategoriesOfFile';
 import queryFileName from '../../db/queries/queryFileName';
 import queryRemoveFileFromFilesTable from '../../db/queries/queryRemoveFileFromFilesTable';
 import WebclipWidget from './WebclipWidget/WebclipWidget';
-import FileName from './FileNameWidget/FileName';
 
 const fetchFileData = async (fileId) => {
   const fileName = await queryFileName(fileId);
@@ -75,43 +74,28 @@ const openFile = (file) => {
   openFileByName(file.name);
 };
 
-const FileScreen = ({ fileId, file }) => {
+const FileScreen = ({ fileId, file, categories, notifySuccess }) => {
   const [current, send] = useMachine(
     machineWithConfig.withContext({
       fileId: fileId,
     }),
   );
-  if (current.matches('idle') || current.matches('loading')) {
+  if (current.matches('idle')) {
     return (
       <div style={{ textAlign: 'center' }}>
         <Icon name="file" color="yellow" size="huge" />
-        {current.matches('idle') ? (
-          <FileNameWidget
-            notifySuccess={() =>
-              toast(
-                <>
-                  <Header>
-                    <Icon name="checkmark" color="green" />
-                    Renamed successfully
-                  </Header>
-                </>,
-              )
-            }
-            refetchFileData={() => send('REFETCH_FILE_DATA')}
-            file={file}
-          />
-        ) : null}
-        {current.matches('loading') ? (
-          <FileName
-            file={{ ...file, name: '' }}
-            newFileName=""
-            onChangeInputText={() => {}}
-            onClickRenameFile={() => {}}
-          />
-        ) : null}
+        <FileNameWidget
+          notifySuccess={() => notifySuccess()}
+          refetchFileData={() => send('REFETCH_FILE_DATA')}
+          file={file}
+        />
         <Divider horizontal />
         <div style={{ border: '1px solid black', borderRadius: 6, padding: 5 }}>
-          <CategoriesWidget />
+          <CategoriesWidget
+            refetchData={() => send('REFETCH_FILE_DATA')}
+            categories={categories}
+            file={file}
+          />
           <AddCategoryWidget refetchFileData={() => send('REFETCH_FILE_DATA')} />
         </div>
         <Divider horizontal />
@@ -126,14 +110,10 @@ const FileScreen = ({ fileId, file }) => {
         />
         {current.matches('idle.success') ? <h2 style={{ color: 'green' }}>Succeeded</h2> : null}
         {current.matches('idle.failure') ? <h2 style={{ color: 'red' }}>Failed</h2> : null}
-        <ToastContainer
-          hideProgressBar={true}
-          autoClose={3000}
-          newestOnTop={true}
-          position="top-right"
-        />
       </div>
     );
+  } else if (current.matches('loading')) {
+    return null;
   } else if (current.matches('deletedFile')) {
     return <h2 style={{ color: 'green' }}>File has been deleted successfully</h2>;
   } else {
@@ -144,10 +124,44 @@ const FileScreen = ({ fileId, file }) => {
 FileScreen.propTypes = {
   fileId: PropTypes.number.isRequired,
   file: PropTypes.object,
+  categories: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  notifySuccess: PropTypes.func.isRequired,
 };
 
 const getFile = (store) => (store && store.specificTagScreen ? store.specificTagScreen.file : '');
 
-export default connect((state) => ({
+const getCategories = (store) =>
+  store && store.specificTagScreen ? store.specificTagScreen.categories : [];
+
+const FileScreenContainer = connect((state) => ({
   file: getFile(state),
+  categories: getCategories(state),
 }))(FileScreen);
+
+const FileScreenContainerWithToast = (props) => {
+  return (
+    <>
+      <FileScreenContainer
+        {...props}
+        notifySuccess={() =>
+          toast(
+            <>
+              <Header>
+                <Icon name="checkmark" color="green" />
+                Renamed successfully
+              </Header>
+            </>,
+          )
+        }
+      />
+      <ToastContainer
+        hideProgressBar={true}
+        autoClose={3000}
+        newestOnTop={true}
+        position="top-right"
+      />
+    </>
+  );
+};
+
+export default FileScreenContainerWithToast;

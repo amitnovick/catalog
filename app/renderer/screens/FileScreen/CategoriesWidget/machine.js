@@ -3,6 +3,11 @@ import { Machine } from 'xstate';
 
 const machine = Machine({
   id: 'categories-widget',
+  context: {
+    chosenCategoryForActionsModal: null,
+    file: null,
+    categories: [],
+  },
   initial: 'idle',
   states: {
     idle: {
@@ -23,8 +28,7 @@ const machine = Machine({
       invoke: {
         src: 'removeCategoryOfFile',
         onDone: {
-          target: 'idle',
-          actions: 'removeCategoryFromState',
+          actions: 'refetchData',
         },
         onError: 'failure',
       },
