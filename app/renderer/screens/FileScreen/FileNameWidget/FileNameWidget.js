@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import FileName from './FileName';
 import { useMachine } from '@xstate/react';
-import machine from './machine';
 import { Icon, Message } from 'semantic-ui-react';
+import { assign } from 'xstate';
+
+import FileName from './FileName';
+import machine from './machine';
 import queryUpdateFileName from '../../../db/queries/queryUpdateFileName';
 import renameFile from '../../../fs/renameFile';
-import { assign } from 'xstate';
+
 const isValidFilename = require('valid-filename');
 
 const isNewFileNameValidFileName = (newFileName) => {
