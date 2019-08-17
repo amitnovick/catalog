@@ -4,9 +4,14 @@ import { Link } from 'react-router-dom';
 import routes from '../routes';
 import { Menu, Icon, Button } from 'semantic-ui-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFileImport } from '@fortawesome/free-solid-svg-icons';
+import { faFileImport, faPaperclip } from '@fortawesome/free-solid-svg-icons';
 
-const NavigationBox = ({ path, onClickAddButton, onClickFileImportButton }) => {
+const NavigationBox = ({
+  path,
+  onClickAddButton,
+  onClickFileImportButton,
+  onClickWebclipButton,
+}) => {
   return (
     <Menu size="massive" inverted style={{ backgroundColor: '#073642' /* Solarized base03 */ }}>
       <Menu.Item
@@ -34,6 +39,9 @@ const NavigationBox = ({ path, onClickAddButton, onClickFileImportButton }) => {
         to={routes.RESOURCES_ADDITION_TIMELINE}>
         <Icon name="calendar alternate" size="big" />
       </Menu.Item>
+      <Menu.Item position="right" as={Button} onClick={() => onClickWebclipButton()}>
+        <FontAwesomeIcon icon={faPaperclip} size="2x" />
+      </Menu.Item>
     </Menu>
   );
 };
@@ -42,6 +50,7 @@ NavigationBox.propTypes = {
   path: PropTypes.string,
   onClickAddButton: PropTypes.func.isRequired,
   onClickFileImportButton: PropTypes.func.isRequired,
+  onClickWebclipButton: PropTypes.func.isRequired,
 };
 
 export default NavigationBox;

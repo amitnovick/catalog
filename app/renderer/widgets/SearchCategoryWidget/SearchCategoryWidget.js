@@ -1,9 +1,11 @@
 import React from 'react';
-import SearchCategory from '../../../../../components/SearchCategory';
-import { useMachine } from '@xstate/react';
-import machine from './machine';
+import PropTypes from 'prop-types';
 import { assign } from 'xstate';
-import querySelectCategoriesWithMatchingName from '../../../../../db/queries/querySelectCategoriesWithMatchingName';
+import { useMachine } from '@xstate/react';
+
+import SearchCategory from '../../components/SearchCategory';
+import machine from './machine';
+import querySelectCategoriesWithMatchingName from '../../db/queries/querySelectCategoriesWithMatchingName';
 
 const fetchSearchResultCategories = (inputSearchQuery) => {
   return querySelectCategoriesWithMatchingName(inputSearchQuery);
@@ -20,7 +22,7 @@ const machineWithConfig = machine.withConfig({
   },
 });
 
-const SearchCategoryContainer = ({ onFinish }) => {
+const SearchCategoryWidget = ({ onFinish }) => {
   const [current, send] = useMachine(
     machineWithConfig.withConfig({
       actions: {
@@ -44,4 +46,8 @@ const SearchCategoryContainer = ({ onFinish }) => {
   );
 };
 
-export default SearchCategoryContainer;
+SearchCategoryWidget.propTypes = {
+  onFinish: PropTypes.func.isRequired,
+};
+
+export default SearchCategoryWidget;

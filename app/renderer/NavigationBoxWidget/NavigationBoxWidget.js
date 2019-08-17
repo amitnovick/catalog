@@ -7,6 +7,7 @@ import machine from './machine';
 import FileAdditionModalWidget from './FileAdditionModalWidget/FileAdditionModalWidget';
 import routes from '../routes';
 import FileImportModalWidget from './FileImportModalWidget/FileImportModalWidget';
+import WebclipsModalWidget from './WebclipsModalWidget/WebclipsModalWidget';
 
 const machineWithConfig = machine.withConfig({
   actions: {
@@ -21,6 +22,7 @@ const NavigationBoxWidget = ({ path, history }) => {
     <>
       <NavigationBox
         path={path}
+        onClickWebclipButton={() => send('CLICK_WEBCLIP_BUTTON')}
         onClickAddButton={() => send('CLICK_ADD_BUTTON')}
         onClickFileImportButton={() => send('CLICK_FILE_IMPORT_BUTTON')}
       />
@@ -32,6 +34,9 @@ const NavigationBoxWidget = ({ path, history }) => {
       ) : null}
       {current.matches('fileImportModal') ? (
         <FileImportModalWidget onClose={() => send('CLOSE_FILE_IMPORT_MODAL')} />
+      ) : null}
+      {current.matches('webclipsModal') ? (
+        <WebclipsModalWidget onClose={() => send('CLOSE_WEBCLIPS_MODAL')} />
       ) : null}
     </>
   );

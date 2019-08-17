@@ -8,7 +8,7 @@ import { Message, Button, Icon } from 'semantic-ui-react';
 
 const ChosenCategory = ({ category, onClickClearButton }) => {
   return (
-    <Button onClick={() => onClickClearButton()} icon labelPosition="right">
+    <Button size="big" onClick={() => onClickClearButton()} icon labelPosition="right">
       {category.name}
       <Icon name="redo" />
     </Button>

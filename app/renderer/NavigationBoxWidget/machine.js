@@ -9,6 +9,7 @@ const machine = Machine({
       on: {
         CLICK_ADD_BUTTON: 'fileAdditionModal',
         CLICK_FILE_IMPORT_BUTTON: 'fileImportModal',
+        CLICK_WEBCLIP_BUTTON: 'webclipsModal',
       },
     },
     fileAdditionModal: {
@@ -23,6 +24,11 @@ const machine = Machine({
     fileImportModal: {
       on: {
         CLOSE_FILE_IMPORT_MODAL: 'idle',
+      },
+    },
+    webclipsModal: {
+      on: {
+        CLOSE_WEBCLIPS_MODAL: 'idle',
       },
     },
   },
