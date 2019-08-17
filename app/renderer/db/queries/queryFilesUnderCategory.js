@@ -1,9 +1,9 @@
 import getSqlDriver from '../getSqlDriver';
 
-const selectFilesUnderCategoryByName = `
+const selectFilesUnderCategory = `
 WITH categories_subtree AS (
   WITH RECURSIVE tc( i )  AS (
-    SELECT id FROM categories WHERE name = $category_name
+    SELECT id FROM categories WHERE id = $category_id
     UNION 
     SELECT id from categories, tc
     WHERE categories.parent_id = tc.i
@@ -18,16 +18,14 @@ WITH categories_subtree AS (
 SELECT DISTINCT files.id, files.name
 FROM files
 WHERE files.id IN categorized_files
-AND files.name LIKE $file_name
 `;
 
-const queryFilesUnderCategoryByName = (fileName, categoryName) => {
+const queryFilesUnderCategory = (category) => {
   return new Promise((resolve, reject) => {
     getSqlDriver().all(
-      selectFilesUnderCategoryByName,
+      selectFilesUnderCategory,
       {
-        $file_name: `%${fileName}%`,
-        $category_name: categoryName,
+        $category_id: category.id,
       },
       (err, rows) => {
         if (err) {
@@ -41,4 +39,4 @@ const queryFilesUnderCategoryByName = (fileName, categoryName) => {
   });
 };
 
-export default queryFilesUnderCategoryByName;
+export default queryFilesUnderCategory;
