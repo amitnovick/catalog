@@ -60,15 +60,6 @@ const updateFile = (file) => {
   });
 };
 
-const updateNewFileName = (file) => {
-  store.dispatch({
-    type: RECEIVE_ENTITIES,
-    payload: {
-      newFileName: file.name,
-    },
-  });
-};
-
 const machineWithConfig = machine.withConfig({
   services: {
     fetchFileData: (context, _) => fetchFileData(context.fileId),
@@ -77,7 +68,6 @@ const machineWithConfig = machine.withConfig({
   actions: {
     updateCategories: (_, event) => updateCategories(event.data.categories),
     updateFile: (_, event) => updateFile(event.data.file),
-    updateNewFileName: (_, event) => updateNewFileName(event.data.file),
   },
 });
 

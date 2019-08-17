@@ -32,7 +32,7 @@ const machine = Machine({
             src: 'fetchFileData',
             onDone: {
               target: '#file-screen.idle.idle',
-              actions: ['updateCategories', 'updateFile', 'updateNewFileName'],
+              actions: ['updateCategories', 'updateFile'],
             },
             onError: '#file-screen.failedFetching',
           },
