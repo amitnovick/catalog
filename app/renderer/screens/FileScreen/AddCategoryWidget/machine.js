@@ -3,6 +3,16 @@ import { Machine } from 'xstate';
 
 const machine = Machine({
   id: 'add-category',
+  context: {
+    file: null,
+    categories: null,
+    inputSearchQuery: '',
+    searchResultCategories: [],
+    chosenSearchResultCategory: null,
+    genericErrorAddCategoryWidget: null,
+    narrowerCategoriesOfFile: null,
+    broaderFileCategories: null,
+  },
   initial: 'idle',
   states: {
     idle: {
@@ -111,8 +121,7 @@ const machine = Machine({
       invoke: {
         src: 'attemptToAddChosenSearchResultCategory',
         onDone: {
-          target: 'idle',
-          actions: ['refetchFileData', 'resetInputSearchQuery'],
+          actions: 'refetchFileData',
         },
         onError: 'idle.failure',
       },
@@ -127,8 +136,7 @@ const machine = Machine({
       invoke: {
         src: 'replaceBroaderCategoriesWithNarrowerCategoryInDb',
         onDone: {
-          target: 'idle',
-          actions: ['refetchFileData', 'resetInputSearchQuery'],
+          actions: 'refetchFileData',
         },
         onError: 'idle.failure',
       },

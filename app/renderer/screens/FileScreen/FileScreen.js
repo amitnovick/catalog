@@ -96,7 +96,11 @@ const FileScreen = ({ fileId, file, categories, notifySuccess }) => {
             categories={categories}
             file={file}
           />
-          <AddCategoryWidget refetchFileData={() => send('REFETCH_FILE_DATA')} />
+          <AddCategoryWidget
+            file={file}
+            categories={categories}
+            refetchFileData={() => send('REFETCH_FILE_DATA')}
+          />
         </div>
         <Divider horizontal />
         <WebclipWidget fileId={fileId} />
