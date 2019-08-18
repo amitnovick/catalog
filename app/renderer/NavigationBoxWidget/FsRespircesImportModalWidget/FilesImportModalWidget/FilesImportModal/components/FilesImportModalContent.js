@@ -4,7 +4,7 @@ import { Modal } from 'semantic-ui-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileImport } from '@fortawesome/free-solid-svg-icons';
 
-const FileImportModalContent = ({ FileImportWidget }) => {
+const FilesImportModalContent = ({ FileImportWidget }) => {
   return (
     <Modal.Content image>
       <div className="image">
@@ -21,8 +21,8 @@ const FileImportModalContent = ({ FileImportWidget }) => {
   );
 };
 
-FileImportModalContent.propTypes = {
+FilesImportModalContent.propTypes = {
   FileImportWidget: PropTypes.any,
 };
 
-export default FileImportModalContent;
+export default FilesImportModalContent;

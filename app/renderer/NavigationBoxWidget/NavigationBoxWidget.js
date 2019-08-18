@@ -6,7 +6,7 @@ import NavigationBox from './NavigationBox';
 import machine from './machine';
 import FileAdditionModalWidget from './FileAdditionModalWidget/FileAdditionModalWidget';
 import routes from '../routes';
-import FileImportModalWidget from './FileImportModalWidget/FileImportModalWidget';
+import FsRespircesImportModalWidget from './FsRespircesImportModalWidget/FsRespircesImportModalWidget';
 import WebclipsModalWidget from './WebclipsModalWidget/WebclipsModalWidget';
 
 const machineWithConfig = machine.withConfig({
@@ -33,7 +33,7 @@ const NavigationBoxWidget = ({ path, history }) => {
         />
       ) : null}
       {current.matches('fileImportModal') ? (
-        <FileImportModalWidget onClose={() => send('CLOSE_FILE_IMPORT_MODAL')} />
+        <FsRespircesImportModalWidget onClose={() => send('CLOSE_FILE_IMPORT_MODAL')} />
       ) : null}
       {current.matches('webclipsModal') ? (
         <WebclipsModalWidget onClose={() => send('CLOSE_WEBCLIPS_MODAL')} />

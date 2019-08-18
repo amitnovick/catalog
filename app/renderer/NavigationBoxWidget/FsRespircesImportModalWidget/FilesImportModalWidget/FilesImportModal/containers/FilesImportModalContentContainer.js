@@ -1,9 +1,9 @@
 import React from 'react';
 import { useService } from '@xstate/react';
 
-import FileImportModalContent from '../components/FileImportModalContent';
+import FilesImportModalContent from '../components/FilesImportModalContent';
 import ReactContext from '../../ReactContext';
-import FilesPicker from '../../../../components/FilesPicker';
+import FilesPicker from '../../../../../components/FilesPicker';
 import ImportFilesList from '../../components/ImportFilesList';
 import { Button } from 'semantic-ui-react';
 
@@ -40,7 +40,7 @@ const FilesImportModalContentContainer = () => {
     FileImportWidget = () => <h2>Unknown state</h2>;
   }
 
-  return <FileImportModalContent FileImportWidget={FileImportWidget} />;
+  return <FilesImportModalContent FileImportWidget={FileImportWidget} />;
 };
 
 export default FilesImportModalContentContainer;

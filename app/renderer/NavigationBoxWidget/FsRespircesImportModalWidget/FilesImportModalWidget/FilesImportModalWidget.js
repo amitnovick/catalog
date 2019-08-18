@@ -1,13 +1,13 @@
 import React from 'react';
-import FileImportModal from './FileImportModal/FileImportModal';
+import FilesImportModal from './FilesImportModal/FilesImportModal';
 import { useMachine } from '@xstate/react';
 import machine from './machine';
 import ReactContext from './ReactContext';
 import { assign } from 'xstate';
-import store from '../../redux/store';
-import copyFile from '../../fs/copyFile';
-import queryInsertFile from '../../db/transactions/queryInsertFile';
-import deleteFile from '../../fs/deleteFile';
+import store from '../../../redux/store';
+import copyFile from '../../../fs/copyFile';
+import queryInsertFile from '../../../db/transactions/queryInsertFile';
+import deleteFile from '../../../fs/deleteFile';
 const path = require('path');
 
 const getUserFilesSubdirPath = (store) =>
@@ -109,7 +109,7 @@ const machineWithConfig = machine.withConfig({
   },
 });
 
-const FileImportModalWidget = ({ onClose }) => {
+const FilesImportModalWidget = ({ onClose }) => {
   const [, , service] = useMachine(machineWithConfig, {
     actions: {
       onClose: (_, __) => onClose(),
@@ -117,9 +117,9 @@ const FileImportModalWidget = ({ onClose }) => {
   });
   return (
     <ReactContext.Provider value={service}>
-      <FileImportModal onClose={onClose} />
+      <FilesImportModal onClose={onClose} />
     </ReactContext.Provider>
   );
 };
 
-export default FileImportModalWidget;
+export default FilesImportModalWidget;

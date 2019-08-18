@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
-const FileImportModalActions = ({
+const DirectoriesImportModalActions = ({
   onClickCancelButton,
   onClickSubmitButton,
   shouldDisableSubmitButton,
@@ -17,10 +17,10 @@ const FileImportModalActions = ({
   );
 };
 
-FileImportModalActions.propTypes = {
+DirectoriesImportModalActions.propTypes = {
   onClickCancelButton: PropTypes.func.isRequired,
   onClickSubmitButton: PropTypes.func.isRequired,
   shouldDisableSubmitButton: PropTypes.bool.isRequired,
 };
 
-export default FileImportModalActions;
+export default DirectoriesImportModalActions;

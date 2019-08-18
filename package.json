@@ -23,6 +23,7 @@
     "emotion": "^10.0.14",
     "filenamify": "^4.1.0",
     "hapi-swagger": "^10.0.2",
+    "ncp": "^2.0.0",
     "paths.macro": "^2.0.2",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
@@ -67,7 +68,7 @@
     "npm-run-all": "^4.0.1",
     "prettier": "^1.13.7",
     "redux-mock-store": "^1.2.2",
-    "rimraf": "^2.5.4"
+    "rimraf": "^2.7.1"
   },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Modal, Header } from 'semantic-ui-react';
 
-const FileImportModalHeader = () => {
+const FilesImportModalHeader = () => {
   return (
     <Modal.Header>
       <Header as="h3" textAlign="center">
@@ -12,4 +12,4 @@ const FileImportModalHeader = () => {
   );
 };
 
-export default FileImportModalHeader;
+export default FilesImportModalHeader;
