@@ -5,7 +5,7 @@ import ReactContext from './ReactContext';
 import machine from './machine';
 import FileAdditionModal from './FileAdditionModal/FileAdditionModal';
 import { assign } from 'xstate';
-import queryInsertFile from '../../db/queries/queryInsertFile';
+import queryInsertFile from '../../db/transactions/queryInsertFile';
 import writeFile from '../../fs/writeFile';
 import queryDeleteFsResourceByName from '../../db/queries/queryDeleteFsResourceByName';
 import isFileNameValid from '../../utils/isFileNameValid';

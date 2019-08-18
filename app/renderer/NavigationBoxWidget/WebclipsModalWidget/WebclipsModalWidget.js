@@ -7,7 +7,7 @@ import WebclipsModal from './WebclipsModal/WebclipsModal';
 import { assign } from 'xstate';
 import queryWebclipsCategory from '../../db/queries/queryWebclipsCategory';
 import ReactContext from './ReactContext';
-import queryUpdateWebclipsCategory from '../../db/queries/queryUpdateWebclipsCategory';
+import queryUpdateWebclipsCategory from '../../db/transactions/queryUpdateWebclipsCategory';
 
 const fetchWebclipsCategory = async () => {
   const webclipsCategory = await queryWebclipsCategory();
