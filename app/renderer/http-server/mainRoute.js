@@ -1,5 +1,5 @@
 import formatFilePathRaw from './fs/formatFilePathRaw';
-import queryInsertWebclipResource from './db/queryInsertWebclipResource';
+import queryInsertWebclipResource from '../db/queries/queryInsertWebclipResource';
 import deleteFileRaw from './fs/deleteFileRaw';
 import store from '../redux/store';
 

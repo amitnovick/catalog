@@ -1,19 +1,21 @@
 import getSqlDriver from '../getSqlDriver';
 
-const selectCategorizedFsResources = `
-SELECT fs_resources.id, fs_resources.name
+const selectCategoriesOfFsResource = `
+SELECT categories.name, categories.id
 FROM fs_resources
 INNER JOIN categories_fs_resources
 ON fs_resources.id = categories_fs_resources.fs_resource_id
-WHERE categories_fs_resources.category_id = $category_id
+INNER JOIN categories
+ON categories.id = categories_fs_resources.category_id
+WHERE fs_resources.id = $fs_resource_id
 `;
 
-const queryCategorizedFsResources = (categoryId) => {
+const querySelectCategoriesOfFsResource = (fsResourceId) => {
   return new Promise((resolve, reject) => {
     getSqlDriver().all(
-      selectCategorizedFsResources,
+      selectCategoriesOfFsResource,
       {
-        $category_id: categoryId,
+        $fs_resource_id: fsResourceId,
       },
       (err, rows) => {
         if (err) {
@@ -27,4 +29,4 @@ const queryCategorizedFsResources = (categoryId) => {
   });
 };
 
-export default queryCategorizedFsResources;
+export default querySelectCategoriesOfFsResource;

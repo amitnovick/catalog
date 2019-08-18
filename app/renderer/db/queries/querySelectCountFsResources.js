@@ -1,13 +1,13 @@
 import getSqlDriver from '../getSqlDriver';
 
-const selectCountFiles = `
-SELECT COUNT(*) AS count_of_files
-FROM files
+const selectCountFsResources = `
+SELECT COUNT(*) AS count_of_fs_resources
+FROM fs_resources
 `;
 
-const querySelectCountFiles = async () => {
+const querySelectCountFsResources = async () => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().all(selectCountFiles, (err, rows) => {
+    getSqlDriver().all(selectCountFsResources, (err, rows) => {
       if (err) {
         reject(new Error(`Unknown error: ${err.message}`));
       } else {
@@ -15,12 +15,12 @@ const querySelectCountFiles = async () => {
           reject(new Error(`Unknown error: retrieved zero rows`));
         } else {
           const countRow = rows[0];
-          const { count_of_files: countOfFiles } = countRow;
-          resolve(countOfFiles);
+          const { count_of_fs_resources: countOfFsResources } = countRow;
+          resolve(countOfFsResources);
         }
       }
     });
   });
 };
 
-export default querySelectCountFiles;
+export default querySelectCountFsResources;

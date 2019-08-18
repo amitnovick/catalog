@@ -6,7 +6,7 @@ import { assign } from 'xstate';
 
 import FileName from './FileName';
 import machine from './machine';
-import queryUpdateFileName from '../../../db/queries/queryUpdateFileName';
+import queryUpdateFileName from '../../../db/queries/queryUpdateFsResourceName';
 import renameFile from '../../../fs/renameFile';
 
 const isValidFilename = require('valid-filename');

@@ -2,7 +2,7 @@ import React from 'react';
 import { useMachine } from '@xstate/react';
 import machine from './machine';
 import { assign } from 'xstate';
-import queryDeleteCategoryOfFilesWhenMovingCategory from '../../../db/queries/queryDeleteCategoryOfFilesWhenMovingCategory';
+import queryDeleteCategoryOfFsResourcesWhenMovingCategory from '../../../db/queries/queryDeleteCategoryOfFsResourcesWhenMovingCategory';
 import queryCategoriesInPath from '../../../db/queries/queryCategoriesInPath';
 import MoveToModal from './MoveToModal/MoveToModal';
 import ReactContext from './ReactContext';
@@ -22,7 +22,7 @@ const checkIsParentCategoryValid = async (childCategory, parentCategory) => {
 };
 
 const deleteParentCategoryOfFilesWithBothParentAndChild = (childCategory, parentCategory) => {
-  return queryDeleteCategoryOfFilesWhenMovingCategory(childCategory.id, parentCategory.id);
+  return queryDeleteCategoryOfFsResourcesWhenMovingCategory(childCategory.id, parentCategory.id);
 };
 
 const updateParentCategoryOfChildCategory = (childCategory, parentCategory) => {

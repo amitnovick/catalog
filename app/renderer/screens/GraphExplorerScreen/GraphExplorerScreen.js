@@ -13,7 +13,7 @@ import Explorer from './Explorer/Explorer';
 import CategoryDeleteModalWidget from './CategoryDeleteModalWidget/CategoryDeleteModalWidget';
 import CategoryAdditionModalWidget from './CategoryAdditionModalWidget/CategoryAdditionModalWidget';
 import CategoryMoveToModalWidget from './CategoryMoveToModalWidget/CategoryMoveToModalWidget';
-import queryFiles from '../../db/queries/queryFiles';
+import queryFiles from '../../db/queries/querySelectFilesOfCategory';
 import ReactContext from './ReactContext';
 
 const fetchData = async (currentCategoryId) => {

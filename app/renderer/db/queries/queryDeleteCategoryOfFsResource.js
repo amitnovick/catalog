@@ -1,18 +1,18 @@
 import getSqlDriver from '../getSqlDriver';
 
-const deleteCategoryOfFile = `
-DELETE FROM categories_files
-WHERE categories_files.category_id = $category_id
-AND categories_files.file_id = $file_id
+const deleteCategoryOfFsResource = `
+DELETE FROM categories_fs_resources
+WHERE categories_fs_resources.category_id = $category_id
+AND categories_fs_resources.fs_resource_id = $fs_resource_id
 `;
 
-const queryDeleteFileCategory = (categoryId, fileId) => {
+const queryDeleteCategoryOfFsResource = (categoryId, fsResourceId) => {
   return new Promise((resolve, reject) => {
     getSqlDriver().run(
-      deleteCategoryOfFile,
+      deleteCategoryOfFsResource,
       {
         $category_id: categoryId,
-        $file_id: fileId,
+        $fs_resource_id: fsResourceId,
       },
       function(err) {
         if (err) {
@@ -32,4 +32,4 @@ const queryDeleteFileCategory = (categoryId, fileId) => {
   });
 };
 
-export default queryDeleteFileCategory;
+export default queryDeleteCategoryOfFsResource;

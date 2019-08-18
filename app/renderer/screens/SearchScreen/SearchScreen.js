@@ -6,9 +6,9 @@ import { Accordion, Checkbox, List, Icon, Header, Button, Message } from 'semant
 import LabelledInput from '../../components/SearchBox';
 import SearchCategoryWidget from '../../widgets/SearchCategoryWidget/SearchCategoryWidget';
 import FileListItem from '../../components/FileListItem';
-import queryFilesByName from '../../db/queries/queryFilesByName';
-import queryFilesUnderCategoryByFileName from '../../db/queries/queryFilesUnderCategoryByFileName';
-import queryFilesUnderCategory from '../../db/queries/queryFilesUnderCategory';
+import queryFilesByName from '../../db/queries/querySelectFsResourcesByName';
+import queryFilesUnderCategoryByFileName from '../../db/queries/querySelectFsResourcesInCategorySubtreeWithMatchingFileName';
+import queryFilesUnderCategory from '../../db/queries/querySelectFsResourcesInCategorySubtree';
 
 const fetchSearchResultsBothFilters = (inputFileNameText, chosenAncestorCategory) => {
   return queryFilesUnderCategoryByFileName(inputFileNameText, chosenAncestorCategory);

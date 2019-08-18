@@ -7,7 +7,7 @@ import FileAdditionModal from './FileAdditionModal/FileAdditionModal';
 import { assign } from 'xstate';
 import queryInsertFile from '../../db/queries/queryInsertFile';
 import writeFile from '../../fs/writeFile';
-import queryDeleteFile from '../../db/queries/queryDeleteFile';
+import queryDeleteFsResourceByName from '../../db/queries/queryDeleteFsResourceByName';
 import isFileNameValid from '../../utils/isFileNameValid';
 
 const attemptToCreateFile = async (fileName) => {
@@ -16,7 +16,7 @@ const attemptToCreateFile = async (fileName) => {
     await writeFile(fileName);
     return Promise.resolve(fileId);
   } catch (error) {
-    await queryDeleteFile(fileName); // clean up after `insertFileToDb`
+    await queryDeleteFsResourceByName(fileName); // clean up after `insertFileToDb`
     return Promise.reject(error);
   }
 };

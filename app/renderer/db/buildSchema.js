@@ -1,12 +1,41 @@
 import getSqlDriver from './getSqlDriver';
 import createDbConnection from './createDbConnection';
 
-const createFilesTableIfNotExists = `
-CREATE TABLE IF NOT EXISTS files (
+const enableForeignKeySupport = `PRAGMA foreign_keys = ON`;
+
+const selectFsResourceTypesTable = `
+SELECT name
+FROM sqlite_master
+WHERE type = "table" 
+AND name = "fs_resource_types"
+LIMIT 1
+`;
+
+const createFsResourceTypesTable = `
+CREATE TABLE fs_resource_types (
+  id INTEGER PRIMARY KEY,
+  name TEXT UNIQUE NOT NULL
+)
+`;
+
+const insertAllFsResourceTypes = `
+  INSERT INTO fs_resource_types (
+    name
+  ) VALUES
+  ( "file" ), ( "directory")
+`;
+
+const createFsResourcesTableIfNotExists = `
+CREATE TABLE IF NOT EXISTS fs_resources (
   id INTEGER PRIMARY KEY,
   name TEXT UNIQUE NOT NULL,
-  added_at DATE NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+  added_at DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  type_id INTEGER NOT NULL,
+  
+  FOREIGN KEY (type_id)
+  REFERENCES fs_resource_types (id)
+  ON DELETE CASCADE
+)
 `;
 
 const createWebClipResourcesIfNotExists = `
@@ -16,7 +45,7 @@ CREATE TABLE IF NOT EXISTS webclip_resources (
   page_title TEXT NOT NULL,
 
   FOREIGN KEY (id)
-  REFERENCES files (id)
+  REFERENCES fs_resources (id)
   ON DELETE CASCADE,
 
   PRIMARY KEY (id)
@@ -36,24 +65,22 @@ CREATE TABLE IF NOT EXISTS categories (
 );
 `;
 
-const createCategoriesFilesTableIfNotExists = `
-CREATE TABLE IF NOT EXISTS categories_files (
+const createCategoriesFsResourcesTableIfNotExists = `
+CREATE TABLE IF NOT EXISTS categories_fs_resources (
   category_id INTEGER NOT NULL,
-  file_id INTEGER NOT NULL,
+  fs_resource_id INTEGER NOT NULL,
 
   FOREIGN KEY(category_id)
   REFERENCES categories(id)
   ON DELETE CASCADE,
 
-  FOREIGN KEY(file_id)
-  REFERENCES files(id)
+  FOREIGN KEY(fs_resource_id)
+  REFERENCES fs_resources(id)
   ON DELETE CASCADE,
 
-  PRIMARY KEY (category_id, file_id)
+  PRIMARY KEY (category_id, fs_resource_id)
 );
 `;
-
-const enableForeignKeySupport = `PRAGMA foreign_keys = ON`;
 
 const insertRootCategoryIfNotExists = `
 WITH existing_root AS (
@@ -154,7 +181,53 @@ const buildSchema = () => {
   return new Promise(async (resolve, reject) => {
     try {
       await new Promise((resolve, reject) => {
-        getSqlDriver().run(createFilesTableIfNotExists, function(err) {
+        getSqlDriver().run(enableForeignKeySupport, function(err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      });
+
+      await new Promise((resolve, reject) => {
+        getSqlDriver().all(selectFsResourceTypesTable, async function(err, rows) {
+          if (err) {
+            reject(err);
+          } else {
+            const rowsCount = rows.length;
+            const doesFsResourceTypesTableExist = rowsCount > 0;
+            if (doesFsResourceTypesTableExist) {
+              resolve();
+            } else {
+              await new Promise((resolve, reject) => {
+                getSqlDriver().run(createFsResourceTypesTable, function(err) {
+                  if (err) {
+                    reject(err);
+                  } else {
+                    resolve();
+                  }
+                });
+              });
+
+              await new Promise((resolve, reject) => {
+                getSqlDriver().run(insertAllFsResourceTypes, function(err) {
+                  if (err) {
+                    reject(err);
+                  } else {
+                    resolve();
+                  }
+                });
+              });
+
+              resolve();
+            }
+          }
+        });
+      });
+
+      await new Promise((resolve, reject) => {
+        getSqlDriver().run(createFsResourcesTableIfNotExists, function(err) {
           if (err) {
             reject(err);
           } else {
@@ -184,17 +257,7 @@ const buildSchema = () => {
       });
 
       await new Promise((resolve, reject) => {
-        getSqlDriver().run(createCategoriesFilesTableIfNotExists, function(err) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve();
-          }
-        });
-      });
-
-      await new Promise((resolve, reject) => {
-        getSqlDriver().run(enableForeignKeySupport, function(err) {
+        getSqlDriver().run(createCategoriesFsResourcesTableIfNotExists, function(err) {
           if (err) {
             reject(err);
           } else {

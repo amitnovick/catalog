@@ -1,16 +1,16 @@
 import getSqlDriver from '../getSqlDriver';
 
-const deleteFileFromFiles = `
-DELETE FROM files
-WHERE files.id = $file_id
+const deleteFsResource = `
+DELETE FROM fs_resources
+WHERE fs_resources.id = $fs_resource_id
 `;
 
-const queryRemoveFileFromFilesTable = (fileId) => {
+const queryDeleteFsResource = (fsResourceId) => {
   return new Promise((resolve, reject) => {
     getSqlDriver().run(
-      deleteFileFromFiles,
+      deleteFsResource,
       {
-        $file_id: fileId,
+        $fs_resource_id: fsResourceId,
       },
       function(err) {
         if (err) {
@@ -19,7 +19,7 @@ const queryRemoveFileFromFilesTable = (fileId) => {
         } else {
           const { changes: affectedRowsCount } = this;
           if (affectedRowsCount !== 1) {
-            console.log('queryRemoveFileFromFilesTable: No affected rows error');
+            console.log('queryDeleteFsResource: No affected rows error');
             reject();
           } else {
             resolve();
@@ -30,4 +30,4 @@ const queryRemoveFileFromFilesTable = (fileId) => {
   });
 };
 
-export default queryRemoveFileFromFilesTable;
+export default queryDeleteFsResource;

@@ -13,8 +13,8 @@ import PropTypes from 'prop-types';
 import { assign } from 'xstate';
 
 import machine from './machine';
-import querySelectFilesOrderByDateAdded from '../../db/queries/querySelectFilesOrderByDateAdded';
-import querySelectCountFiles from '../../db/queries/querySelectCountFiles';
+import querySelectFilesOrderByDateAdded from '../../db/queries/querySelectPaginatedFsResources';
+import querySelectCountFiles from '../../db/queries/querySelectCountFsResources';
 import routes from '../../routes';
 import FileListItem from '../../components/FileListItem';
 

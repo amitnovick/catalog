@@ -1,19 +1,21 @@
 import createDbConnection from '../createDbConnection';
 
 const insertFile = `
-INSERT INTO files (
-  name
+INSERT INTO fs_resources (
+  name,
+  type_id
 )
-VALUES (
-  $file_name
-);
+SELECT $fs_resource_name, id
+FROM fs_resource_types
+WHERE fs_resource_types.name = "file"
 `;
 
 const selectInsertedFileId = `SELECT last_insert_rowid() AS id`;
 
-const fileNameAlreadyExistsErrorMessage = 'SQLITE_CONSTRAINT: UNIQUE constraint failed: files.name';
+const fileNameAlreadyExistsErrorMessage =
+  'SQLITE_CONSTRAINT: UNIQUE constraint failed: fs_resources.name';
 
-const queryInsertFile = async (fileName) => {
+const queryInsertFile = async (fsResourceName) => {
   return new Promise(async (resolve, reject) => {
     try {
       const db = await createDbConnection();
@@ -31,7 +33,7 @@ const queryInsertFile = async (fileName) => {
           db.run(
             insertFile,
             {
-              $file_name: fileName,
+              $fs_resource_name: fsResourceName,
             },
             function(err) {
               if (err) {

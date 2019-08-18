@@ -5,7 +5,7 @@ import CategoryActionsModal from './Modal/CategoryActionsModal';
 import { useMachine } from '@xstate/react';
 import Categories from './Categories';
 import machine from './machine';
-import queryDeleteFileCategory from '../../../db/queries/queryDeleteFileCategory';
+import queryDeleteFileCategory from '../../../db/queries/queryDeleteCategoryOfFsResource';
 import { assign } from 'xstate';
 
 const removeCategoryOfFile = async (category, file) => {

@@ -9,7 +9,7 @@ import SubcategoriesContainers from './containers/SubcategoriesContainer';
 import CategorizedFilesContainer from './containers/CategorizedFilesContainer';
 import ConfirmationContainer from './containers/ConfirmationContainer';
 import { assign } from 'xstate';
-import queryCategorizedFiles from '../../../db/queries/queryCategorizedFilesV2';
+import queryCategorizedFsResources from '../../../db/queries/queryCategorizedFilesV2';
 import queryDeleteCategory from '../../../db/queries/queryDeleteCategory';
 import Modal from '../../../components/Modal';
 import ReactContext from './ReactContext';
@@ -24,7 +24,7 @@ const isSubcategoriesEmpty = (subcategories) => {
 };
 
 const fetchCategorizedFiles = (category) => {
-  return queryCategorizedFiles(category.id);
+  return queryCategorizedFsResources(category.id);
 };
 
 const isCategorizedFilesEmpty = (categorizedFiles) => {

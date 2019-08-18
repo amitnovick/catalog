@@ -1,12 +1,13 @@
-import createDbConnection from '../../db/createDbConnection';
+import createDbConnection from '../createDbConnection';
 
 const insertFile = `
-INSERT INTO files (
-  name
+INSERT INTO fs_resources (
+  name,
+  type_id
 )
-VALUES (
-  $file_name
-);
+SELECT $fs_resource_name, id
+FROM fs_resource_types
+WHERE fs_resource_types.name = "file"
 `;
 
 const selectLastInsertRowId = `
@@ -18,7 +19,7 @@ INSERT INTO webclip_resources (
   id, page_url, page_title 
 )
 VALUES (
-  $file_id, $page_url, $page_title
+  $fs_resource_id, $page_url, $page_title
 )
 `;
 
@@ -29,15 +30,15 @@ WITH existing_webclips_category AS (
   LIMIT 1
 )
 
-INSERT INTO categories_files (
-  category_id, file_id
+INSERT INTO categories_fs_resources (
+  category_id, fs_resource_id
 )
-SELECT id, $file_id
+SELECT id, $fs_resource_id
 FROM existing_webclips_category
 WHERE EXISTS (SELECT 1 FROM existing_webclips_category)
 `;
 
-const queryInsertWebclipResource = async (fileName, pageUrl, pageTitle) => {
+const queryInsertWebclipFile = async (fileName, pageUrl, pageTitle) => {
   return new Promise(async (resolve, reject) => {
     try {
       const db = await createDbConnection();
@@ -55,7 +56,7 @@ const queryInsertWebclipResource = async (fileName, pageUrl, pageTitle) => {
           db.run(
             insertFile,
             {
-              $file_name: fileName,
+              $fs_resource_name: fileName,
             },
             function(err) {
               if (err) {
@@ -94,7 +95,7 @@ const queryInsertWebclipResource = async (fileName, pageUrl, pageTitle) => {
           db.run(
             insertWebclipResource,
             {
-              $file_id: fileId,
+              $fs_resource_id: fileId,
               $page_url: pageUrl,
               $page_title: pageTitle,
             },
@@ -112,7 +113,7 @@ const queryInsertWebclipResource = async (fileName, pageUrl, pageTitle) => {
           db.run(
             assignWebclipsCategoryToFileIfCategoryExists,
             {
-              $file_id: fileId,
+              $fs_resource_id: fileId,
             },
             (err) => {
               if (err) {
@@ -146,4 +147,4 @@ const queryInsertWebclipResource = async (fileName, pageUrl, pageTitle) => {
   });
 };
 
-export default queryInsertWebclipResource;
+export default queryInsertWebclipFile;

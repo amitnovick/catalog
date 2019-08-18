@@ -1,20 +1,19 @@
 import getSqlDriver from '../getSqlDriver';
 
-const insertCategoryOfFile = `
-INSERT INTO categories_files
-(category_id, file_id)
-VALUES ($category_id, $file_id)
-`;
+const insertCategoryOfFsResource = `
+INSERT INTO categories_fs_resources
+(category_id, fs_resource_id)
+VALUES ($category_id, $fs_resource_id)`;
 
 const categoryAlreadyExistsErrorMessage = `SQLITE_CONSTRAINT: UNIQUE constraint failed: categories_files.category_id, categories_files.file_id`;
 
-const queryAddCategoryToFile = (fileId, category) => {
+const queryAddCategoryToFsResource = (fsResourceId, category) => {
   return new Promise((resolve, reject) => {
     getSqlDriver().run(
-      insertCategoryOfFile,
+      insertCategoryOfFsResource,
       {
         $category_id: category.id,
-        $file_id: fileId,
+        $fs_resource_id: fsResourceId,
       },
       function(err) {
         if (err) {
@@ -38,4 +37,4 @@ const queryAddCategoryToFile = (fileId, category) => {
   });
 };
 
-export default queryAddCategoryToFile;
+export default queryAddCategoryToFsResource;

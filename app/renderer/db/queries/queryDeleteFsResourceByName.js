@@ -1,16 +1,16 @@
 import getSqlDriver from '../getSqlDriver';
 
-const deleteFileByName = `
-DELETE FROM files 
-WHERE files.name = $file_name
+const deleteFsResourceByName = `
+DELETE FROM fs_resources 
+WHERE fs_resources.name = $fs_resource_name
 `;
 
-const queryDeleteFile = async (fileName) => {
+const queryDeleteFsResourceByName = async (fsResourceName) => {
   return new Promise((resolve, reject) => {
     getSqlDriver().run(
-      deleteFileByName,
+      deleteFsResourceByName,
       {
-        $file_name: fileName,
+        $fs_resource_name: fsResourceName,
       },
       function(err) {
         /* Must be non-arrow function, since `this` is used*/
@@ -32,4 +32,4 @@ const queryDeleteFile = async (fileName) => {
   });
 };
 
-export default queryDeleteFile;
+export default queryDeleteFsResourceByName;

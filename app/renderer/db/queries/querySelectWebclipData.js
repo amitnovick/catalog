@@ -3,15 +3,15 @@ import getSqlDriver from '../getSqlDriver';
 const selectWebclipData = `
 SELECT page_url, page_title
 FROM webclip_resources
-WHERE id = $file_id
+WHERE id = $fs_resource_id
 `;
 
-const querySelectWebclipData = (fileId) => {
+const querySelectWebclipData = (fsResourceId) => {
   return new Promise((resolve, reject) => {
     getSqlDriver().all(
       selectWebclipData,
       {
-        $file_id: fileId,
+        $fs_resource_id: fsResourceId,
       },
       (err, rows) => {
         if (err) {
@@ -19,8 +19,8 @@ const querySelectWebclipData = (fileId) => {
           reject(new Error(`Unknown error: ${err.message}`));
         } else {
           if (rows.length > 0) {
-            const fileRow = rows[0];
-            const { page_url: pageUrl, page_title: pageTitle } = fileRow;
+            const fsResourceRow = rows[0];
+            const { page_url: pageUrl, page_title: pageTitle } = fsResourceRow;
             resolve({
               pageUrl,
               pageTitle,

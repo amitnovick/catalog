@@ -1,25 +1,25 @@
 import getSqlDriver from '../getSqlDriver';
 
-const updateFileName = `
-UPDATE files
-SET name = $file_name
-WHERE files.id = $file_id
+const updateFsResourceName = `
+UPDATE fs_resources
+SET name = $fs_resource_name
+WHERE fs_resources.id = $fs_resource_id
 `;
 
-const fileNameAlreadyExistsErrorMessage = `SQLITE_CONSTRAINT: UNIQUE constraint failed: files.name`;
+const fsResourceNameAlreadyExistsErrorMessage = `SQLITE_CONSTRAINT: UNIQUE constraint failed: fs_resources.name`;
 
-const queryUpdateFileName = (fileId, newFileName) => {
+const queryUpdateFsResourceName = (fsResourceId, newFsResourceName) => {
   return new Promise((resolve, reject) => {
     getSqlDriver().run(
-      updateFileName,
+      updateFsResourceName,
       {
-        $file_name: newFileName,
-        $file_id: fileId,
+        $fs_resource_name: newFsResourceName,
+        $fs_resource_id: fsResourceId,
       },
       function(err) {
         if (err) {
-          if (err.message === fileNameAlreadyExistsErrorMessage) {
-            reject(new Error(`Error: file name ${newFileName} already exists in db`));
+          if (err.message === fsResourceNameAlreadyExistsErrorMessage) {
+            reject(new Error(`Error: fs resource "${newFsResourceName}" already exists in db`));
           } else {
             reject(new Error(`Unknown error: ${err}`));
           }
@@ -40,4 +40,4 @@ const queryUpdateFileName = (fileId, newFileName) => {
   });
 };
 
-export default queryUpdateFileName;
+export default queryUpdateFsResourceName;

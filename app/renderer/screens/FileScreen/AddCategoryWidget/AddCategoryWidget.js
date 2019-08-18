@@ -4,14 +4,14 @@ import { useMachine } from '@xstate/react';
 import machine from './machine';
 
 import querySelectCategoriesWithMatchingName from '../../../db/queries/querySelectCategoriesWithMatchingName';
-import queryDeleteFileCategory from '../../../db/queries/queryDeleteFileCategory';
+import queryDeleteFileCategory from '../../../db/queries/queryDeleteCategoryOfFsResource';
 import { Message, Label, Button } from 'semantic-ui-react';
 import BroaderCategoriesModal from './Modal/BroaderCategoriesModal';
 import addNewCategoryUnderRoot from '../../../db/queries/addNewCategoryUnderRoot';
 import queryGetCategoryByName from '../../../db/queries/queryGetCategoryByName';
 import { css } from 'emotion';
 import queryCategoryAncestors from '../../../db/queries/queryCategoryAncestors';
-import queryAddCategoryToFile from '../../../db/queries/queryAddCategoryToFIle';
+import queryAddCategoryToFsResource from '../../../db/queries/queryAddCategoryToFsResource';
 import { assign } from 'xstate';
 import SearchCategory from '../../../components/SearchCategory';
 
@@ -69,7 +69,7 @@ const replaceBroaderCategoriesWithNarrowerCategoryInDb = async (
   categories,
 ) => {
   await removeBroaderFileCategoriesIfExist(chosenSearchResultCategory.id, file.id, categories);
-  return queryAddCategoryToFile(file.id, chosenSearchResultCategory);
+  return queryAddCategoryToFsResource(file.id, chosenSearchResultCategory);
 };
 
 const areNarrowerCategoriesOfFileEmpty = (narrowerCategoriesOfFile) => {
@@ -81,7 +81,7 @@ const areBroaderCategoriesOfFileEmpty = (broaderCategoriesOfFile) => {
 };
 
 const attemptToAddChosenSearchResultCategory = (file, chosenSearchResultCategory) => {
-  return queryAddCategoryToFile(file.id, chosenSearchResultCategory);
+  return queryAddCategoryToFsResource(file.id, chosenSearchResultCategory);
 };
 
 const categoryIsntAlreadyAssigned = (category, categories) => {

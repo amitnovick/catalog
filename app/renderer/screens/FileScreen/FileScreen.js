@@ -12,15 +12,15 @@ import FileNameWidget from './FileNameWidget/FileNameWidget';
 import CategoriesWidget from './CategoriesWidget/CategoriesWidget';
 import { Divider, Icon, Header } from 'semantic-ui-react';
 import deleteFileFromFs from '../../fs/deleteFile';
-import queryCategoriesOfFile from '../../db/queries/getCategoriesOfFile';
-import queryFileName from '../../db/queries/queryFileName';
-import queryRemoveFileFromFilesTable from '../../db/queries/queryRemoveFileFromFilesTable';
+import queryCategoriesOfFsResource from '../../db/queries/querySelectCategoriesOfFsResource';
+import queryFileName from '../../db/queries/querySelectFsResourceName';
+import queryRemoveFileFromFilesTable from '../../db/queries/queryDeleteFsResource';
 import WebclipWidget from './WebclipWidget/WebclipWidget';
 import { assign } from 'xstate';
 
 const fetchFileData = async (fileId) => {
   const fileName = await queryFileName(fileId);
-  const categories = await queryCategoriesOfFile(fileId);
+  const categories = await queryCategoriesOfFsResource(fileId);
   const resolvedValue = {
     categories,
     file: {
