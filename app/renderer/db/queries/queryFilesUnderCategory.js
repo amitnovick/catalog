@@ -18,6 +18,7 @@ WITH categories_subtree AS (
 SELECT DISTINCT files.id, files.name
 FROM files
 WHERE files.id IN categorized_files
+ORDER BY files.added_at DESC
 `;
 
 const queryFilesUnderCategory = (category) => {

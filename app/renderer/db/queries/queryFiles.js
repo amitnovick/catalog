@@ -6,6 +6,7 @@ FROM files
 INNER JOIN categories_files
 ON files.id = categories_files.file_id
 WHERE categories_files.category_id = $category_id
+ORDER BY files.added_at DESC
 `;
 
 const queryFiles = (categoryId) => {
@@ -27,4 +28,4 @@ const queryFiles = (categoryId) => {
   });
 };
 
-export default queryFiles
+export default queryFiles;

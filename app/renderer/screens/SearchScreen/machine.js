@@ -8,6 +8,7 @@ const machine = Machine({
     chosenAncestorCategory: null,
     inputFileNameText: '',
     selectedFileRow: null,
+    hasSearchedAtLeastOnce: false,
   },
   type: 'parallel',
   states: {
@@ -54,14 +55,17 @@ const machine = Machine({
             cond: (_, __, meta) =>
               meta.state.matches('filtering.filterByName.enabled') &&
               meta.state.matches('filtering.filterByAncestorCategory.enabled'),
+            actions: 'updateHasSearchedAtLeastOnce',
             target: '#processing.fetchingSearchResultsBothFilters',
           },
           {
             in: 'filtering.filterByName.enabled',
+            actions: 'updateHasSearchedAtLeastOnce',
             target: '#processing.fetchingSearchResultsOnlyByNameFilter',
           },
           {
             in: 'filtering.filterByAncestorCategory.enabled',
+            actions: 'updateHasSearchedAtLeastOnce',
             target: '#processing.fetchingSearchResultsOnlyByAncestorCategoryFilter',
           },
         ],

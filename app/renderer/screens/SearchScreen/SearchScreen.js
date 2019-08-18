@@ -2,7 +2,7 @@ import React from 'react';
 import { useMachine } from '@xstate/react';
 import machine from './machine';
 import { assign } from 'xstate';
-import { Accordion, Checkbox, List, Icon, Header, Button } from 'semantic-ui-react';
+import { Accordion, Checkbox, List, Icon, Header, Button, Message } from 'semantic-ui-react';
 import LabelledInput from '../../components/SearchBox';
 import SearchCategoryWidget from '../../widgets/SearchCategoryWidget/SearchCategoryWidget';
 import FileListItem from '../../components/FileListItem';
@@ -44,6 +44,9 @@ const machineWithConfig = machine.withConfig({
     updateSelectedFileRow: assign({
       selectedFileRow: (_, event) => event.file,
     }),
+    updateHasSearchedAtLeastOnce: assign({
+      hasSearchedAtLeastOnce: (_, __) => true,
+    }),
   },
 });
 
@@ -55,6 +58,7 @@ const SearchScreen = () => {
     inputFileNameText,
     chosenAncestorCategory,
     selectedFileRow,
+    hasSearchedAtLeastOnce,
   } = current.context;
 
   const isFilteringByNameEnabled = current.matches('filtering.filterByName.enabled');
@@ -128,16 +132,23 @@ const SearchScreen = () => {
         />
       </div>
       <Header as="h2">Search Results</Header>
-      <List size="big" style={{ overflowY: 'scroll', height: '100%' }}>
-        {searchResultFiles.map((searchResultFile) => (
-          <FileListItem
-            key={searchResultFile.id}
-            file={searchResultFile}
-            isSelected={selectedFileRow !== null && searchResultFile.id === selectedFileRow.id}
-            onClickRow={() => send('SELECT_FILE_ROW', { file: searchResultFile })}
-          />
-        ))}
-      </List>
+      {hasSearchedAtLeastOnce && searchResultFiles.length > 0 ? (
+        <List size="big" style={{ overflowY: 'scroll', height: '100%' }}>
+          {searchResultFiles.map((searchResultFile) => (
+            <FileListItem
+              key={searchResultFile.id}
+              file={searchResultFile}
+              isSelected={selectedFileRow !== null && searchResultFile.id === selectedFileRow.id}
+              onClickRow={() => send('SELECT_FILE_ROW', { file: searchResultFile })}
+            />
+          ))}
+        </List>
+      ) : null}
+      {hasSearchedAtLeastOnce && searchResultFiles.length === 0 ? (
+        <Message info>
+          <Message.Header>No Results</Message.Header>
+        </Message>
+      ) : null}
     </div>
   );
 };

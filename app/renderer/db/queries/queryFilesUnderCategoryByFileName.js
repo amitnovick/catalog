@@ -19,6 +19,7 @@ SELECT DISTINCT files.id, files.name
 FROM files
 WHERE files.id IN categorized_files
 AND files.name LIKE $file_name
+ORDER BY files.added_at DESC
 `;
 
 const queryFilesUnderCategoryByFileName = (fileName, category) => {
