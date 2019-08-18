@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'semantic-ui-react';
 import { css } from 'emotion';
 
 /* TODO:
@@ -16,7 +15,9 @@ const inputClass = css`
   display: none;
 `;
 
-const AddNewInstance = ({ onInput }) => {
+const FILES_PICKER_ELEMENT_ID = 'files-picker';
+
+const FilesPicker = ({ onInput, children }) => {
   return (
     <label
       className={
@@ -27,7 +28,7 @@ const AddNewInstance = ({ onInput }) => {
         className={inputClass}
         type="file"
         multiple
-        id="files-picker"
+        id={FILES_PICKER_ELEMENT_ID}
         onInput={() => {
           const filesPickerElement = document.getElementById('files-picker');
           if (filesPickerElement && filesPickerElement.files) {
@@ -41,19 +42,14 @@ const AddNewInstance = ({ onInput }) => {
           }
         }}
       />
-      <Button
-        as="label"
-        htmlFor="files-picker"
-        size="massive" /* Note: It is necessary to have `htmlFor` here and point to the <input/> in order to trigger the Filepicker element */
-      >
-        Choose Files
-      </Button>
+      {children(FILES_PICKER_ELEMENT_ID)}
     </label>
   );
 };
 
-AddNewInstance.propTypes = {
+FilesPicker.propTypes = {
   onInput: PropTypes.func.isRequired,
+  children: PropTypes.func.isRequired,
 };
 
-export default AddNewInstance;
+export default FilesPicker;
