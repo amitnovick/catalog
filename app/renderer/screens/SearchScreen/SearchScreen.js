@@ -3,23 +3,22 @@ import { useMachine } from '@xstate/react';
 import machine from './machine';
 import { assign } from 'xstate';
 import { Accordion, Checkbox, List, Icon, Header, Button, Message } from 'semantic-ui-react';
-import LabelledInput from '../../components/SearchBox';
+import LabelledInput from '../../components/LabelledInput';
 import SearchCategoryWidget from '../../widgets/SearchCategoryWidget/SearchCategoryWidget';
-import FileListItem from '../../containers/FileListItemWithNavigation';
 import querySelectFsResourcesByName from '../../db/queries/querySelectFsResourcesByName';
 import querySelectFsResourcesInCategorySubtreeWithMatchingFileName from '../../db/queries/querySelectFsResourcesInCategorySubtreeWithMatchingFileName';
 import querySelectFsResourcesInCategorySubtree from '../../db/queries/querySelectFsResourcesInCategorySubtree';
 import FsResourcesListItemWithNavigation from '../../containers/FsResourceListItemWithNavigation';
 
-const fetchSearchResultsBothFilters = (inputFileNameText, chosenAncestorCategory) => {
+const fetchSearchResultsBothFilters = (inputFsResourceNameText, chosenAncestorCategory) => {
   return querySelectFsResourcesInCategorySubtreeWithMatchingFileName(
-    inputFileNameText,
+    inputFsResourceNameText,
     chosenAncestorCategory,
   );
 };
 
-const fetchSearchResultsOnlyByNameFilter = (inputFileNameText) => {
-  return querySelectFsResourcesByName(inputFileNameText);
+const fetchSearchResultsOnlyByNameFilter = (inputFsResourceNameText) => {
+  return querySelectFsResourcesByName(inputFsResourceNameText);
 };
 
 const fetchSearchResultsOnlyByAncestorCategoryFilter = (chosenAncestorCategory) => {
@@ -29,24 +28,27 @@ const fetchSearchResultsOnlyByAncestorCategoryFilter = (chosenAncestorCategory) 
 const machineWithConfig = machine.withConfig({
   services: {
     fetchSearchResultsBothFilters: (context, _) =>
-      fetchSearchResultsBothFilters(context.inputFileNameText, context.chosenAncestorCategory),
+      fetchSearchResultsBothFilters(
+        context.inputFsResourceNameText,
+        context.chosenAncestorCategory,
+      ),
     fetchSearchResultsOnlyByNameFilter: (context, _) =>
-      fetchSearchResultsOnlyByNameFilter(context.inputFileNameText),
+      fetchSearchResultsOnlyByNameFilter(context.inputFsResourceNameText),
     fetchSearchResultsOnlyByAncestorCategoryFilter: (context, _) =>
       fetchSearchResultsOnlyByAncestorCategoryFilter(context.chosenAncestorCategory),
   },
   actions: {
-    updateSearchResultFiles: assign({
-      searchResultFiles: (_, event) => event.data,
+    updateSearchResultFsResources: assign({
+      searchResultFsResources: (_, event) => event.data,
     }),
     updateChosenAncestorCategory: assign({
       chosenAncestorCategory: (_, event) => event.category,
     }),
-    updateInputFileNameText: assign({
-      inputFileNameText: (_, event) => event.inputFileNameText,
+    updateInputFsResourceNameText: assign({
+      inputFsResourceNameText: (_, event) => event.inputFsResourceNameText,
     }),
-    updateSelectedFileRow: assign({
-      selectedFileRow: (_, event) => event.file,
+    updateSelectedFsResourceRow: assign({
+      selectedFsResourceRow: (_, event) => event.file,
     }),
     updateHasSearchedAtLeastOnce: assign({
       hasSearchedAtLeastOnce: (_, __) => true,
@@ -58,10 +60,10 @@ const SearchScreen = () => {
   const [current, send] = useMachine(machineWithConfig, { devTools: true });
 
   const {
-    searchResultFiles,
-    inputFileNameText,
+    searchResultFsResources,
+    inputFsResourceNameText,
     chosenAncestorCategory,
-    selectedFileRow,
+    selectedFsResourceRow,
     hasSearchedAtLeastOnce,
   } = current.context;
 
@@ -83,9 +85,9 @@ const SearchScreen = () => {
           <div style={{ marginLeft: '3em' }}>
             <LabelledInput
               onHitEnterKey={() => send('FETCH_DATA')}
-              inputText={inputFileNameText}
-              onChangeSearchText={(inputFileNameText) =>
-                send('CHANGED_TEXT', { inputFileNameText: inputFileNameText })
+              inputText={inputFsResourceNameText}
+              onChangeSearchText={(inputFsResourceNameText) =>
+                send('CHANGED_TEXT', { inputFsResourceNameText: inputFsResourceNameText })
               }
             />
           </div>
@@ -127,6 +129,10 @@ const SearchScreen = () => {
       </Accordion>
       <div style={{ textAlign: 'center' }}>
         <Button
+          disabled={
+            current.matches('filtering.filterByName.enabled') === false &&
+            current.matches('filtering.filterByAncestorCategory.enabled') === false
+          }
           size="massive"
           color="green"
           icon="search"
@@ -136,19 +142,21 @@ const SearchScreen = () => {
         />
       </div>
       <Header as="h2">Search Results</Header>
-      {hasSearchedAtLeastOnce && searchResultFiles.length > 0 ? (
+      {hasSearchedAtLeastOnce && searchResultFsResources.length > 0 ? (
         <List size="big" style={{ overflowY: 'scroll', height: '100%' }}>
-          {searchResultFiles.map((searchResultFile) => (
+          {searchResultFsResources.map((searchResultFile) => (
             <FsResourcesListItemWithNavigation
               key={searchResultFile.id}
               fsResource={searchResultFile}
-              isSelected={selectedFileRow !== null && searchResultFile.id === selectedFileRow.id}
+              isSelected={
+                selectedFsResourceRow !== null && searchResultFile.id === selectedFsResourceRow.id
+              }
               onClickRow={() => send('SELECT_FILE_ROW', { file: searchResultFile })}
             />
           ))}
         </List>
       ) : null}
-      {hasSearchedAtLeastOnce && searchResultFiles.length === 0 ? (
+      {hasSearchedAtLeastOnce && searchResultFsResources.length === 0 ? (
         <Message info>
           <Message.Header>No Results</Message.Header>
         </Message>

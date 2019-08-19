@@ -4,10 +4,10 @@ import { Machine } from 'xstate';
 const machine = Machine({
   id: 'search-screen',
   context: {
-    searchResultFiles: [],
+    searchResultFsResources: [],
     chosenAncestorCategory: null,
-    inputFileNameText: '',
-    selectedFileRow: null,
+    inputFsResourceNameText: '',
+    selectedFsResourceRow: null,
     hasSearchedAtLeastOnce: false,
   },
   type: 'parallel',
@@ -23,7 +23,7 @@ const machine = Machine({
             src: 'fetchSearchResultsBothFilters',
             onDone: {
               target: 'idle',
-              actions: 'updateSearchResultFiles',
+              actions: 'updateSearchResultFsResources',
             },
             onError: 'failure',
           },
@@ -33,7 +33,7 @@ const machine = Machine({
             src: 'fetchSearchResultsOnlyByNameFilter',
             onDone: {
               target: 'idle',
-              actions: 'updateSearchResultFiles',
+              actions: 'updateSearchResultFsResources',
             },
             onError: 'failure',
           },
@@ -43,7 +43,7 @@ const machine = Machine({
             src: 'fetchSearchResultsOnlyByAncestorCategoryFilter',
             onDone: {
               target: 'idle',
-              actions: 'updateSearchResultFiles',
+              actions: 'updateSearchResultFsResources',
             },
             onError: 'failure',
           },
@@ -81,7 +81,7 @@ const machine = Machine({
               on: {
                 TOGGLE_FILTER_BY_NAME: 'disabled',
                 CHANGED_TEXT: {
-                  actions: 'updateInputFileNameText',
+                  actions: 'updateInputFsResourceNameText',
                 },
               },
             },
@@ -124,7 +124,7 @@ const machine = Machine({
   },
   on: {
     SELECT_FILE_ROW: {
-      actions: 'updateSelectedFileRow',
+      actions: 'updateSelectedFsResourceRow',
     },
   },
 });

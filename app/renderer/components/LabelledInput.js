@@ -6,7 +6,7 @@ const LabelledInput = ({ inputText, onChangeSearchText, onHitEnterKey }) => {
   return (
     <Form>
       <Form.Field width="6">
-        <label style={{ fontSize: '1.5em' }}>File name</label>
+        <label style={{ fontSize: '1.5em' }}>File / directory name</label>
         <Input
           autoFocus
           type="text"
