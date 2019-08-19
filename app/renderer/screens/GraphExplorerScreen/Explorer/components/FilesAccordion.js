@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { List, Message } from 'semantic-ui-react';
 
 import AccordionWrapper from './AccordionWrapper';
-import FileListItem from '../../../../components/FileListItem';
+import FileListItem from '../../../../widgets/FileListItemWithNavigation';
 
 const FilesAccordion = ({ files, selectedFileRow, onClickRow }) => {
   return (

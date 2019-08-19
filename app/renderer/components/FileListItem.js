@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 import { css } from 'emotion';
 
-import routes from '../routes';
 import FileIcon from './FileIcon';
 
 const BLUE = '#2196F3';
@@ -46,22 +44,11 @@ const FileListItem = ({ file, isSelected, onClickRow, onDoubleClickRow }) => {
   );
 };
 
-const FileListItemWrapper = ({ file, history, ...props }) => {
-  return (
-    <FileListItem
-      {...props}
-      file={file}
-      onDoubleClickRow={() => history.push(`${routes.FILE}/${file.id}`)}
-    />
-  );
-};
-
-const FileListItemWrapperHistoryWrapper = withRouter(FileListItemWrapper);
-
-FileListItemWrapperHistoryWrapper.propTypes = {
+FileListItem.propTypes = {
   file: PropTypes.any,
   isSelected: PropTypes.bool.isRequired,
   onClickRow: PropTypes.func.isRequired,
+  onDoubleClickRow: PropTypes.func.isRequired,
 };
 
-export default FileListItemWrapperHistoryWrapper;
+export default FileListItem;
