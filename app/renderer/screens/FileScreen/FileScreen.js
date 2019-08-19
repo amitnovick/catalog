@@ -17,6 +17,7 @@ import queryFileName from '../../db/queries/querySelectFsResourceName';
 import queryRemoveFileFromFilesTable from '../../db/queries/queryDeleteFsResource';
 import WebclipWidget from './WebclipWidget/WebclipWidget';
 import { assign } from 'xstate';
+import FsResourceIcon from '../../components/FsResourceIcon';
 
 const fetchFileData = async (fileId) => {
   const fileName = await queryFileName(fileId);
@@ -66,13 +67,23 @@ const FileScreen = ({ fileId, notifySuccess }) => {
 
   if (current.matches('idle')) {
     return (
-      <div style={{ textAlign: 'center' }}>
-        <Icon name="file" color="yellow" size="huge" />
-        <FileNameWidget
-          notifySuccess={() => notifySuccess()}
-          refetchFileData={() => send('REFETCH_FILE_DATA')}
-          file={file}
-        />
+      <div style={{ textAlign: 'center', overflowY: 'auto', height: '100%' }}>
+        <div style={{ textAlign: 'unset', float: 'left' }}>
+          <FsResourceIcon fsResourceType="file" size="5x" />
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <FileNameWidget
+            notifySuccess={() => notifySuccess()}
+            refetchFileData={() => send('REFETCH_FILE_DATA')}
+            file={file}
+          />
+        </div>
         <Divider horizontal />
         <div style={{ border: '1px solid black', borderRadius: 6, padding: 5 }}>
           <CategoriesWidget

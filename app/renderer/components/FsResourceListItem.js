@@ -34,7 +34,7 @@ const FsResourceListItem = ({ fsResource, isSelected, onClickRow, onDoubleClickR
       onDoubleClick={() => onDoubleClickRow()}
       onMouseDown={(event) => event.preventDefault()}
       title="Open in file screen">
-      <FsResourceIcon fsResourceType={fsResource.type} />
+      <FsResourceIcon size="lg" fsResourceType={fsResource.type} />
       <span
         className={`${spanClass} ${threeDotsClass}`}
         style={{ color: isSelected ? 'white' : 'black' }}>

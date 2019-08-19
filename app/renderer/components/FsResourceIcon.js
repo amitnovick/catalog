@@ -7,11 +7,11 @@ import fsResourceTypes from '../fsResourceTypes';
 
 const iconStyle = { marginRight: '0.5em', marginLeft: '0.2em' };
 
-const FsResourceIcon = ({ fsResourceType }) => {
+const FsResourceIcon = ({ fsResourceType, ...props }) => {
   if (fsResourceType === fsResourceTypes.FILE) {
-    return <FileIcon size="lg" style={iconStyle} />;
+    return <FileIcon {...props} style={iconStyle} />;
   } else if (fsResourceType === fsResourceTypes.DIRECTORY) {
-    return <DirectoryIcon size="lg" style={iconStyle} />;
+    return <DirectoryIcon {...props} style={iconStyle} />;
   }
 };
 

@@ -64,26 +64,24 @@ const FileNameWidget = ({ refetchFileData, notifySuccess, file }) => {
   const { errorMessage, newFileName } = current.context;
 
   return (
-    <>
-      <FileName
-        onChangeInputText={(inputText) => send('CHANGE_INPUT_TEXT', { inputText })}
-        onClickRenameFile={(file, newFileName) =>
-          send('CLICK_RENAME_FILE', {
-            file: file,
-            newFileName: newFileName,
-          })
-        }
-        file={file}
-        newFileName={newFileName}
-      />
+    <div>
+      <div>
+        <FileName
+          onChangeInputText={(inputText) => send('CHANGE_INPUT_TEXT', { inputText })}
+          onClickRenameFile={(file, newFileName) =>
+            send('CLICK_RENAME_FILE', {
+              file: file,
+              newFileName: newFileName,
+            })
+          }
+          file={file}
+          newFileName={newFileName}
+        />
+        {current.matches('idle.failure') ? <Icon size="big" name="remove" color="red" /> : null}
+      </div>
       {current.matches('idle.success') ? <Icon size="big" name="checkmark" color="green" /> : null}
-      {current.matches('idle.failure') ? (
-        <>
-          <Icon size="big" name="remove" color="red" />
-          <Message error content={errorMessage} />
-        </>
-      ) : null}
-    </>
+      {current.matches('idle.failure') ? <Message error content={errorMessage} /> : null}
+    </div>
   );
 };
 
