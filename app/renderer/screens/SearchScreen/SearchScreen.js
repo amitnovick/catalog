@@ -6,20 +6,24 @@ import { Accordion, Checkbox, List, Icon, Header, Button, Message } from 'semant
 import LabelledInput from '../../components/SearchBox';
 import SearchCategoryWidget from '../../widgets/SearchCategoryWidget/SearchCategoryWidget';
 import FileListItem from '../../containers/FileListItemWithNavigation';
-import queryFilesByName from '../../db/queries/querySelectFsResourcesByName';
-import queryFilesUnderCategoryByFileName from '../../db/queries/querySelectFsResourcesInCategorySubtreeWithMatchingFileName';
-import queryFilesUnderCategory from '../../db/queries/querySelectFsResourcesInCategorySubtree';
+import querySelectFsResourcesByName from '../../db/queries/querySelectFsResourcesByName';
+import querySelectFsResourcesInCategorySubtreeWithMatchingFileName from '../../db/queries/querySelectFsResourcesInCategorySubtreeWithMatchingFileName';
+import querySelectFsResourcesInCategorySubtree from '../../db/queries/querySelectFsResourcesInCategorySubtree';
+import FsResourcesListItemWithNavigation from '../../containers/FsResourceListItemWithNavigation';
 
 const fetchSearchResultsBothFilters = (inputFileNameText, chosenAncestorCategory) => {
-  return queryFilesUnderCategoryByFileName(inputFileNameText, chosenAncestorCategory);
+  return querySelectFsResourcesInCategorySubtreeWithMatchingFileName(
+    inputFileNameText,
+    chosenAncestorCategory,
+  );
 };
 
 const fetchSearchResultsOnlyByNameFilter = (inputFileNameText) => {
-  return queryFilesByName(inputFileNameText);
+  return querySelectFsResourcesByName(inputFileNameText);
 };
 
 const fetchSearchResultsOnlyByAncestorCategoryFilter = (chosenAncestorCategory) => {
-  return queryFilesUnderCategory(chosenAncestorCategory);
+  return querySelectFsResourcesInCategorySubtree(chosenAncestorCategory);
 };
 
 const machineWithConfig = machine.withConfig({
@@ -135,9 +139,9 @@ const SearchScreen = () => {
       {hasSearchedAtLeastOnce && searchResultFiles.length > 0 ? (
         <List size="big" style={{ overflowY: 'scroll', height: '100%' }}>
           {searchResultFiles.map((searchResultFile) => (
-            <FileListItem
+            <FsResourcesListItemWithNavigation
               key={searchResultFile.id}
-              file={searchResultFile}
+              fsResource={searchResultFile}
               isSelected={selectedFileRow !== null && searchResultFile.id === selectedFileRow.id}
               onClickRow={() => send('SELECT_FILE_ROW', { file: searchResultFile })}
             />

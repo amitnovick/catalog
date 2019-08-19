@@ -13,8 +13,13 @@ WITH categories_subtree AS (
     FROM categories_fs_resources
     WHERE categories_fs_resources.category_id IN categories_subtree
 )
-SELECT DISTINCT fs_resources.id, fs_resources.name
+SELECT DISTINCT 
+  fs_resources.id,
+  fs_resources.name,
+  fs_resource_types.name AS type
 FROM fs_resources
+INNER JOIN fs_resource_types
+ON fs_resources.type_id = fs_resource_types.id
 WHERE fs_resources.id IN categorized_fs_resources
 `;
 

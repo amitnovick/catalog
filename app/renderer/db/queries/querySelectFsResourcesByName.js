@@ -1,7 +1,10 @@
 import getSqlDriver from '../getSqlDriver';
 
 const selectFsResourcesByName = `
-SELECT fs_resources.id, fs_resources.name, fs_resource_types.name AS type_name
+SELECT 
+  fs_resources.id,
+  fs_resources.name,
+  fs_resource_types.name AS type
 FROM fs_resources
 INNER JOIN fs_resource_types
 ON fs_resources.type_id = fs_resource_types.id
