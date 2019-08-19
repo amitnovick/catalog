@@ -5,7 +5,7 @@ import { assign } from 'xstate';
 import { Accordion, Checkbox, List, Icon, Header, Button, Message } from 'semantic-ui-react';
 import LabelledInput from '../../components/SearchBox';
 import SearchCategoryWidget from '../../widgets/SearchCategoryWidget/SearchCategoryWidget';
-import FileListItem from '../../widgets/FileListItemWithNavigation';
+import FileListItem from '../../containers/FileListItemWithNavigation';
 import queryFilesByName from '../../db/queries/querySelectFsResourcesByName';
 import queryFilesUnderCategoryByFileName from '../../db/queries/querySelectFsResourcesInCategorySubtreeWithMatchingFileName';
 import queryFilesUnderCategory from '../../db/queries/querySelectFsResourcesInCategorySubtree';

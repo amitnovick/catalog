@@ -16,7 +16,7 @@ import machine from './machine';
 import querySelectFilesOrderByDateAdded from '../../db/queries/querySelectPaginatedFsResources';
 import querySelectCountFiles from '../../db/queries/querySelectCountFsResources';
 import routes from '../../routes';
-import FileListItem from '../../widgets/FileListItemWithNavigation';
+import FileListItem from '../../containers/FileListItemWithNavigation';
 
 const ITEMS_PER_PAGE = 20;
 

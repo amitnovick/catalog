@@ -1,7 +1,7 @@
 import React from 'react';
 import { useService } from '@xstate/react';
 import ReactContext from '../../ReactContext';
-import FilesAccordion from '../components/FilesAccordion';
+import FsResourcesAccordion from '../components/FsResourcesAccordion';
 
 const FilesAccordionContainer = () => {
   const service = React.useContext(ReactContext);
@@ -10,8 +10,8 @@ const FilesAccordionContainer = () => {
   const { files, selectedFileRow } = current.context;
 
   return (
-    <FilesAccordion
-      files={files}
+    <FsResourcesAccordion
+      fsResources={files}
       selectedFileRow={selectedFileRow}
       onClickRow={(file) => send('SELECTED_FILE_ROW', { file: file })}
     />
