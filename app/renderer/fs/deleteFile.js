@@ -1,10 +1,7 @@
-import formatFilePath from './formatFilePath';
-
 const fs = require('fs');
 
-const deleteFile = (fileName) =>
+const deleteFile = (filePath) =>
   new Promise((resolve, reject) => {
-    const filePath = formatFilePath(fileName);
     fs.unlink(filePath, (err) => {
       if (err) {
         reject(new Error(`Unknown error: ${err}`));

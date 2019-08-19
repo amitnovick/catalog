@@ -6,7 +6,7 @@ import { assign } from 'xstate';
 import store from '../../../redux/store';
 import copyFile from '../../../fs/copyFile';
 import queryInsertFile from '../../../db/transactions/queryInsertFile';
-import deleteFile from '../../../fs/deleteFile';
+import deleteFileFromUserFiles from '../../../fs/deleteFileFromUserFiles';
 import FsResourcesImportModal from '../FsResourcesImportModal';
 
 const path = require('path');
@@ -61,7 +61,7 @@ const removeCopiedFilesThatAlreadyExistInDb = async (filesPaths) => {
   for (let i = 0; i < filesPathsBasenames.length; i++) {
     const filePathBasename = filesPathsBasenames[i];
     try {
-      await deleteFile(filePathBasename);
+      await deleteFileFromUserFiles(filePathBasename);
     } catch (error) {
       console.log('Error while removing copied file that already exists in db:', filePathBasename);
     }

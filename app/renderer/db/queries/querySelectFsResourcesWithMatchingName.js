@@ -12,7 +12,7 @@ WHERE fs_resources.name LIKE $fs_resource_name
 ORDER BY fs_resources.added_at DESC
 `;
 
-const querySelectFsResourcesByName = async (fsResourceName) => {
+const querySelectFsResourcesWithMatchingName = async (fsResourceName) => {
   return new Promise((resolve, reject) => {
     getSqlDriver().all(
       selectFsResourcesByName,
@@ -31,4 +31,4 @@ const querySelectFsResourcesByName = async (fsResourceName) => {
   });
 };
 
-export default querySelectFsResourcesByName;
+export default querySelectFsResourcesWithMatchingName;

@@ -7,7 +7,7 @@ import { assign } from 'xstate';
 import FileName from './FileName';
 import machine from './machine';
 import queryUpdateFileName from '../../../db/queries/queryUpdateFsResourceName';
-import renameFile from '../../../fs/renameFile';
+import renameFsResourceInUserFiles from '../../../fs/renameFsResourceInUserFiles';
 
 const isValidFilename = require('valid-filename');
 
@@ -18,7 +18,7 @@ const isNewFileNameValidFileName = (newFileName) => {
 const attemptToRenameFile = async (file, newFileName) => {
   await queryUpdateFileName(file.id, newFileName);
   try {
-    return await renameFile(file.name, newFileName);
+    return await renameFsResourceInUserFiles(file.name, newFileName);
   } catch (error) {
     try {
       await queryUpdateFileName(file.id, file.name); // Revert rename

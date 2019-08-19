@@ -11,31 +11,38 @@ import AddCategoryWidget from './AddCategoryWidget/AddCategoryWidget';
 import FileNameWidget from './FileNameWidget/FileNameWidget';
 import CategoriesWidget from './CategoriesWidget/CategoriesWidget';
 import { Divider, Icon, Header } from 'semantic-ui-react';
-import deleteFileFromFs from '../../fs/deleteFile';
+import deleteFileFromUserFiles from '../../fs/deleteFileFromUserFiles';
 import queryCategoriesOfFsResource from '../../db/queries/querySelectCategoriesOfFsResource';
-import queryFileName from '../../db/queries/querySelectFsResourceName';
-import queryRemoveFileFromFilesTable from '../../db/queries/queryDeleteFsResource';
+import querySelectFsResource from '../../db/queries/querySelectFsResource';
+import queryDeleteFsResource from '../../db/queries/queryDeleteFsResource';
 import WebclipWidget from './WebclipWidget/WebclipWidget';
 import { assign } from 'xstate';
 import FsResourceIcon from '../../components/FsResourceIcon';
+import fsResourceTypes from '../../fsResourceTypes';
+import deleteDirectoryFromUserFiles from '../../fs/deleteDirectoryFromUserFiles';
 
-const fetchFileData = async (fileId) => {
-  const fileName = await queryFileName(fileId);
-  const categories = await queryCategoriesOfFsResource(fileId);
+const fetchFsResourceData = async (fsResourceId) => {
+  const fsResource = await querySelectFsResource(fsResourceId);
+  const categories = await queryCategoriesOfFsResource(fsResourceId);
   const resolvedValue = {
     categories,
-    file: {
-      id: fileId,
-      name: fileName,
-    },
+    file: fsResource,
   };
   return Promise.resolve(resolvedValue);
 };
 
-const deleteFile = async (file) => {
-  await queryRemoveFileFromFilesTable(file.id);
+const deleteFsResourceFromFs = async (fsResource) => {
+  if (fsResource.type === fsResourceTypes.FILE) {
+    return deleteFileFromUserFiles(fsResource.name);
+  } else if (fsResource.type === fsResourceTypes.DIRECTORY) {
+    return deleteDirectoryFromUserFiles(fsResource.name);
+  }
+};
+
+const deleteFsResource = async (fsResource) => {
+  await queryDeleteFsResource(fsResource.id);
   try {
-    await deleteFileFromFs(file.name);
+    await deleteFsResourceFromFs(fsResource);
   } catch (error) {
     console.log(`Error: failed to delete file from filesystem: {error}`);
   }
@@ -43,8 +50,8 @@ const deleteFile = async (file) => {
 
 const machineWithConfig = machine.withConfig({
   services: {
-    fetchFileData: (context, _) => fetchFileData(context.fileId),
-    deleteFile: (_, event) => deleteFile(event.file),
+    fetchFileData: (context, _) => fetchFsResourceData(context.fileId),
+    deleteFile: (_, event) => deleteFsResource(event.file),
   },
   actions: {
     updateCategories: assign({ categories: (_, event) => event.data.categories }),
@@ -69,7 +76,7 @@ const FileScreen = ({ fileId, notifySuccess }) => {
     return (
       <div style={{ textAlign: 'center', overflowY: 'auto', height: '100%' }}>
         <div style={{ textAlign: 'unset', float: 'left' }}>
-          <FsResourceIcon fsResourceType="file" size="5x" />
+          <FsResourceIcon fsResourceType={file.type} size="5x" />
         </div>
         <div
           style={{
@@ -115,7 +122,13 @@ const FileScreen = ({ fileId, notifySuccess }) => {
   } else if (current.matches('loading')) {
     return null;
   } else if (current.matches('deletedFile')) {
-    return <h2 style={{ color: 'green' }}>File has been deleted successfully</h2>;
+    let deletionMessage = 'Unknown resource has been deleted successfully';
+    if (file.type === fsResourceTypes.FILE) {
+      deletionMessage = 'File has been deleted successfully';
+    } else if (file.type === fsResourceTypes.DIRECTORY) {
+      deletionMessage = 'Directory has been deleted successfully';
+    }
+    return <h2 style={{ color: 'green' }}>{deletionMessage}</h2>;
   } else {
     return <h3>Unknown state</h3>;
   }

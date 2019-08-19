@@ -5,7 +5,7 @@ import { assign } from 'xstate';
 import { Accordion, Checkbox, List, Icon, Header, Button, Message } from 'semantic-ui-react';
 import LabelledInput from '../../components/LabelledInput';
 import SearchCategoryWidget from '../../widgets/SearchCategoryWidget/SearchCategoryWidget';
-import querySelectFsResourcesByName from '../../db/queries/querySelectFsResourcesByName';
+import querySelectFsResourcesWithMatchingName from '../../db/queries/querySelectFsResourcesWithMatchingName';
 import querySelectFsResourcesInCategorySubtreeWithMatchingFileName from '../../db/queries/querySelectFsResourcesInCategorySubtreeWithMatchingFileName';
 import querySelectFsResourcesInCategorySubtree from '../../db/queries/querySelectFsResourcesInCategorySubtree';
 import FsResourcesListItemWithNavigation from '../../containers/FsResourceListItemWithNavigation';
@@ -18,7 +18,7 @@ const fetchSearchResultsBothFilters = (inputFsResourceNameText, chosenAncestorCa
 };
 
 const fetchSearchResultsOnlyByNameFilter = (inputFsResourceNameText) => {
-  return querySelectFsResourcesByName(inputFsResourceNameText);
+  return querySelectFsResourcesWithMatchingName(inputFsResourceNameText);
 };
 
 const fetchSearchResultsOnlyByAncestorCategoryFilter = (chosenAncestorCategory) => {

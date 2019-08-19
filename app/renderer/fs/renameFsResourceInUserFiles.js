@@ -1,7 +1,7 @@
 import formatFilePath from './formatFilePath';
 const fs = require('fs');
 
-const renameFile = (oldFileName, newFileName) =>
+const renameFsResourceInUserFiles = (oldFileName, newFileName) =>
   new Promise((resolve, reject) => {
     const oldFilePath = formatFilePath(oldFileName);
     const newFilePath = formatFilePath(newFileName);
@@ -14,4 +14,4 @@ const renameFile = (oldFileName, newFileName) =>
     });
   });
 
-export default renameFile;
+export default renameFsResourceInUserFiles;
