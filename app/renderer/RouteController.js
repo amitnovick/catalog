@@ -80,7 +80,7 @@ const RouteController = () => {
           render={({ match }) => (
             <Layout
               key={match.params.id}
-              BodyComponent={() => <FileScreen fileId={Number(match.params.id)} />}
+              BodyComponent={() => <FileScreen fsResourceId={Number(match.params.id)} />}
               HeaderComponent={() => <NavigationBoxWidget />}
             />
           )}

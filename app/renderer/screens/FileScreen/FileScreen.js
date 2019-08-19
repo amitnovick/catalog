@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useMachine } from '@xstate/react';
-import { connect } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 
 import machine from './machine';
 import FileMenu from './components/FileMenu';
-import openFileByName from '../../fs/openFileByName';
+import openFsResourceInUserFiles from '../../fs/openFsResourceInUserFiles';
 import AddCategoryWidget from './AddCategoryWidget/AddCategoryWidget';
 import FileNameWidget from './FileNameWidget/FileNameWidget';
 import CategoriesWidget from './CategoriesWidget/CategoriesWidget';
@@ -50,23 +49,23 @@ const deleteFsResource = async (fsResource) => {
 
 const machineWithConfig = machine.withConfig({
   services: {
-    fetchFileData: (context, _) => fetchFsResourceData(context.fileId),
-    deleteFile: (_, event) => deleteFsResource(event.fsResource),
+    fetchFsResourceData: (context, _) => fetchFsResourceData(context.fsResourceId),
+    deleteFsResource: (_, event) => deleteFsResource(event.fsResource),
   },
   actions: {
     updateCategories: assign({ categories: (_, event) => event.data.categories }),
-    updateFile: assign({ fsResource: (_, event) => event.data.fsResource }),
+    updateFsResource: assign({ fsResource: (_, event) => event.data.fsResource }),
   },
 });
 
-const openFile = (fsResource) => {
-  openFileByName(fsResource.name);
+const openFsResource = (fsResource) => {
+  openFsResourceInUserFiles(fsResource.name);
 };
 
-const FileScreen = ({ fileId, notifySuccess }) => {
+const FileScreen = ({ fsResourceId, notifySuccess }) => {
   const [current, send] = useMachine(
     machineWithConfig.withContext({
-      fileId: fileId,
+      fsResourceId: fsResourceId,
     }),
   );
 
@@ -105,10 +104,10 @@ const FileScreen = ({ fileId, notifySuccess }) => {
           />
         </div>
         <Divider horizontal />
-        <WebclipWidget fileId={fileId} />
+        <WebclipWidget fileId={fsResourceId} />
         <FileMenu
           file={fsResource}
-          onClickOpenFile={openFile}
+          onClickOpenFile={openFsResource}
           onClickDeleteFile={(fsResource) =>
             send('CLICK_DELETE_FILE', {
               fsResource: fsResource,
@@ -135,7 +134,7 @@ const FileScreen = ({ fileId, notifySuccess }) => {
 };
 
 FileScreen.propTypes = {
-  fileId: PropTypes.number.isRequired,
+  fsResourceId: PropTypes.number.isRequired,
   notifySuccess: PropTypes.func.isRequired,
 };
 

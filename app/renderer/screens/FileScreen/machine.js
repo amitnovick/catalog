@@ -14,7 +14,7 @@ const machine = Machine({
   id: 'file-screen',
   initial: 'loading',
   context: {
-    fileId: null,
+    fsResourceId: null,
     fsResource: null,
     categories: null,
   },
@@ -31,17 +31,17 @@ const machine = Machine({
       states: {
         fetchingFileData: {
           invoke: {
-            src: 'fetchFileData',
+            src: 'fetchFsResourceData',
             onDone: {
               target: '#file-screen.idle.idle',
-              actions: ['updateCategories', 'updateFile'],
+              actions: ['updateCategories', 'updateFsResource'],
             },
             onError: '#file-screen.failedFetching',
           },
         },
         deletingFile: {
           invoke: {
-            src: 'deleteFile',
+            src: 'deleteFsResource',
             onDone: '#file-screen.deletedFile',
             onError: '#file-screen.idle.failure',
           },
