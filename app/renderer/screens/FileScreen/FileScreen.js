@@ -26,7 +26,7 @@ const fetchFsResourceData = async (fsResourceId) => {
   const categories = await queryCategoriesOfFsResource(fsResourceId);
   const resolvedValue = {
     categories,
-    file: fsResource,
+    fsResource: fsResource,
   };
   return Promise.resolve(resolvedValue);
 };
@@ -44,23 +44,23 @@ const deleteFsResource = async (fsResource) => {
   try {
     await deleteFsResourceFromFs(fsResource);
   } catch (error) {
-    console.log(`Error: failed to delete file from filesystem: {error}`);
+    console.log(`Error: failed to delete fs resource from filesystem: {error}`);
   }
 };
 
 const machineWithConfig = machine.withConfig({
   services: {
     fetchFileData: (context, _) => fetchFsResourceData(context.fileId),
-    deleteFile: (_, event) => deleteFsResource(event.file),
+    deleteFile: (_, event) => deleteFsResource(event.fsResource),
   },
   actions: {
     updateCategories: assign({ categories: (_, event) => event.data.categories }),
-    updateFile: assign({ file: (_, event) => event.data.file }),
+    updateFile: assign({ fsResource: (_, event) => event.data.fsResource }),
   },
 });
 
-const openFile = (file) => {
-  openFileByName(file.name);
+const openFile = (fsResource) => {
+  openFileByName(fsResource.name);
 };
 
 const FileScreen = ({ fileId, notifySuccess }) => {
@@ -70,13 +70,13 @@ const FileScreen = ({ fileId, notifySuccess }) => {
     }),
   );
 
-  const { file, categories } = current.context;
+  const { fsResource, categories } = current.context;
 
   if (current.matches('idle')) {
     return (
       <div style={{ textAlign: 'center', overflowY: 'auto', height: '100%' }}>
         <div style={{ textAlign: 'unset', float: 'left' }}>
-          <FsResourceIcon fsResourceType={file.type} size="5x" />
+          <FsResourceIcon fsResourceType={fsResource.type} size="5x" />
         </div>
         <div
           style={{
@@ -88,7 +88,7 @@ const FileScreen = ({ fileId, notifySuccess }) => {
           <FileNameWidget
             notifySuccess={() => notifySuccess()}
             refetchFileData={() => send('REFETCH_FILE_DATA')}
-            file={file}
+            file={fsResource}
           />
         </div>
         <Divider horizontal />
@@ -96,10 +96,10 @@ const FileScreen = ({ fileId, notifySuccess }) => {
           <CategoriesWidget
             refetchData={() => send('REFETCH_FILE_DATA')}
             categories={categories}
-            file={file}
+            file={fsResource}
           />
           <AddCategoryWidget
-            file={file}
+            file={fsResource}
             categories={categories}
             refetchFileData={() => send('REFETCH_FILE_DATA')}
           />
@@ -107,11 +107,11 @@ const FileScreen = ({ fileId, notifySuccess }) => {
         <Divider horizontal />
         <WebclipWidget fileId={fileId} />
         <FileMenu
-          file={file}
+          file={fsResource}
           onClickOpenFile={openFile}
-          onClickDeleteFile={(file) =>
+          onClickDeleteFile={(fsResource) =>
             send('CLICK_DELETE_FILE', {
-              file: file,
+              fsResource: fsResource,
             })
           }
         />
@@ -123,9 +123,9 @@ const FileScreen = ({ fileId, notifySuccess }) => {
     return null;
   } else if (current.matches('deletedFile')) {
     let deletionMessage = 'Unknown resource has been deleted successfully';
-    if (file.type === fsResourceTypes.FILE) {
+    if (fsResource.type === fsResourceTypes.FILE) {
       deletionMessage = 'File has been deleted successfully';
-    } else if (file.type === fsResourceTypes.DIRECTORY) {
+    } else if (fsResource.type === fsResourceTypes.DIRECTORY) {
       deletionMessage = 'Directory has been deleted successfully';
     }
     return <h2 style={{ color: 'green' }}>{deletionMessage}</h2>;
@@ -139,20 +139,10 @@ FileScreen.propTypes = {
   notifySuccess: PropTypes.func.isRequired,
 };
 
-const getFile = (store) => (store && store.specificTagScreen ? store.specificTagScreen.file : '');
-
-const getCategories = (store) =>
-  store && store.specificTagScreen ? store.specificTagScreen.categories : [];
-
-const FileScreenContainer = connect((state) => ({
-  file: getFile(state),
-  categories: getCategories(state),
-}))(FileScreen);
-
 const FileScreenContainerWithToast = (props) => {
   return (
     <>
-      <FileScreenContainer
+      <FileScreen
         {...props}
         notifySuccess={() =>
           toast(

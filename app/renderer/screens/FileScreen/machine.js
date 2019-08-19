@@ -15,7 +15,7 @@ const machine = Machine({
   initial: 'loading',
   context: {
     fileId: null,
-    file: null,
+    fsResource: null,
     categories: null,
   },
   states: {
