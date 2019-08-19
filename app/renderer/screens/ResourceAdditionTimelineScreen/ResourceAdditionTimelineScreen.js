@@ -13,10 +13,10 @@ import PropTypes from 'prop-types';
 import { assign } from 'xstate';
 
 import machine from './machine';
-import querySelectFilesOrderByDateAdded from '../../db/queries/querySelectPaginatedFsResources';
-import querySelectCountFiles from '../../db/queries/querySelectCountFsResources';
+import querySelectPaginatedFsResources from '../../db/queries/querySelectPaginatedFsResources';
+import querySelectCountFsResources from '../../db/queries/querySelectCountFsResources';
 import routes from '../../routes';
-import FileListItem from '../../containers/FileListItemWithNavigation';
+import FsResourcesListItemWithNavigation from '../../containers/FsResourceListItemWithNavigation';
 
 const ITEMS_PER_PAGE = 20;
 
@@ -74,8 +74,8 @@ const formatDate = (isoDateString) => {
 
 const fetchData = async (pageNumber) => {
   const [paginatedResources, countOfFiles] = await Promise.all([
-    querySelectFilesOrderByDateAdded(pageNumber, ITEMS_PER_PAGE),
-    querySelectCountFiles(),
+    querySelectPaginatedFsResources(pageNumber, ITEMS_PER_PAGE),
+    querySelectCountFsResources(),
   ]);
   return Promise.resolve({ paginatedResources, countOfFiles });
 };
@@ -144,9 +144,9 @@ const ResourceAdditionTimelineScreen = ({ pageNumber }) => {
               </div>
               <List.List>
                 {dateGroupResources.get(dataGroupNane).map((paginatedResource) => (
-                  <FileListItem
+                  <FsResourcesListItemWithNavigation
                     key={paginatedResource.id}
-                    file={paginatedResource}
+                    fsResource={paginatedResource}
                     isSelected={
                       selectedResource !== null && selectedResource.id === paginatedResource.id
                     }
