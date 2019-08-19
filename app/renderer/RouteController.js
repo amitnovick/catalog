@@ -2,7 +2,7 @@ import React from 'react';
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 
 import SearchScreen from './screens/SearchScreen/SearchScreen';
-import GraphExplorerScreen from './screens/GraphExplorerScreen/GraphExplorerScreen';
+import ExplorerScreen from './screens/ExplorerScreen/ExplorerScreen';
 import FileScreen from './screens/FileScreen/FileScreen';
 import routes from './routes';
 import HomeScreen from './screens/HomeScreen';
@@ -57,7 +57,7 @@ const RouteController = () => {
           render={({ match }) => (
             <Layout
               key="root"
-              BodyComponent={() => <GraphExplorerScreen initialCategoryId={null} />}
+              BodyComponent={() => <ExplorerScreen initialCategoryId={null} />}
               HeaderComponent={() => <NavigationBoxWidget path={match.path} />}
             />
           )}
@@ -69,7 +69,7 @@ const RouteController = () => {
           render={({ match }) => (
             <Layout
               key={match.params.id}
-              BodyComponent={() => <GraphExplorerScreen initialCategoryId={match.params.id} />}
+              BodyComponent={() => <ExplorerScreen initialCategoryId={match.params.id} />}
               HeaderComponent={() => <NavigationBoxWidget />}
             />
           )}

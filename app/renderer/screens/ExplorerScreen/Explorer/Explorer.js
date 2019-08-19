@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import PathCategoriesMenu from './components/PathCategoriesMenu';
 import CategoriesAccordionContainer from './containers/CategoriesAccordionContainer';
-import FilesAccordionContainer from './containers/FilesAccordionContainer';
+import FsResourcesAccordionContainer from './containers/FsResourcesAccordionContainer';
 import { css } from 'emotion';
 
 const listClass = css`
@@ -23,7 +23,7 @@ const Explorer = ({ categoriesInPath }) => {
           <CategoriesAccordionContainer />
         </List.Item>
         <List.Item style={{ height: '50%' }}>
-          <FilesAccordionContainer />
+          <FsResourcesAccordionContainer />
         </List.Item>
       </List>
     </>

@@ -6,14 +6,14 @@ const machine = Machine({
   context: {
     initialCategoryId: null,
     categoriesInPath: [],
-    files: [],
+    fsResources: [],
     childCategories: [],
     categoryRenamingModalCategory: null,
     categoryRenamingModalChosenNewCategoryName: null,
     categoryMoveToModalCategory: null,
     categoryDeletionModalCategory: null,
     selectedCategoryRow: null,
-    selectedFileRow: null,
+    selectedFsResourceRow: null,
   },
   initial: 'idle',
   states: {
@@ -71,8 +71,8 @@ const machine = Machine({
             SELECTED_CATEGORY_ROW: {
               actions: 'updateSelectedCategoryRow',
             },
-            SELECTED_FILE_ROW: {
-              actions: 'updateSelectedFileRow',
+            SELECTED_FS_RESOURCE_ROW: {
+              actions: 'updateSelectedFsResourceRow',
             },
           },
         },

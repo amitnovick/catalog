@@ -13,7 +13,7 @@ import Explorer from './Explorer/Explorer';
 import CategoryDeleteModalWidget from './CategoryDeleteModalWidget/CategoryDeleteModalWidget';
 import CategoryAdditionModalWidget from './CategoryAdditionModalWidget/CategoryAdditionModalWidget';
 import CategoryMoveToModalWidget from './CategoryMoveToModalWidget/CategoryMoveToModalWidget';
-import queryFiles from '../../db/queries/querySelectFilesOfCategory';
+import querySelectFsResourcesOfCategory from '../../db/queries/querySelectFsResourcesOfCategory';
 import ReactContext from './ReactContext';
 
 const fetchData = async (currentCategoryId) => {
@@ -24,13 +24,13 @@ const fetchData = async (currentCategoryId) => {
 
   const representorCategory = categoriesInPath[categoriesInPath.length - 1];
 
-  const files = await queryFiles(representorCategory.id);
+  const fsResources = await querySelectFsResourcesOfCategory(representorCategory.id);
 
   const childCategories = await queryChildCategories(representorCategory.id);
 
   return Promise.resolve({
     categoriesInPath,
-    files,
+    fsResources,
     childCategories,
   });
 };
@@ -64,7 +64,7 @@ const machineWithServices = machine.withConfig({
   actions: {
     updateState: assign({
       categoriesInPath: (_, event) => event.data.categoriesInPath,
-      files: (_, event) => event.data.files,
+      fsResources: (_, event) => event.data.fsResources,
       childCategories: (_, event) => event.data.childCategories,
     }),
     updateCategoryRenamingModalCategory: assign({
@@ -79,8 +79,8 @@ const machineWithServices = machine.withConfig({
     updateSelectedCategoryRow: assign({
       selectedCategoryRow: (_, event) => event.category,
     }),
-    updateSelectedFileRow: assign({
-      selectedFileRow: (_, event) => event.file,
+    updateSelectedFsResourceRow: assign({
+      selectedFsResourceRow: (_, event) => event.fsResource,
     }),
     clearSelectedCategoryRow: assign({
       selectedCategoryRow: (_, __) => null,
@@ -102,7 +102,7 @@ const machineWithServices = machine.withConfig({
   },
 });
 
-const GraphExplorerScreen = ({ initialCategoryId }) => {
+const ExplorerScreen = ({ initialCategoryId }) => {
   const [current, send, service] = useMachine(
     machineWithServices.withContext({
       ...machineWithServices.initialState.context,
@@ -170,8 +170,8 @@ const GraphExplorerScreen = ({ initialCategoryId }) => {
   }
 };
 
-GraphExplorerScreen.propTypes = {
+ExplorerScreen.propTypes = {
   initialCategoryId: PropTypes.any,
 };
 
-export default GraphExplorerScreen;
+export default ExplorerScreen;

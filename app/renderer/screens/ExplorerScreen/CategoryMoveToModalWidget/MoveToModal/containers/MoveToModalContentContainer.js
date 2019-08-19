@@ -3,7 +3,7 @@ import { useService } from '@xstate/react';
 
 import MoveToModalContent from '../components/MoveToModalContent';
 import ReactContext from '../../ReactContext';
-import SearchCategoryWidget from '../SearchCategoryWidget/SearchCategoryWidget';
+import SearchCategoryWidget from '../../../../../widgets/SearchCategoryWidget/SearchCategoryWidget';
 import { Message, Button, Icon } from 'semantic-ui-react';
 
 const ChosenCategory = ({ category, onClickClearButton }) => {
