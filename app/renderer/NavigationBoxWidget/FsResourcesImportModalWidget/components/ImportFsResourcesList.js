@@ -1,42 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { List, Icon } from 'semantic-ui-react';
-import FileListItem from '../../../components/FileListItem';
-import DirectoryListItem from '../../../components/DirectoryListItem';
 import { css } from 'emotion';
-
-const fsResourceTypes = {
-  FILE: 'file',
-  DIRECTORY: 'directory',
-};
+import FsResourceListItem from '../../../components/FsResourceListItem';
+import fsResourceTypes from '../../../fsResourceTypes';
 
 const overrideCursorClass = css`
   & * {
     cursor: auto !important;
   }
 `;
-
-const FsResourceItem = ({ fsResourcepath, fsResourceType }) => {
-  if (fsResourceType === fsResourceTypes.FILE) {
-    return (
-      <FileListItem
-        file={{ name: fsResourcepath }}
-        isSelected={false}
-        onClickRow={() => {}}
-        onDoubleClickRow={() => {}}
-      />
-    );
-  } else if (fsResourceType === fsResourceTypes.DIRECTORY) {
-    return (
-      <DirectoryListItem
-        directory={{ name: fsResourcepath }}
-        isSelected={false}
-        onClickRow={() => {}}
-        onDoubleClickRow={() => {}}
-      />
-    );
-  }
-};
 
 const ImportFsResourcesList = ({
   filesPaths,
@@ -67,7 +40,15 @@ const ImportFsResourcesList = ({
               <Icon name="minus" />
             )}
           </span>
-          <FsResourceItem fsResourcepath={filePath} fsResourceType={fsResourceType} />
+          <FsResourceListItem
+            fsResource={{
+              name: filePath,
+              type: fsResourceType,
+            }}
+            isSelected={false}
+            onClickRow={() => {}}
+            onDoubleClickRow={() => {}}
+          />
         </div>
       ))}
     </List>
