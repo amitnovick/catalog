@@ -6,7 +6,7 @@ import NavigationBox from './NavigationBox';
 import machine from './machine';
 import FileAdditionModalWidget from './FileAdditionModalWidget/FileAdditionModalWidget';
 import routes from '../routes';
-import FsRespircesImportModalWidget from './FsRespircesImportModalWidget/FsRespircesImportModalWidget';
+import FsRespircesImportModalWidget from './FsResourcesImportModalWidget/FsResourcesImportModalWidget';
 import WebclipsModalWidget from './WebclipsModalWidget/WebclipsModalWidget';
 
 const machineWithConfig = machine.withConfig({

@@ -1,13 +1,14 @@
 import React from 'react';
-import FilesImportModal from './DirectoriesImportModal/DirectoriesImportModal';
 import { useMachine } from '@xstate/react';
-import machine from './machine';
-import ReactContext from './ReactContext';
+import fsResourcesImportModalMachine from '../fsResourcesImportModalMachine';
+import ReactContext from '../ReactContext';
 import { assign } from 'xstate';
 import store from '../../../redux/store';
 import copyDirectory from '../../../fs/copyDirectory';
 import queryInsertDirectory from '../../../db/transactions/queryInsertDirectory';
 import deleteDirectory from '../../../fs/deleteDirectory';
+import FsResourcesImportModal from '../FsResourcesImportModal';
+
 const path = require('path');
 
 const getUserFilesSubdirPath = (store) =>
@@ -102,7 +103,7 @@ const attemptToImportFiles = async (directoriesPaths) => {
   return finalFilesPathsOutcomes;
 };
 
-const machineWithConfig = machine.withConfig({
+const machineWithConfig = fsResourcesImportModalMachine.withConfig({
   services: {
     attemptToImportFiles: (context, __) => attemptToImportFiles(context.filesPaths),
   },
@@ -120,7 +121,7 @@ const DirectoriesImportModalWidget = ({ onClose }) => {
   });
   return (
     <ReactContext.Provider value={service}>
-      <FilesImportModal onClose={onClose} />
+      <FsResourcesImportModal fsResourceType="directory" onClose={onClose} />
     </ReactContext.Provider>
   );
 };
