@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Catalog Web Clipper",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Save web clippings to Catalog app",
   "icons": {
     "32": "icons/32.png",

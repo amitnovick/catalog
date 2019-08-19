@@ -9,7 +9,7 @@ internet connection, nor user's registration to run on desktop devices.
 
 In addition to the desktop application, a companion Web Clipper browser extension is available for
 [Firefox](https://addons.mozilla.org/en-US/firefox/addon/catalog-web-clipper/) and
-[Chrome](https://github.com/amitnovick/catalog/blob/master/docs/browser-extension.md).
+[Chrome](https://chrome.google.com/webstore/detail/catalog-web-clipper/oocdimepfbgcmbokkmfcpjmglbcclnlj).
 
 <div align="center">
   <img src="docs/app-screenshot.png" width="350" alt="Catalog App Screenshot">
@@ -18,7 +18,9 @@ In addition to the desktop application, a companion Web Clipper browser extensio
 ## Features
 
 - Desktop application
-- [Web Clipper browser extension](https://github.com/amitnovick/catalog/blob/master/docs/browser-extension.md)
+- Web Clipper browser extension for
+  [Firefox](https://addons.mozilla.org/en-US/firefox/addon/catalog-web-clipper/) and
+  [Chrome](https://chrome.google.com/webstore/detail/catalog-web-clipper/oocdimepfbgcmbokkmfcpjmglbcclnlj)
 
 ## Installation
 

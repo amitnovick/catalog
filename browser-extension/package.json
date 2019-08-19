@@ -1,6 +1,6 @@
 {
   "name": "catalog-web-extension",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A WebClipper web extension",
   "author": {
     "name": "Amit Novick",

@@ -1,5 +1,6 @@
 node_modules
 browser-extension/node_modules
+browser-extensions/web-ext-artifacts
 dist
 build
 .DS_Store
