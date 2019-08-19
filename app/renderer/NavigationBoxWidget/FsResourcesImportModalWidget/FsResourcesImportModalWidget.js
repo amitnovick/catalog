@@ -1,25 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useMachine } from '@xstate/react';
 import machine from './machine';
-import FilesImportModalWidget from './FilesImportModalWidget/FilesImportModalWidget';
-import DirectoriesImportModalWidget from './DirectoriesImportModalWidget/DirectoriesImportModalWidget';
+import FilesImportModalWidget from './correspondingFsResourceWidget/FilesImportModalWidget';
+import DirectoriesImportModalWidget from './correspondingFsResourceWidget/DirectoriesImportModalWidget';
 import Modal from '../../components/Modal';
-import ModalHeader from './ModalHeader';
-import { css } from 'emotion';
-import FileIcon from '../../components/FileIcon';
-import DirectoryIcon from '../../components/DirectoryIcon';
+import ModalHeader from './components/ModalHeader';
 import { Button, Modal as SemanticModal } from 'semantic-ui-react';
-
-const fsResourceItemClass = css`
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
-  padding: 1em;
-  border: 1px solid grey;
-  border-radius: 5px;
-  align-items: center;
-  height: 100%;
-`;
+import ChooseTypeModalContent from './components/ChooseTypeModalContent';
 
 const FsResourcesImportModalWidget = ({ onClose }) => {
   const [current, send] = useMachine(machine);
@@ -31,47 +19,10 @@ const FsResourcesImportModalWidget = ({ onClose }) => {
         ModalHeader={<ModalHeader />}
         ModalContent={
           <SemanticModal.Content>
-            <div
-              style={{
-                height: '200px',
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'center',
-              }}>
-              <div
-                className={fsResourceItemClass}
-                style={{
-                  marginRight: '2em',
-                }}>
-                <div style={{ height: '100%' }}>
-                  <DirectoryIcon
-                    onClick={() => send('CHOOSE_DIRECTORIES')}
-                    style={{
-                      width: 150,
-                      height: 150,
-                    }}
-                  />
-                </div>
-                <div style={{ height: '100%' }}>
-                  <span>Directories</span>
-                </div>
-              </div>
-
-              <div className={fsResourceItemClass}>
-                <div style={{ height: '100%' }}>
-                  <FileIcon
-                    onClick={() => send('CHOOSE_FILES')}
-                    style={{
-                      width: 150,
-                      height: 150,
-                    }}
-                  />
-                </div>
-                <div style={{ height: '100%' }}>
-                  <span>Files</span>
-                </div>
-              </div>
-            </div>
+            <ChooseTypeModalContent
+              onChooseFiles={() => send('CHOOSE_FILES')}
+              onChooseDirectories={() => send('CHOOSE_DIRECTORIES')}
+            />
           </SemanticModal.Content>
         }
         ModalActions={
@@ -86,6 +37,10 @@ const FsResourcesImportModalWidget = ({ onClose }) => {
   } else if (current.matches('directories')) {
     return <DirectoriesImportModalWidget onClose={onClose} />;
   }
+};
+
+FsResourcesImportModalWidget.propTypes = {
+  onClose: PropTypes.func.isRequired,
 };
 
 export default FsResourcesImportModalWidget;

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Header } from 'semantic-ui-react';
-import FileIcon from '../../components/FileIcon';
-import DirectoryIcon from '../../components/DirectoryIcon';
+import FileIcon from '../../../components/FileIcon';
+import DirectoryIcon from '../../../components/DirectoryIcon';
 import { css } from 'emotion';
 
 const divClass = css`

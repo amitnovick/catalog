@@ -2,7 +2,7 @@ import { Machine } from 'xstate';
 
 //@ts-check
 
-const fsResourcesImportModalMachine = Machine({
+const machine = Machine({
   id: 'file-import-modal',
   initial: 'choosing',
   context: {
@@ -46,4 +46,4 @@ const fsResourcesImportModalMachine = Machine({
   },
 });
 
-export default fsResourcesImportModalMachine;
+export default machine;

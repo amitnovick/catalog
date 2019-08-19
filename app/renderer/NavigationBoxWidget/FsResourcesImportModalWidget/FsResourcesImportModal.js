@@ -4,10 +4,10 @@ import { useService } from '@xstate/react';
 
 import ReactContext from './ReactContext';
 import Modal from '../../components/Modal';
-import ModalHeader from './ModalHeader';
+import ModalHeader from './components/ModalHeader';
 import { Modal as SemanticModal, Button } from 'semantic-ui-react';
-import FsResourcePickerModalContent from './FsResourcePickerModalContent';
-import ImportFilesList from './ImportFilesList';
+import FsResourcePickerModalContent from './components/FsResourcePickerModalContent';
+import ImportFsResourcesList from './components/ImportFsResourcesList';
 import FsResourcesPicker from '../../components/FsResourcesPicker';
 
 const fsResourceTypes = {
@@ -46,7 +46,8 @@ const FsResourcesImportModal = ({ onClose, fsResourceType }) => {
 
     ModalContent = () => (
       <SemanticModal.Content>
-        <ImportFilesList
+        <ImportFsResourcesList
+          fsResourceType={fsResourceType}
           hasAttemptedCopyingAlready={hasAttemptedCopyingAlready}
           filesPaths={filesPaths}
           filePathsAttemptOutcomes={filePathsAttemptOutcomes}

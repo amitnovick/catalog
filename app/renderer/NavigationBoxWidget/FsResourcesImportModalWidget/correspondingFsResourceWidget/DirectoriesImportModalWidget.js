@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMachine } from '@xstate/react';
-import fsResourcesImportModalMachine from '../fsResourcesImportModalMachine';
+import machine from './machine';
 import ReactContext from '../ReactContext';
 import { assign } from 'xstate';
 import store from '../../../redux/store';
@@ -103,7 +103,7 @@ const attemptToImportFiles = async (directoriesPaths) => {
   return finalFilesPathsOutcomes;
 };
 
-const machineWithConfig = fsResourcesImportModalMachine.withConfig({
+const machineWithConfig = machine.withConfig({
   services: {
     attemptToImportFiles: (context, __) => attemptToImportFiles(context.filesPaths),
   },
