@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const selectChildCategories = `
 SELECT child_categories.id, child_categories.name
@@ -10,7 +10,7 @@ WHERE categories.id = $parent_category_id;
 
 const queryChildCategories = categoryId => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().all(
+    getPersistentDbConnection().all(
       selectChildCategories,
       {
         $parent_category_id: categoryId

@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const selectPaginatedFsResources = `
 SELECT 
@@ -16,7 +16,7 @@ OFFSET ($current_page_number - 1) * $items_per_page
 
 const querySelectPaginatedFsResources = async (pageNumber, itemsPerPage) => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().all(
+    getPersistentDbConnection().all(
       selectPaginatedFsResources,
       {
         $items_per_page: itemsPerPage,

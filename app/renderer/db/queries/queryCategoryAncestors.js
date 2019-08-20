@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const selectCategoryAncestors = `
 WITH RECURSIVE tc( i )  AS (
@@ -16,7 +16,7 @@ SELECT categories.id FROM categories WHERE categories.id IN tc
 
 const queryCategoryAncestors = (categoryId) => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().all(
+    getPersistentDbConnection().all(
       selectCategoryAncestors,
       {
         $category_id: categoryId,

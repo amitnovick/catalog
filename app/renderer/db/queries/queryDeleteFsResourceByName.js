@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const deleteFsResourceByName = `
 DELETE FROM fs_resources 
@@ -7,7 +7,7 @@ WHERE fs_resources.name = $fs_resource_name
 
 const queryDeleteFsResourceByName = async (fsResourceName) => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().run(
+    getPersistentDbConnection().run(
       deleteFsResourceByName,
       {
         $fs_resource_name: fsResourceName,

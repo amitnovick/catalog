@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const selectWebclipsCategory = `
   SELECT webclips_category.id, categories.name
@@ -9,7 +9,7 @@ const selectWebclipsCategory = `
 
 const queryWebclipsCategory = () => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().all(selectWebclipsCategory, (err, rows) => {
+    getPersistentDbConnection().all(selectWebclipsCategory, (err, rows) => {
       if (err) {
         reject(err);
       } else {

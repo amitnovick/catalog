@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const selectCountFsResources = `
 SELECT COUNT(*) AS count_of_fs_resources
@@ -7,7 +7,7 @@ FROM fs_resources
 
 const querySelectCountFsResources = async () => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().all(selectCountFsResources, (err, rows) => {
+    getPersistentDbConnection().all(selectCountFsResources, (err, rows) => {
       if (err) {
         reject(new Error(`Unknown error: ${err.message}`));
       } else {

@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const deleteCategoryFromDb = `
 DELETE FROM categories
@@ -7,7 +7,7 @@ WHERE categories.id = $category_id
 
 const queryDeleteCategory = (categoryId) => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().run(
+    getPersistentDbConnection().run(
       deleteCategoryFromDb,
       {
         $category_id: categoryId,

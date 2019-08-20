@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const selectFsResource = `
   SELECT 
@@ -13,7 +13,7 @@ const selectFsResource = `
 
 const querySelectFsResource = (fsResourceId) => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().all(
+    getPersistentDbConnection().all(
       selectFsResource,
       {
         $fs_resource_id: fsResourceId,

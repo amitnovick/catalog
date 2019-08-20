@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const selectWebclipData = `
 SELECT page_url, page_title
@@ -8,7 +8,7 @@ WHERE id = $fs_resource_id
 
 const querySelectWebclipData = (fsResourceId) => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().all(
+    getPersistentDbConnection().all(
       selectWebclipData,
       {
         $fs_resource_id: fsResourceId,

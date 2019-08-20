@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const updateCategoryName = `
 UPDATE categories
@@ -10,7 +10,7 @@ const newCategoryNameAlreadyExistsErrorMessage = `SQLITE_CONSTRAINT: UNIQUE cons
 
 const queryRenameCategory = (categoryId, newCategoryName) => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().run(
+    getPersistentDbConnection().run(
       updateCategoryName,
       {
         $category_id: categoryId,

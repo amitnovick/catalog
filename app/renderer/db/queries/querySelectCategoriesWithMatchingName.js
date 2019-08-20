@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const selectCategoriesWithMatchingName = `
 SELECT categories.id, categories.name
@@ -8,7 +8,7 @@ WHERE categories.name LIKE $category_name
 
 const querySelectCategoriesWithMatchingName = (categoryName) => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().all(
+    getPersistentDbConnection().all(
       selectCategoriesWithMatchingName,
       {
         $category_name: `%${categoryName}%`,

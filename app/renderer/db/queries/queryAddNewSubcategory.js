@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const insertCategory = `
 INSERT INTO categories (
@@ -13,7 +13,7 @@ const categoryNameAlreadyExistsErrorMessage =
 
 const queryAddNewSubcategory = async (parentCategoryId, categoryName) => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().run(
+    getPersistentDbConnection().run(
       insertCategory,
       {
         $parent_category_id: parentCategoryId,

@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const selectCategoriesInPath = `
 WITH RECURSIVE tc( i, depth )  AS (
@@ -14,7 +14,7 @@ ORDER BY depth DESC
 
 const queryCategoriesInPath = (categoryId) => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().all(
+    getPersistentDbConnection().all(
       selectCategoriesInPath,
       {
         $lowest_category_id: categoryId,

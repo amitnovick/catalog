@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const selectRootCategory = `
 SELECT categories.id, categories.name
@@ -9,7 +9,7 @@ LIMIT 1;
 
 const queryRootCategory = () => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().all(selectRootCategory, (err, categoriesRows) => {
+    getPersistentDbConnection().all(selectRootCategory, (err, categoriesRows) => {
       if (err) {
         console.log('err:', err);
         reject();

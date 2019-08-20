@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const insertCategoryOfFsResource = `
 INSERT INTO categories_fs_resources
@@ -9,7 +9,7 @@ const categoryAlreadyExistsErrorMessage = `SQLITE_CONSTRAINT: UNIQUE constraint 
 
 const queryAddCategoryToFsResource = (fsResourceId, category) => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().run(
+    getPersistentDbConnection().run(
       insertCategoryOfFsResource,
       {
         $category_id: category.id,

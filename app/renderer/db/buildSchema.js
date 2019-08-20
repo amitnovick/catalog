@@ -1,4 +1,4 @@
-import getSqlDriver from './getSqlDriver';
+import getPersistentDbConnection from './getPersistentDbConnection';
 import latestDbVersion from './latestDbVersion';
 import migrateIntoVersion1 from './migrations/migrateIntoVersion1';
 
@@ -24,7 +24,7 @@ const buildSchema = () => {
 
     try {
       await new Promise((resolve, reject) => {
-        getSqlDriver().run(enableForeignKeySupport, function(err) {
+        getPersistentDbConnection().run(enableForeignKeySupport, function(err) {
           if (err) {
             reject(err);
           } else {
@@ -34,7 +34,7 @@ const buildSchema = () => {
       });
 
       const foundDbVersion = await new Promise((resolve, reject) => {
-        getSqlDriver().all(selectUserVersion, function(err, rows) {
+        getPersistentDbConnection().all(selectUserVersion, function(err, rows) {
           if (err) {
             reject(err);
           } else {
@@ -57,7 +57,7 @@ const buildSchema = () => {
 
       if (dbMigrationsStack[dbMigrationsStack.length - 1] === 0) {
         const currentDbVersion = dbMigrationsStack[dbMigrationsStack.length - 1];
-        await migrateIntoVersion1(getSqlDriver(), currentDbVersion);
+        await migrateIntoVersion1(getPersistentDbConnection(), currentDbVersion);
         dbMigrationsStack.push(currentDbVersion + 1);
       }
 

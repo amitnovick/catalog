@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const deleteCategoryOfFsResourcesWhenMovingCategory = `
 WITH fs_resources_categorized_by_parent AS (
@@ -23,7 +23,7 @@ AND fs_resource_id IN fs_resources_categorized_by_both
 
 const queryDeleteCategoryOfFsResourcesWhenMovingCategory = (childCategoryId, parentCategoryId) => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().run(
+    getPersistentDbConnection().run(
       deleteCategoryOfFsResourcesWhenMovingCategory,
       {
         $parent_category_id: parentCategoryId,

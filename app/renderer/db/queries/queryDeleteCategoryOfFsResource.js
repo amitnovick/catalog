@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const deleteCategoryOfFsResource = `
 DELETE FROM categories_fs_resources
@@ -8,7 +8,7 @@ AND categories_fs_resources.fs_resource_id = $fs_resource_id
 
 const queryDeleteCategoryOfFsResource = (categoryId, fsResourceId) => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().run(
+    getPersistentDbConnection().run(
       deleteCategoryOfFsResource,
       {
         $category_id: categoryId,

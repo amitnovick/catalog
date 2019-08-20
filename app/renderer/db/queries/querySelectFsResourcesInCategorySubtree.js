@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 import selectFsResourcesInCategorySubtree from '../sql_fragments/selectFsResourcesInCategorySubtree';
 
 const orderedSelectFsResourcesInCategorySubtree = `
@@ -8,7 +8,7 @@ ORDER BY fs_resources.added_at DESC
 
 const querySelectFsResourcesInCategorySubtree = (category) => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().all(
+    getPersistentDbConnection().all(
       orderedSelectFsResourcesInCategorySubtree,
       {
         $category_id: category.id,

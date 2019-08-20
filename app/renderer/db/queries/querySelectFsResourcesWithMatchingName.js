@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const selectFsResourcesByName = `
 SELECT 
@@ -14,7 +14,7 @@ ORDER BY fs_resources.added_at DESC
 
 const querySelectFsResourcesWithMatchingName = async (fsResourceName) => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().all(
+    getPersistentDbConnection().all(
       selectFsResourcesByName,
       {
         $fs_resource_name: `%${fsResourceName}%`,

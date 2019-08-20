@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 export const updateCategoryParentId = `
 UPDATE categories
@@ -8,7 +8,7 @@ WHERE id = $child_category_id
 
 const queryUpdateCategoryParentId = async (childCategoryId, parentCategoryId) => {
   return new Promise(async (resolve, reject) => {
-    getSqlDriver().run(
+    getPersistentDbConnection().run(
       updateCategoryParentId,
       {
         $child_category_id: childCategoryId,

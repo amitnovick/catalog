@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const selectCategoryByName = `
 SELECT categories.id
@@ -8,7 +8,7 @@ WHERE categories.name = $category_name
 
 const queryGetCategoryByName = (categoryName) => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().all(
+    getPersistentDbConnection().all(
       selectCategoryByName,
       {
         $category_name: categoryName,

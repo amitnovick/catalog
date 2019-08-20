@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const updateFsResourceName = `
 UPDATE fs_resources
@@ -10,7 +10,7 @@ const fsResourceNameAlreadyExistsErrorMessage = `SQLITE_CONSTRAINT: UNIQUE const
 
 const queryUpdateFsResourceName = (fsResourceId, newFsResourceName) => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().run(
+    getPersistentDbConnection().run(
       updateFsResourceName,
       {
         $fs_resource_name: newFsResourceName,

@@ -1,4 +1,4 @@
-import getSqlDriver from '../getSqlDriver';
+import getPersistentDbConnection from '../getPersistentDbConnection';
 
 const selectCategorizedFsResources = `
 SELECT fs_resources.id, fs_resources.name
@@ -10,7 +10,7 @@ WHERE categories_fs_resources.category_id = $category_id
 
 const queryCategorizedFsResources = (categoryId) => {
   return new Promise((resolve, reject) => {
-    getSqlDriver().all(
+    getPersistentDbConnection().all(
       selectCategorizedFsResources,
       {
         $category_id: categoryId,
