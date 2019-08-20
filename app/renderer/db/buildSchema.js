@@ -62,13 +62,28 @@ const buildSchema = () => {
       }
 
       if (dbMigrationsStack[dbMigrationsStack.length - 1] !== latestDbVersion) {
-        reject(
-          new Error(
-            `Current db version should match latest, but doesn't: current: ${
-              dbMigrationsStack[dbMigrationsStack.length - 1]
-            }, latest: ${latestDbVersion}`,
-          ),
-        );
+        if (dbMigrationsStack[dbMigrationsStack.length - 1] > latestDbVersion) {
+          reject(
+            new Error(
+              `Your db version is not supported by this release of Catalog.
+              Please try to install the latest release instead.
+              Details:
+              - Your db version: ${dbMigrationsStack[dbMigrationsStack.length - 1]}
+              - Latest supported db version by this release: ${latestDbVersion}
+              `,
+            ),
+          );
+        } else {
+          reject(
+            new Error(
+              `Due to an unexpected error, the db version doesn't match the expected latest db version.
+              Details:
+              - Your db version: ${dbMigrationsStack[dbMigrationsStack.length - 1]}
+              - Latest supported db version by this release: ${latestDbVersion}
+              `,
+            ),
+          );
+        }
       }
 
       if (isConsecutiveArray(dbMigrationsStack) === false) {
