@@ -1,6 +1,7 @@
 import path from 'path';
 import { app, crashReporter, BrowserWindow, Menu } from 'electron';
 import checkForUpdates from './checkForUpdates';
+import openAboutDialog from './openAboutDialog';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -40,6 +41,14 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
+  mainWindow = new BrowserWindow({
+    width: 1000,
+    height: 800,
+    minWidth: 640,
+    minHeight: 480,
+    show: false,
+  });
+
   const menuTemplate = [
     {
       label: 'View',
@@ -55,18 +64,14 @@ app.on('ready', async () => {
       label: 'Check Updates',
       click: checkForUpdates,
     },
+    {
+      label: 'About',
+      click: () => openAboutDialog(mainWindow),
+    },
   ];
 
   const menu = Menu.buildFromTemplate(menuTemplate);
   Menu.setApplicationMenu(menu);
-
-  mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 800,
-    minWidth: 640,
-    minHeight: 480,
-    show: false,
-  });
 
   mainWindow.loadFile(path.resolve(path.join(__dirname, '../renderer/index.html')));
 
