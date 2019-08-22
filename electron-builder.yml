@@ -39,5 +39,5 @@ linux:
 publish:
   provider: 'github'
   owner: 'amitnovick'
-  publishAutoUpdate: false
+  publishAutoUpdate: true
   private: false

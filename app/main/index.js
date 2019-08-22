@@ -1,5 +1,6 @@
 import path from 'path';
 import { app, crashReporter, BrowserWindow, Menu } from 'electron';
+import checkForUpdates from './checkForUpdates';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -49,6 +50,10 @@ app.on('ready', async () => {
         },
         { label: 'Zoom Out', role: 'zoomout' },
       ],
+    },
+    {
+      label: 'Check Updates',
+      click: checkForUpdates,
     },
   ];
 
