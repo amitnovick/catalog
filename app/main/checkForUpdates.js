@@ -10,8 +10,8 @@
 /* Imported on 2019-08-23
  * Source: https://github.com/electron-userland/electron-builder/blob/docs/encapsulated%20manual%20update%20via%20menu.js
  */
+import { app, dialog, BrowserWindow } from 'electron';
 
-const { dialog } = require('electron');
 const { autoUpdater } = require('electron-updater');
 
 let updater;
@@ -50,11 +50,24 @@ autoUpdater.on('update-not-available', () => {
 });
 
 autoUpdater.on('update-downloaded', () => {
-  dialog.showMessageBox({
-    title: 'Install Updates',
-    message: 'Updates downloaded, application will be quit for update...',
-  });
-  setImmediate(() => autoUpdater.quitAndInstall());
+  dialog.showMessageBox(
+    {
+      title: 'Install Updates',
+      message: 'Updates downloaded, application will be quit for update...',
+    },
+    () => {
+      setImmediate(() => {
+        app.removeAllListeners('window-all-closed');
+        const browserWindows = BrowserWindow.getAllWindows();
+        browserWindows.forEach((browserWindow) => {
+          browserWindow.removeAllListeners('close');
+          browserWindow.close();
+        });
+
+        autoUpdater.quitAndInstall(false);
+      });
+    },
+  );
 });
 
 // export this to MenuItem click callback
