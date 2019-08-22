@@ -102,24 +102,28 @@ async function sendScreenshot(pageUrl, tabTitle) {
       [commsConstants.PAGE_TITLE]: tabTitle,
     };
 
-    const response = await window.fetch(SERVER_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
+    try {
+      const response = await window.fetch(SERVER_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
 
-    const responseBodyPayload = await response.json();
+      const responseBodyPayload = await response.json();
 
-    const { [commsConstants.FILE_NAME]: fileName } = responseBodyPayload;
+      const { [commsConstants.FILE_NAME]: fileName } = responseBodyPayload;
 
-    console.log('fileName:', fileName);
-
-    await sendMessageToActiveTab({
-      name: 'catalog-notify-saved-screenshot-successfully',
-      payload: { fileName },
-    });
+      await sendMessageToActiveTab({
+        name: 'catalog-notify-saved-screenshot-successfully',
+        payload: { fileName },
+      });
+    } catch (error) {
+      await sendMessageToActiveTab({
+        name: 'catalog-notify-saving-screenshot-failed',
+      });
+    }
   }
 }
 

@@ -207,6 +207,36 @@ const notifyFileWasSavedSuccessfully = (fileName) => {
   });
 };
 
+const notifyFailedToSaveFile = () => {
+  const toastHtmlContentWrapper = document.createElement('span');
+
+  const failureIconSpan = document.createElement('span');
+
+  failureIconSpan.style.fontSize = '20px';
+  failureIconSpan.style.color = 'red';
+  failureIconSpan.style.marginRight = '26px';
+  failureIconSpan.style.display = 'inline-flex';
+  failureIconSpan.style.verticalAlign = 'middle';
+
+  failureIconSpan.textContent = '❌';
+
+  const failureTextSpan = document.createElement('span');
+
+  failureTextSpan.style.display = 'inline-flex';
+  failureTextSpan.style.verticalAlign = 'middle';
+
+  failureTextSpan.textContent = `Failed to save`;
+
+  toastHtmlContentWrapper.appendChild(failureIconSpan);
+  toastHtmlContentWrapper.appendChild(failureTextSpan);
+
+  iqwerty.toast.Toast(toastHtmlContentWrapper, {
+    settings: {
+      duration: 3000,
+    },
+  });
+};
+
 browser.runtime.onMessage.addListener(async (message) => {
   console.info('Message: ' + message.name);
 
@@ -215,6 +245,8 @@ browser.runtime.onMessage.addListener(async (message) => {
   } else if (message.name === 'catalog-notify-saved-screenshot-successfully') {
     const { fileName } = message.payload;
     notifyFileWasSavedSuccessfully(fileName);
+  } else if (message.name === 'catalog-notify-saving-screenshot-failed') {
+    notifyFailedToSaveFile();
   } else {
     throw new Error('Unknown command: ' + JSON.stringify(message));
   }
