@@ -15,8 +15,7 @@ const querySelectCategoriesWithMatchingName = (categoryName) => {
       },
       (err, categoriesRows) => {
         if (err) {
-          console.log('err:', err);
-          reject();
+          reject(err);
         } else {
           resolve(categoriesRows);
         }

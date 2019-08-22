@@ -15,6 +15,7 @@ import CategoryAdditionModalWidget from './CategoryAdditionModalWidget/CategoryA
 import CategoryMoveToModalWidget from './CategoryMoveToModalWidget/CategoryMoveToModalWidget';
 import querySelectFsResourcesOfCategory from '../../db/queries/querySelectFsResourcesOfCategory';
 import ReactContext from './ReactContext';
+import { Message } from 'semantic-ui-react';
 
 const fetchData = async (currentCategoryId) => {
   const categoriesInPath =
@@ -99,6 +100,9 @@ const machineWithServices = machine.withConfig({
     updateNewCategoryName: assign({
       newCategoryName: (_, event) => event.newCategoryName,
     }),
+    updateErrorMessage: assign({
+      errorMessage: (_, event) => event.data.message,
+    }),
   },
 });
 
@@ -108,13 +112,13 @@ const ExplorerScreen = ({ initialCategoryId }) => {
       ...machineWithServices.initialState.context,
       initialCategoryId: initialCategoryId,
     }),
-    { devTools: true },
   );
   const {
     categoryRenamingModalCategory,
     categoryDeletionModalCategory,
     categoryMoveToModalCategory,
     categoriesInPath,
+    errorMessage,
   } = current.context;
 
   const currentCategory =
@@ -164,7 +168,7 @@ const ExplorerScreen = ({ initialCategoryId }) => {
       </ReactContext.Provider>
     );
   } else if (current.matches('idle.failure')) {
-    return <h2>Failure</h2>;
+    return <Message error>{errorMessage}</Message>;
   } else {
     return <h2>Unknown state</h2>;
   }

@@ -32,7 +32,7 @@ const machineWithConfig = machine.withConfig({
 });
 
 const WebclipsModalWidget = ({ onClose }) => {
-  const [current, , service] = useMachine(machineWithConfig, {
+  const [, , service] = useMachine(machineWithConfig, {
     actions: {
       onClose: (_, __) => onClose(),
     },

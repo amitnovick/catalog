@@ -10,15 +10,22 @@ import writeFile from '../../fs/writeFile';
 import queryDeleteFsResourceByName from '../../db/queries/queryDeleteFsResourceByName';
 import isFileNameValid from '../../utils/isFileNameValid';
 
-const attemptToCreateFile = async (fileName) => {
-  const fileId = await queryInsertFile(fileName);
-  try {
-    await writeFile(fileName);
-    return Promise.resolve(fileId);
-  } catch (error) {
-    await queryDeleteFsResourceByName(fileName); // clean up after `insertFileToDb`
-    return Promise.reject(error);
-  }
+const attemptToCreateFile = (fileName) => {
+  return new Promise(async (resolve, reject) => {
+    const fileId = await queryInsertFile(fileName);
+    try {
+      await writeFile(fileName);
+      resolve(fileId);
+    } catch (error) {
+      try {
+        await queryDeleteFsResourceByName(fileName); // clean up after `insertFileToDb`
+        reject(error);
+      } catch (error2) {
+        const errorMessage = `Two errors: 1.${error.message}, 2. ${error2.message}`;
+        reject(new Error(errorMessage));
+      }
+    }
+  });
 };
 
 const machineWithConfig = machine.withConfig({

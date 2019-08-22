@@ -53,6 +53,9 @@ const machineWithConfig = machine.withConfig({
     updateHasSearchedAtLeastOnce: assign({
       hasSearchedAtLeastOnce: (_, __) => true,
     }),
+    updateErrorMessage: assign({
+      errorMessage: (_, event) => event.data.message,
+    }),
   },
 });
 
@@ -65,6 +68,7 @@ const SearchScreen = () => {
     chosenAncestorCategory,
     selectedFsResourceRow,
     hasSearchedAtLeastOnce,
+    errorMessage,
   } = current.context;
 
   const isFilteringByNameEnabled = current.matches('filtering.filterByName.enabled');
@@ -72,97 +76,102 @@ const SearchScreen = () => {
   const isCategoryAccordionOpen =
     current.matches('filtering.filterByAncestorCategory.choosing') ||
     current.matches('filtering.filterByAncestorCategory.enabled');
-  return (
-    <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ marginBottom: '2em' }}>
-        <Checkbox
-          style={{ display: 'block', marginBottom: '1em' }}
-          label={<label style={{ fontSize: '1.5em' }}>Filter by Name</label>}
-          checked={isFilteringByNameEnabled}
-          onChange={() => send('TOGGLE_FILTER_BY_NAME')}
-        />
-        {isFilteringByNameEnabled ? (
-          <div style={{ marginLeft: '3em' }}>
-            <LabelledInput
-              onHitEnterKey={() => send('FETCH_DATA')}
-              inputText={inputFsResourceNameText}
-              onChangeSearchText={(inputFsResourceNameText) =>
-                send('CHANGED_TEXT', { inputFsResourceNameText: inputFsResourceNameText })
+
+  if (current.matches('failure')) {
+    return <Message error>{errorMessage}</Message>;
+  } else {
+    return (
+      <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ marginBottom: '2em' }}>
+          <Checkbox
+            style={{ display: 'block', marginBottom: '1em' }}
+            label={<label style={{ fontSize: '1.5em' }}>Filter by Name</label>}
+            checked={isFilteringByNameEnabled}
+            onChange={() => send('TOGGLE_FILTER_BY_NAME')}
+          />
+          {isFilteringByNameEnabled ? (
+            <div style={{ marginLeft: '3em' }}>
+              <LabelledInput
+                onHitEnterKey={() => send('FETCH_DATA')}
+                inputText={inputFsResourceNameText}
+                onChangeSearchText={(inputFsResourceNameText) =>
+                  send('CHANGED_TEXT', { inputFsResourceNameText: inputFsResourceNameText })
+                }
+              />
+            </div>
+          ) : null}
+        </div>
+
+        <Accordion style={{ marginBottom: '2em' }}>
+          <Accordion.Title
+            active={isCategoryAccordionOpen}
+            index={0}
+            style={{ fontSize: '1.5em' }}
+            onClick={() => {
+              if (isCategoryAccordionOpen) {
+                send('CLOSED_CATEGORY_ACCORDION');
+              } else {
+                send('OPENED_CATEGORY_ACCORDION');
               }
-            />
-          </div>
+            }}>
+            <Icon name="dropdown" />
+            Filter by Ancestor Category
+          </Accordion.Title>
+          <Accordion.Content active={isCategoryAccordionOpen} style={{ marginLeft: '3em' }}>
+            {current.matches('filtering.filterByAncestorCategory.choosing') ? (
+              <SearchCategoryWidget onFinish={(category) => send('CHOSE_CATEGORY', { category })} />
+            ) : null}
+
+            {current.matches('filtering.filterByAncestorCategory.enabled') ? (
+              <Button
+                size="large"
+                color="blue"
+                icon
+                labelPosition="right"
+                onClick={() => send('CHOOSE_ANOTHER_CATEGORY')}>
+                {`${chosenAncestorCategory.name}`}
+                <Icon name="redo" />
+              </Button>
+            ) : null}
+          </Accordion.Content>
+        </Accordion>
+        <div style={{ textAlign: 'center' }}>
+          <Button
+            disabled={
+              current.matches('filtering.filterByName.enabled') === false &&
+              current.matches('filtering.filterByAncestorCategory.enabled') === false
+            }
+            size="massive"
+            color="green"
+            icon="search"
+            style={{ height: '100%', width: '75%' }}
+            onClick={() => send('FETCH_DATA')}
+            content="Search"
+          />
+        </div>
+        {hasSearchedAtLeastOnce ? <Header as="h2">Search Results</Header> : null}
+        {hasSearchedAtLeastOnce && searchResultFsResources.length > 0 ? (
+          <List size="big" style={{ overflowY: 'auto', height: '100%' }}>
+            {searchResultFsResources.map((searchResultFile) => (
+              <FsResourcesListItemWithNavigation
+                key={searchResultFile.id}
+                fsResource={searchResultFile}
+                isSelected={
+                  selectedFsResourceRow !== null && searchResultFile.id === selectedFsResourceRow.id
+                }
+                onClickRow={() => send('SELECT_FILE_ROW', { file: searchResultFile })}
+              />
+            ))}
+          </List>
+        ) : null}
+        {hasSearchedAtLeastOnce && searchResultFsResources.length === 0 ? (
+          <Message info>
+            <Message.Header>No Results</Message.Header>
+          </Message>
         ) : null}
       </div>
-
-      <Accordion style={{ marginBottom: '2em' }}>
-        <Accordion.Title
-          active={isCategoryAccordionOpen}
-          index={0}
-          style={{ fontSize: '1.5em' }}
-          onClick={() => {
-            if (isCategoryAccordionOpen) {
-              send('CLOSED_CATEGORY_ACCORDION');
-            } else {
-              send('OPENED_CATEGORY_ACCORDION');
-            }
-          }}>
-          <Icon name="dropdown" />
-          Filter by Ancestor Category
-        </Accordion.Title>
-        <Accordion.Content active={isCategoryAccordionOpen} style={{ marginLeft: '3em' }}>
-          {current.matches('filtering.filterByAncestorCategory.choosing') ? (
-            <SearchCategoryWidget onFinish={(category) => send('CHOSE_CATEGORY', { category })} />
-          ) : null}
-
-          {current.matches('filtering.filterByAncestorCategory.enabled') ? (
-            <Button
-              size="large"
-              color="blue"
-              icon
-              labelPosition="right"
-              onClick={() => send('CHOOSE_ANOTHER_CATEGORY')}>
-              {`${chosenAncestorCategory.name}`}
-              <Icon name="redo" />
-            </Button>
-          ) : null}
-        </Accordion.Content>
-      </Accordion>
-      <div style={{ textAlign: 'center' }}>
-        <Button
-          disabled={
-            current.matches('filtering.filterByName.enabled') === false &&
-            current.matches('filtering.filterByAncestorCategory.enabled') === false
-          }
-          size="massive"
-          color="green"
-          icon="search"
-          style={{ height: '100%', width: '75%' }}
-          onClick={() => send('FETCH_DATA')}
-          content="Search"
-        />
-      </div>
-      <Header as="h2">Search Results</Header>
-      {hasSearchedAtLeastOnce && searchResultFsResources.length > 0 ? (
-        <List size="big" style={{ overflowY: 'auto', height: '100%' }}>
-          {searchResultFsResources.map((searchResultFile) => (
-            <FsResourcesListItemWithNavigation
-              key={searchResultFile.id}
-              fsResource={searchResultFile}
-              isSelected={
-                selectedFsResourceRow !== null && searchResultFile.id === selectedFsResourceRow.id
-              }
-              onClickRow={() => send('SELECT_FILE_ROW', { file: searchResultFile })}
-            />
-          ))}
-        </List>
-      ) : null}
-      {hasSearchedAtLeastOnce && searchResultFsResources.length === 0 ? (
-        <Message info>
-          <Message.Header>No Results</Message.Header>
-        </Message>
-      ) : null}
-    </div>
-  );
+    );
+  }
 };
 
 export default SearchScreen;

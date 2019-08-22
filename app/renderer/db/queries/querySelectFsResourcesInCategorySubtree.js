@@ -15,8 +15,7 @@ const querySelectFsResourcesInCategorySubtree = (category) => {
       },
       (err, rows) => {
         if (err) {
-          console.log('err:', err);
-          reject();
+          reject(err);
         } else {
           resolve(rows);
         }

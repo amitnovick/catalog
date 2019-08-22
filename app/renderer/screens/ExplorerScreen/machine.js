@@ -14,6 +14,7 @@ const machine = Machine({
     categoryDeletionModalCategory: null,
     selectedCategoryRow: null,
     selectedFsResourceRow: null,
+    errorMessage: null,
   },
   initial: 'idle',
   states: {
@@ -28,7 +29,10 @@ const machine = Machine({
               target: '#explorer-screen-idle.idle',
               actions: 'updateState',
             },
-            onError: '#explorer-screen-idle.failure',
+            onError: {
+              target: '#explorer-screen-idle.failure',
+              actions: 'updateErrorMessage',
+            },
           },
         },
         fetchingNewCategoryDataAndAssigningSelectedCategoryRow: {
@@ -38,7 +42,10 @@ const machine = Machine({
               target: '#explorer-screen-idle.idle',
               actions: ['updateState', 'assignSelectedCategoryRowByName'],
             },
-            onError: '#explorer-screen-idle.failure',
+            onError: {
+              target: '#explorer-screen-idle.failure',
+              actions: 'updateErrorMessage',
+            },
           },
         },
         fetchingRenamedCategoryDataAndAssigningSelectedCategoryRow: {
@@ -48,7 +55,10 @@ const machine = Machine({
               target: '#explorer-screen-idle.idle',
               actions: ['updateState', 'assignSelectedCategoryRowById'],
             },
-            onError: '#explorer-screen-idle.failure',
+            onError: {
+              target: '#explorer-screen-idle.failure',
+              actions: 'updateErrorMessage',
+            },
           },
         },
         idle: {

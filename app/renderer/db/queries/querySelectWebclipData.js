@@ -15,7 +15,6 @@ const querySelectWebclipData = (fsResourceId) => {
       },
       (err, rows) => {
         if (err) {
-          console.log('err:', err);
           reject(new Error(`Unknown error: ${err.message}`));
         } else {
           if (rows.length > 0) {

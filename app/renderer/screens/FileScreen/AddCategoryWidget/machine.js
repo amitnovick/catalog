@@ -79,7 +79,10 @@ const machine = Machine({
           target: 'idle',
           actions: 'updateSearchResultCategories',
         },
-        onError: '#add-category.idle.failure',
+        onError: {
+          target: '#add-category.idle.failure',
+          actions: 'updateErrorMessage',
+        },
       },
     },
     fetchingBroaderCategoriesOfFile: {

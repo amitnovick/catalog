@@ -6,7 +6,6 @@ const deleteFile = (filePath) =>
       if (err) {
         reject(new Error(`Unknown error: ${err}`));
       } else {
-        console.log('The file has been deleted!');
         resolve();
       }
     });

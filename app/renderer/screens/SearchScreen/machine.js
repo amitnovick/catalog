@@ -9,6 +9,7 @@ const machine = Machine({
     inputFsResourceNameText: '',
     selectedFsResourceRow: null,
     hasSearchedAtLeastOnce: false,
+    errorMessage: null,
   },
   type: 'parallel',
   states: {
@@ -25,7 +26,10 @@ const machine = Machine({
               target: 'idle',
               actions: 'updateSearchResultFsResources',
             },
-            onError: 'failure',
+            onError: {
+              target: 'failure',
+              actions: 'updateErrorMessage',
+            },
           },
         },
         fetchingSearchResultsOnlyByNameFilter: {
@@ -35,7 +39,10 @@ const machine = Machine({
               target: 'idle',
               actions: 'updateSearchResultFsResources',
             },
-            onError: 'failure',
+            onError: {
+              target: 'failure',
+              actions: 'updateErrorMessage',
+            },
           },
         },
         fetchingSearchResultsOnlyByAncestorCategoryFilter: {
@@ -45,7 +52,10 @@ const machine = Machine({
               target: 'idle',
               actions: 'updateSearchResultFsResources',
             },
-            onError: 'failure',
+            onError: {
+              target: 'failure',
+              actions: 'updateErrorMessage',
+            },
           },
         },
       },

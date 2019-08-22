@@ -15,15 +15,16 @@ const queryDeleteFsResourceByName = async (fsResourceName) => {
       function(err) {
         /* Must be non-arrow function, since `this` is used*/
         if (err) {
-          console.log('Error: unknown error isnerting into db');
-          reject();
+          reject(err);
         } else {
           const { changes: affectedRowsCount } = this;
           if (affectedRowsCount !== 1) {
-            console.log("Error: couldn't delete file when trying to clean-up");
-            reject();
+            reject(
+              new Error(
+                `Expected to affect ${1} rows, but affected ${affectedRowsCount} rows instead`,
+              ),
+            );
           } else {
-            console.log('Successfully deleted file from db when cleaning up');
             resolve();
           }
         }

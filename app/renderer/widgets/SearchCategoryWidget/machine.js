@@ -7,6 +7,7 @@ const machine = Machine({
   context: {
     inputSearchQuery: '',
     searchResultCategories: [],
+    errorMessage: null,
   },
   states: {
     idle: {
@@ -27,7 +28,10 @@ const machine = Machine({
           target: 'idle',
           actions: 'updateSearchResultCategories',
         },
-        onError: 'failure',
+        onError: {
+          target: 'failure',
+          actions: 'updateErrorMessage',
+        },
       },
     },
     failure: {},

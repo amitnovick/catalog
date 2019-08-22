@@ -10,7 +10,6 @@ const writeFileIfNotExist = (filePath, data = '') => {
       if (err) {
         reject(err);
       } else {
-        console.log('The file has been saved!');
         resolve();
       }
     });

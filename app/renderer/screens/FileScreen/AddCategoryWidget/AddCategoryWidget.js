@@ -140,7 +140,7 @@ const machineWithConfig = machine.withConfig({
       chosenSearchResultCategory: (_, event) => event.data,
     }),
     updateSearchResultCategories: assign({ searchResultCategories: (_, event) => event.data }),
-    updateErrorMessage: assign({ genericErrorAddCategoryWidget: (_, event) => event.data }),
+    updateErrorMessage: assign({ genericErrorAddCategoryWidget: (_, event) => event.data.message }),
     updateNarrowerCategoriesOfFile: assign({ narrowerCategoriesOfFile: (_, event) => event.data }),
     updateBroaderFileCategories: assign({ broaderFileCategories: (_, event) => event.data }),
   },
