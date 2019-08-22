@@ -14,13 +14,13 @@ const queryDeleteFsResource = (fsResourceId) => {
       },
       function(err) {
         if (err) {
-          console.log('unknown error:', err);
-          reject();
+          const errorMessage = `Unexpected error: queryDeleteFsResource: ${err.message}`;
+          reject(new Error(errorMessage));
         } else {
           const { changes: affectedRowsCount } = this;
           if (affectedRowsCount !== 1) {
-            console.log('queryDeleteFsResource: No affected rows error');
-            reject();
+            const errorMessage = 'queryDeleteFsResource: No affected rows error';
+            reject(new Error(errorMessage));
           } else {
             resolve();
           }

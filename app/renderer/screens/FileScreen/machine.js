@@ -6,7 +6,10 @@ const idleStates = {
   states: {
     idle: {},
     success: {},
-    failure: {},
+    failure: {
+      entry: 'notifyErrorMessage',
+      type: 'final',
+    },
   },
 };
 
@@ -36,7 +39,7 @@ const machine = Machine({
               target: '#file-screen.idle.idle',
               actions: ['updateCategories', 'updateFsResource'],
             },
-            onError: '#file-screen.failedFetching',
+            onError: '#file-screen.idle.failure',
           },
         },
         deletingFile: {
@@ -47,9 +50,6 @@ const machine = Machine({
           },
         },
       },
-    },
-    failedFetching: {
-      type: 'final',
     },
     deletedFile: {
       type: 'final',

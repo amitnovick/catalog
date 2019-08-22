@@ -20,11 +20,16 @@ const querySelectFsResource = (fsResourceId) => {
       },
       (err, rows) => {
         if (err) {
-          console.log('err:', err);
-          reject();
+          const errorMessage = `Unexpected error: ${err.message}`;
+          reject(new Error(errorMessage));
         } else {
-          const fsResourceRow = rows[0];
-          resolve(fsResourceRow);
+          if (rows.length !== 1) {
+            const errorMessage = `Expected to retrieve ${1} rows, but got ${rows.length} instead`;
+            reject(new Error(errorMessage));
+          } else {
+            const fsResourceRow = rows[0];
+            resolve(fsResourceRow);
+          }
         }
       },
     );

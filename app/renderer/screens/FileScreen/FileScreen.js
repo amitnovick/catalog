@@ -1,7 +1,9 @@
+//@ts-check
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useMachine } from '@xstate/react';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import machine from './machine';
 import FileMenu from './components/FileMenu';
@@ -43,7 +45,8 @@ const deleteFsResource = async (fsResource) => {
   try {
     await deleteFsResourceFromFs(fsResource);
   } catch (error) {
-    console.log(`Error: failed to delete fs resource from filesystem: {error}`);
+    const errorMessage = `Failed to delete fs resource: ${fsResource.name} from filesystem. Error stack: ${error.message}`;
+    throw new Error(errorMessage);
   }
 };
 
@@ -55,6 +58,13 @@ const machineWithConfig = machine.withConfig({
   actions: {
     updateCategories: assign({ categories: (_, event) => event.data.categories }),
     updateFsResource: assign({ fsResource: (_, event) => event.data.fsResource }),
+    notifyErrorMessage: (_, event) =>
+      toast(event.data.message, {
+        type: 'error',
+        closeOnClick: false,
+        autoClose: false,
+        position: 'bottom-center',
+      }),
   },
 });
 
@@ -62,9 +72,24 @@ const openFsResource = (fsResource) => {
   openFsResourceInUserFiles(fsResource.name);
 };
 
-const FileScreen = ({ fsResourceId, notifySuccess }) => {
+const notifyRenamedSuccessfully = () =>
+  toast(
+    <>
+      <Header>
+        <Icon name="checkmark" color="green" />
+        Renamed successfully
+      </Header>
+    </>,
+    {
+      autoClose: 3000,
+      position: 'top-right',
+    },
+  );
+
+const FileScreen = ({ fsResourceId }) => {
   const [current, send] = useMachine(
     machineWithConfig.withContext({
+      ...machineWithConfig.initialState.context,
       fsResourceId: fsResourceId,
     }),
   );
@@ -72,52 +97,55 @@ const FileScreen = ({ fsResourceId, notifySuccess }) => {
   const { fsResource, categories } = current.context;
 
   if (current.matches('idle')) {
-    return (
-      <div style={{ textAlign: 'center', overflowY: 'auto', height: '100%' }}>
-        <div style={{ textAlign: 'unset', float: 'left' }}>
-          <FsResourceIcon fsResourceType={fsResource.type} size="5x" />
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <FileNameWidget
-            notifySuccess={() => notifySuccess()}
-            refetchFileData={() => send('REFETCH_FILE_DATA')}
+    if (current.matches('idle.failure')) {
+      return <h2 style={{ color: 'red' }}>Failed</h2>;
+    } else {
+      return (
+        <div style={{ textAlign: 'center', overflowY: 'auto', height: '100%' }}>
+          <div style={{ textAlign: 'unset', float: 'left' }}>
+            <FsResourceIcon fsResourceType={fsResource.type} size="5x" />
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <FileNameWidget
+              notifySuccess={() => notifyRenamedSuccessfully()}
+              refetchFileData={() => send('REFETCH_FILE_DATA')}
+              file={fsResource}
+            />
+          </div>
+          <Divider horizontal />
+          <div style={{ border: '1px solid black', borderRadius: 6, padding: 5 }}>
+            <CategoriesWidget
+              refetchData={() => send('REFETCH_FILE_DATA')}
+              categories={categories}
+              file={fsResource}
+            />
+            <AddCategoryWidget
+              file={fsResource}
+              categories={categories}
+              refetchFileData={() => send('REFETCH_FILE_DATA')}
+            />
+          </div>
+          <Divider horizontal />
+          <WebclipWidget fileId={fsResourceId} />
+          <FileMenu
             file={fsResource}
+            onClickOpenFile={openFsResource}
+            onClickDeleteFile={(fsResource) =>
+              send('CLICK_DELETE_FILE', {
+                fsResource: fsResource,
+              })
+            }
           />
+          {current.matches('idle.success') ? <h2 style={{ color: 'green' }}>Succeeded</h2> : null}
         </div>
-        <Divider horizontal />
-        <div style={{ border: '1px solid black', borderRadius: 6, padding: 5 }}>
-          <CategoriesWidget
-            refetchData={() => send('REFETCH_FILE_DATA')}
-            categories={categories}
-            file={fsResource}
-          />
-          <AddCategoryWidget
-            file={fsResource}
-            categories={categories}
-            refetchFileData={() => send('REFETCH_FILE_DATA')}
-          />
-        </div>
-        <Divider horizontal />
-        <WebclipWidget fileId={fsResourceId} />
-        <FileMenu
-          file={fsResource}
-          onClickOpenFile={openFsResource}
-          onClickDeleteFile={(fsResource) =>
-            send('CLICK_DELETE_FILE', {
-              fsResource: fsResource,
-            })
-          }
-        />
-        {current.matches('idle.success') ? <h2 style={{ color: 'green' }}>Succeeded</h2> : null}
-        {current.matches('idle.failure') ? <h2 style={{ color: 'red' }}>Failed</h2> : null}
-      </div>
-    );
+      );
+    }
   } else if (current.matches('loading')) {
     return null;
   } else if (current.matches('deletedFile')) {
@@ -135,33 +163,6 @@ const FileScreen = ({ fsResourceId, notifySuccess }) => {
 
 FileScreen.propTypes = {
   fsResourceId: PropTypes.number.isRequired,
-  notifySuccess: PropTypes.func.isRequired,
 };
 
-const FileScreenContainerWithToast = (props) => {
-  return (
-    <>
-      <FileScreen
-        {...props}
-        notifySuccess={() =>
-          toast(
-            <>
-              <Header>
-                <Icon name="checkmark" color="green" />
-                Renamed successfully
-              </Header>
-            </>,
-          )
-        }
-      />
-      <ToastContainer
-        hideProgressBar={true}
-        autoClose={3000}
-        newestOnTop={true}
-        position="top-right"
-      />
-    </>
-  );
-};
-
-export default FileScreenContainerWithToast;
+export default FileScreen;

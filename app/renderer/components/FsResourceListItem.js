@@ -21,7 +21,7 @@ const liClass = css`
 const spanClass = css`
   display: inline-block;
   font-size: ${ICON_SIZE_PX - 6}px;
-  line-height: 30px;
+  line-height: ${ICON_SIZE_PX - 6}px;
 `;
 
 const threeDotsClass = css`

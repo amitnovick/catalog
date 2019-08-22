@@ -1,5 +1,6 @@
 import React from 'react';
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 import SearchScreen from './screens/SearchScreen/SearchScreen';
 import ExplorerScreen from './screens/ExplorerScreen/ExplorerScreen';
@@ -20,6 +21,7 @@ const Layout = ({ BodyComponent, HeaderComponent }) => {
         justifyContent: 'space-between',
         height: '100vh',
       }}>
+      <ToastContainer hideProgressBar={true} newestOnTop={true} draggable={false} />
       <HeaderComponent />
       <BodyLayout>{BodyComponent}</BodyLayout>
     </div>
