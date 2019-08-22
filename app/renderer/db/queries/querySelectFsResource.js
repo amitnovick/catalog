@@ -11,6 +11,11 @@ const selectFsResource = `
   WHERE fs_resources.id = $fs_resource_id
 `;
 
+export const errorCodes = {
+  SQL_ERROR: Symbol('SQL_ERROR'),
+  UNEXPECTED_ROWS_NUMBER: Symbol('UNEXPECTED_ROWS_NUMBER'),
+};
+
 const querySelectFsResource = (fsResourceId) => {
   return new Promise((resolve, reject) => {
     getPersistentDbConnection().all(
@@ -20,12 +25,16 @@ const querySelectFsResource = (fsResourceId) => {
       },
       (err, rows) => {
         if (err) {
-          const errorMessage = `Unexpected error: ${err.message}`;
-          reject(new Error(errorMessage));
+          const error = new Error(`Unexpected error: ${err.message}`);
+          error.code = errorCodes.SQL_ERROR;
+          reject(error);
         } else {
           if (rows.length !== 1) {
-            const errorMessage = `Expected to retrieve ${1} rows, but got ${rows.length} instead`;
-            reject(new Error(errorMessage));
+            const error = new Error(
+              `Expected to retrieve ${1} rows, but got ${rows.length} instead`,
+            );
+            error.code = errorCodes.UNEXPECTED_ROWS_NUMBER;
+            reject(new Error(error));
           } else {
             const fsResourceRow = rows[0];
             resolve(fsResourceRow);

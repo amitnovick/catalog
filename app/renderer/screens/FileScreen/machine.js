@@ -1,18 +1,6 @@
 //@ts-check
 import { Machine } from 'xstate';
 
-const idleStates = {
-  initial: 'idle',
-  states: {
-    idle: {},
-    success: {},
-    failure: {
-      entry: 'notifyErrorMessage',
-      type: 'final',
-    },
-  },
-};
-
 const machine = Machine({
   id: 'file-screen',
   initial: 'loading',
@@ -20,10 +8,10 @@ const machine = Machine({
     fsResourceId: null,
     fsResource: null,
     categories: null,
+    errorMessage: null,
   },
   states: {
     idle: {
-      ...idleStates,
       on: {
         CLICK_DELETE_FILE: 'loading.deletingFile',
         REFETCH_FILE_DATA: 'loading.fetchingFileData',
@@ -36,20 +24,29 @@ const machine = Machine({
           invoke: {
             src: 'fetchFsResourceData',
             onDone: {
-              target: '#file-screen.idle.idle',
+              target: '#file-screen.idle',
               actions: ['updateCategories', 'updateFsResource'],
             },
-            onError: '#file-screen.idle.failure',
+            onError: {
+              target: '#file-screen.failure',
+              actions: 'updateErrorMessage',
+            },
           },
         },
         deletingFile: {
           invoke: {
             src: 'deleteFsResource',
             onDone: '#file-screen.deletedFile',
-            onError: '#file-screen.idle.failure',
+            onError: {
+              target: '#file-screen.failure',
+              actions: 'updateErrorMessage',
+            },
           },
         },
       },
+    },
+    failure: {
+      type: 'final',
     },
     deletedFile: {
       type: 'final',

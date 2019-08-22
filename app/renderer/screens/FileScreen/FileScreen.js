@@ -11,7 +11,7 @@ import openFsResourceInUserFiles from '../../fs/openFsResourceInUserFiles';
 import AddCategoryWidget from './AddCategoryWidget/AddCategoryWidget';
 import FileNameWidget from './FileNameWidget/FileNameWidget';
 import CategoriesWidget from './CategoriesWidget/CategoriesWidget';
-import { Divider, Icon, Header } from 'semantic-ui-react';
+import { Divider, Icon, Header, Message } from 'semantic-ui-react';
 import deleteFileFromUserFiles from '../../fs/deleteFileFromUserFiles';
 import queryCategoriesOfFsResource from '../../db/queries/querySelectCategoriesOfFsResource';
 import querySelectFsResource from '../../db/queries/querySelectFsResource';
@@ -46,7 +46,7 @@ const deleteFsResource = async (fsResource) => {
     await deleteFsResourceFromFs(fsResource);
   } catch (error) {
     const errorMessage = `Failed to delete fs resource: ${fsResource.name} from filesystem. Error stack: ${error.message}`;
-    throw new Error(errorMessage);
+    notifyError(errorMessage);
   }
 };
 
@@ -58,13 +58,9 @@ const machineWithConfig = machine.withConfig({
   actions: {
     updateCategories: assign({ categories: (_, event) => event.data.categories }),
     updateFsResource: assign({ fsResource: (_, event) => event.data.fsResource }),
-    notifyErrorMessage: (_, event) =>
-      toast(event.data.message, {
-        type: 'error',
-        closeOnClick: false,
-        autoClose: false,
-        position: 'bottom-center',
-      }),
+    updateErrorMessage: assign({
+      errorMessage: (_, event) => event.data.message,
+    }),
   },
 });
 
@@ -86,6 +82,14 @@ const notifyRenamedSuccessfully = () =>
     },
   );
 
+const notifyError = (errorMessage) =>
+  toast(errorMessage, {
+    type: 'error',
+    closeOnClick: false,
+    autoClose: false,
+    position: 'bottom-center',
+  });
+
 const FileScreen = ({ fsResourceId }) => {
   const [current, send] = useMachine(
     machineWithConfig.withContext({
@@ -94,11 +98,11 @@ const FileScreen = ({ fsResourceId }) => {
     }),
   );
 
-  const { fsResource, categories } = current.context;
+  const { fsResource, categories, errorMessage } = current.context;
 
   if (current.matches('idle')) {
-    if (current.matches('idle.failure')) {
-      return <h2 style={{ color: 'red' }}>Failed</h2>;
+    if (current.matches('failure')) {
+      return <Message error>{errorMessage}</Message>;
     } else {
       return (
         <div style={{ textAlign: 'center', overflowY: 'auto', height: '100%' }}>
@@ -142,7 +146,6 @@ const FileScreen = ({ fsResourceId }) => {
               })
             }
           />
-          {current.matches('idle.success') ? <h2 style={{ color: 'green' }}>Succeeded</h2> : null}
         </div>
       );
     }
