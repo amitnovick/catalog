@@ -50,15 +50,11 @@ autoUpdater.on('update-not-available', () => {
 });
 
 autoUpdater.on('update-downloaded', () => {
-  dialog.showMessageBox(
-    {
-      title: 'Install Updates',
-      message: 'Updates downloaded, application will be quit for update...',
-    },
-    () => {
-      setImmediate(() => autoUpdater.quitAndInstall());
-    },
-  );
+  dialog.showMessageBox({
+    title: 'Install Updates',
+    message: 'Updates downloaded, application will be quit for update...',
+  });
+  setImmediate(() => autoUpdater.quitAndInstall());
 });
 
 // export this to MenuItem click callback

@@ -13,7 +13,10 @@ const NavigationBox = ({
   onClickWebclipButton,
 }) => {
   return (
-    <Menu size="massive" inverted style={{ backgroundColor: '#073642' /* Solarized base03 */ }}>
+    <Menu
+      size="massive"
+      inverted
+      style={{ marginTop: 0, backgroundColor: '#073642' /* Solarized base03 */ }}>
       <Menu.Item
         style={{ marginRight: 30 }}
         active={path === routes.HOME}
