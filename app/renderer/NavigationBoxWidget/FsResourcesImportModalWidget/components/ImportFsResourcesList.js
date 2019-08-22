@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { List, Icon } from 'semantic-ui-react';
+import { List } from 'semantic-ui-react';
 import { css } from 'emotion';
 import FsResourceListItem from '../../../components/FsResourceListItem';
 import fsResourceTypes from '../../../fsResourceTypes';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faTimes, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 const overrideCursorClass = css`
   & * {
@@ -18,7 +20,7 @@ const ImportFsResourcesList = ({
   fsResourceType,
 }) => {
   return (
-    <List style={{ maxHeight: '50vh', overflowY: 'scroll', overflowX: 'scroll' }}>
+    <List style={{ height: '100%', overflowY: 'auto', overflowX: 'auto' }}>
       {filesPaths.map((filePath) => (
         <div
           className={overrideCursorClass}
@@ -29,17 +31,17 @@ const ImportFsResourcesList = ({
             width: '100%',
             alignItems: 'center',
           }}>
-          <span>
+          <div>
             {hasAttemptedCopyingAlready ? (
               filePathsAttemptOutcomes[filePath] === true ? (
-                <Icon name="checkmark" color="green" />
+                <FontAwesomeIcon icon={faCheck} color="green" style={{ width: 30, height: 30 }} />
               ) : (
-                <Icon name="remove circle" color="red" />
+                <FontAwesomeIcon icon={faTimes} color="red" style={{ width: 30, height: 30 }} />
               )
             ) : (
-              <Icon name="minus" />
+              <FontAwesomeIcon icon={faMinus} style={{ width: 30, height: 30 }} />
             )}
-          </span>
+          </div>
           <FsResourceListItem
             fsResource={{
               name: filePath,

@@ -6,17 +6,22 @@ import fsResourceTypes from '../fsResourceTypes';
 
 const BLUE = '#2196F3';
 
+const ICON_SIZE_PX = 30;
+
 const liClass = css`
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
+  padding-top: 8px;
+  padding-bottom: 8px;
   display: flex;
   align-items: center;
   cursor: pointer;
   width: 100%;
+  height: 50px;
 `;
 
 const spanClass = css`
   display: inline-block;
+  font-size: ${ICON_SIZE_PX - 6}px;
+  line-height: 30px;
 `;
 
 const threeDotsClass = css`
@@ -34,7 +39,10 @@ const FsResourceListItem = ({ fsResource, isSelected, onClickRow, onDoubleClickR
       onDoubleClick={() => onDoubleClickRow()}
       onMouseDown={(event) => event.preventDefault()}
       title="Open in file screen">
-      <FsResourceIcon size="lg" fsResourceType={fsResource.type} />
+      <FsResourceIcon
+        style={{ width: ICON_SIZE_PX, height: ICON_SIZE_PX }}
+        fsResourceType={fsResource.type}
+      />
       <span
         className={`${spanClass} ${threeDotsClass}`}
         style={{ color: isSelected ? 'white' : 'black' }}>

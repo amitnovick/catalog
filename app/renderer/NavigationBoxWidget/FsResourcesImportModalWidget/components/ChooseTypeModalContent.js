@@ -16,46 +16,55 @@ const fsResourceItemClass = css`
   height: 100%;
 `;
 
+const outerDivClass = css`
+  height: 100%;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+`;
+
 const ChooseTypeModalContent = ({ onChooseFiles, onChooseDirectories }) => {
   return (
-    <div
-      style={{
-        height: '200px',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-      }}>
+    <div className={outerDivClass}>
       <div
-        className={fsResourceItemClass}
         style={{
-          marginRight: '2em',
+          height: '200px',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
         }}>
-        <div style={{ height: '100%' }}>
-          <DirectoryIcon
-            onClick={onChooseDirectories}
-            style={{
-              width: 150,
-              height: 150,
-            }}
-          />
+        <div
+          className={fsResourceItemClass}
+          style={{
+            marginRight: '2em',
+          }}>
+          <div style={{ height: '100%' }}>
+            <DirectoryIcon
+              onClick={onChooseDirectories}
+              style={{
+                width: 150,
+                height: 150,
+              }}
+            />
+          </div>
+          <div style={{ height: '100%' }}>
+            <span>Directories</span>
+          </div>
         </div>
-        <div style={{ height: '100%' }}>
-          <span>Directories</span>
-        </div>
-      </div>
 
-      <div className={fsResourceItemClass}>
-        <div style={{ height: '100%' }}>
-          <FileIcon
-            onClick={onChooseFiles}
-            style={{
-              width: 150,
-              height: 150,
-            }}
-          />
-        </div>
-        <div style={{ height: '100%' }}>
-          <span>Files</span>
+        <div className={fsResourceItemClass}>
+          <div style={{ height: '100%' }}>
+            <FileIcon
+              onClick={onChooseFiles}
+              style={{
+                width: 150,
+                height: 150,
+              }}
+            />
+          </div>
+          <div style={{ height: '100%' }}>
+            <span>Files</span>
+          </div>
         </div>
       </div>
     </div>

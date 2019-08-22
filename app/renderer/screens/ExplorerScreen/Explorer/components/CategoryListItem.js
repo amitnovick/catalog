@@ -8,13 +8,22 @@ import CategoryIcon from '../../../../components/CategoryIcon';
 
 const BLUE = '#2196F3';
 
+const ICON_SIZE_PX = 30;
+
 const liClass = css`
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
+  padding-top: 8px;
+  padding-bottom: 8px;
   display: flex;
   align-items: center;
   cursor: pointer;
   width: 100%;
+  height: 50px;
+`;
+
+const spanClass = css`
+  display: inline-block;
+  font-size: ${ICON_SIZE_PX - 6}px;
+  line-height: ${ICON_SIZE_PX - 6}px;
 `;
 
 const CategoryListItem = ({ category, isSelected, onClickRow, onDoubleClickRow }) => {
@@ -28,12 +37,16 @@ const CategoryListItem = ({ category, isSelected, onClickRow, onDoubleClickRow }
       title="Navigate to category">
       <CategoryIcon
         color={isSelected ? 'white' : 'black'}
-        size="lg"
-        style={{ marginRight: '0.5em', marginLeft: '0.2em' }}
+        style={{
+          width: ICON_SIZE_PX,
+          height: ICON_SIZE_PX,
+          marginRight: '0.5em',
+          marginLeft: '0.2em',
+        }}
       />
       <span
+        className={spanClass}
         style={{
-          display: 'inline-block',
           color: isSelected ? 'white' : 'black',
         }}>
         {category.name}

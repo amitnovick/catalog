@@ -143,7 +143,7 @@ const SearchScreen = () => {
       </div>
       <Header as="h2">Search Results</Header>
       {hasSearchedAtLeastOnce && searchResultFsResources.length > 0 ? (
-        <List size="big" style={{ overflowY: 'scroll', height: '100%' }}>
+        <List size="big" style={{ overflowY: 'auto', height: '100%' }}>
           {searchResultFsResources.map((searchResultFile) => (
             <FsResourcesListItemWithNavigation
               key={searchResultFile.id}

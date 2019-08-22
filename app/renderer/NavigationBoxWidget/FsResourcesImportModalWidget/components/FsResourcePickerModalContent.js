@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Header } from 'semantic-ui-react';
+import { Header } from 'semantic-ui-react';
 import FileIcon from '../../../components/FileIcon';
 import DirectoryIcon from '../../../components/DirectoryIcon';
 import { css } from 'emotion';
+import ModalContent from '../ModalContent';
 
-const divClass = css`
+const innerDivClass = css`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -16,30 +17,41 @@ const divClass = css`
   }
 `;
 
+const outerDivClass = css`
+  height: 100%;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+`;
+
 const FsResourcePickerModalContent = ({ FsResourcePicker, fsResourceType }) => {
   if (fsResourceType === 'file') {
     return (
-      <Modal.Content>
-        <div className={divClass}>
-          <FileIcon style={{ width: 100, height: 100 }} />
-          <div>
-            <Header>Choose the files to import:</Header>
-            <FsResourcePicker />
+      <ModalContent>
+        <div className={outerDivClass}>
+          <div className={innerDivClass}>
+            <FileIcon style={{ width: 100, height: 100 }} />
+            <div>
+              <Header>Choose the files to import:</Header>
+              <FsResourcePicker />
+            </div>
           </div>
         </div>
-      </Modal.Content>
+      </ModalContent>
     );
   } else if (fsResourceType === 'directory') {
     return (
-      <Modal.Content>
-        <div className={divClass}>
-          <DirectoryIcon style={{ width: 100, height: 100 }} />
-          <div>
-            <Header>Choose the directories to import:</Header>
-            <FsResourcePicker />
+      <ModalContent>
+        <div className={outerDivClass}>
+          <div className={innerDivClass}>
+            <DirectoryIcon style={{ width: 100, height: 100 }} />
+            <div>
+              <Header>Choose the directories to import:</Header>
+              <FsResourcePicker />
+            </div>
           </div>
         </div>
-      </Modal.Content>
+      </ModalContent>
     );
   }
 };

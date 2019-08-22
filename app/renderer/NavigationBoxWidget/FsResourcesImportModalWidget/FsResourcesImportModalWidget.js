@@ -8,6 +8,7 @@ import Modal from '../../components/Modal';
 import ModalHeader from './components/ModalHeader';
 import { Button, Modal as SemanticModal } from 'semantic-ui-react';
 import ChooseTypeModalContent from './components/ChooseTypeModalContent';
+import ModalContent from './ModalContent';
 
 const FsResourcesImportModalWidget = ({ onClose }) => {
   const [current, send] = useMachine(machine);
@@ -18,12 +19,12 @@ const FsResourcesImportModalWidget = ({ onClose }) => {
         onClose={onClose}
         ModalHeader={<ModalHeader />}
         ModalContent={
-          <SemanticModal.Content>
+          <ModalContent>
             <ChooseTypeModalContent
               onChooseFiles={() => send('CHOOSE_FILES')}
               onChooseDirectories={() => send('CHOOSE_DIRECTORIES')}
             />
-          </SemanticModal.Content>
+          </ModalContent>
         }
         ModalActions={
           <SemanticModal.Actions>

@@ -135,7 +135,7 @@ const ResourceAdditionTimelineScreen = ({ pageNumber }) => {
 
     return (
       <>
-        <List size="big" style={{ height: '100%', overflowY: 'scroll' }}>
+        <List size="big" style={{ height: '100%', overflowY: 'auto' }}>
           {Array.from(dateGroupResources.keys()).map((dataGroupNane) => (
             <List.Item key={dataGroupNane}>
               <div className={flexParentClass}>

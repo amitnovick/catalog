@@ -9,6 +9,7 @@ import { Modal as SemanticModal, Button } from 'semantic-ui-react';
 import FsResourcePickerModalContent from './components/FsResourcePickerModalContent';
 import ImportFsResourcesList from './components/ImportFsResourcesList';
 import FsResourcesPicker from '../../components/FsResourcesPicker';
+import ImportModalContent from './ModalContent';
 
 const fsResourceTypes = {
   FILE: 'file',
@@ -45,20 +46,20 @@ const FsResourcesImportModal = ({ onClose, fsResourceType }) => {
     const hasAttemptedCopyingAlready = current.matches('chosen.displayAttemptOutcome');
 
     ModalContent = () => (
-      <SemanticModal.Content>
+      <ImportModalContent>
         <ImportFsResourcesList
           fsResourceType={fsResourceType}
           hasAttemptedCopyingAlready={hasAttemptedCopyingAlready}
           filesPaths={filesPaths}
           filePathsAttemptOutcomes={filePathsAttemptOutcomes}
         />
-      </SemanticModal.Content>
+      </ImportModalContent>
     );
   } else {
     ModalContent = () => (
-      <SemanticModal.Content>
+      <ImportModalContent>
         <h2>Unknown state</h2>
-      </SemanticModal.Content>
+      </ImportModalContent>
     );
   }
 
@@ -70,7 +71,10 @@ const FsResourcesImportModal = ({ onClose, fsResourceType }) => {
       ModalActions={
         <SemanticModal.Actions>
           <Button onClick={() => send('CLICK_CANCEL')}>Close</Button>
-          <Button onClick={() => send('CLICK_IMPORT_BUTTON')} disabled={shouldDisableSubmitButton}>
+          <Button
+            color="blue"
+            onClick={() => send('CLICK_IMPORT_BUTTON')}
+            disabled={shouldDisableSubmitButton}>
             Import
           </Button>
         </SemanticModal.Actions>

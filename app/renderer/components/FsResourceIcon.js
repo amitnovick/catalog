@@ -9,9 +9,16 @@ const iconStyle = { marginRight: '0.5em', marginLeft: '0.2em' };
 
 const FsResourceIcon = ({ fsResourceType, ...props }) => {
   if (fsResourceType === fsResourceTypes.FILE) {
-    return <FileIcon {...props} style={iconStyle} />;
+    return (
+      <FileIcon {...props} style={props.style ? { ...props.style, ...iconStyle } : iconStyle} />
+    );
   } else if (fsResourceType === fsResourceTypes.DIRECTORY) {
-    return <DirectoryIcon {...props} style={iconStyle} />;
+    return (
+      <DirectoryIcon
+        {...props}
+        style={props.style ? { ...props.style, ...iconStyle } : iconStyle}
+      />
+    );
   }
 };
 
