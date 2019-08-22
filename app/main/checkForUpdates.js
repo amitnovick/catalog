@@ -27,7 +27,7 @@ autoUpdater.on('update-available', () => {
       type: 'info',
       title: 'Found Updates',
       message: 'Found updates, do you want update now?',
-      buttons: ['Sure', 'No'],
+      buttons: ['Yes, Update Now', 'No'],
     },
     (buttonIndex) => {
       if (buttonIndex === 0) {
