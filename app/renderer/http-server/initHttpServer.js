@@ -8,9 +8,11 @@ const mainRoute = require('./mainRoute');
 
 const routes = [mainRoute];
 
+const PORT = 37740;
+
 const initHttpServer = async () => {
   const server = Hapi.server({
-    port: 37740,
+    port: PORT,
     host: 'localhost',
   });
 
@@ -36,7 +38,11 @@ const initHttpServer = async () => {
     await server.start();
     console.log('Web Clipper HTTP Server: running at:', server.info.uri);
   } catch (err) {
-    console.log(err);
+    if (err.code === 'EADDRINUSE') {
+      throw new Error(`Couldn't start HTTP server since port ${PORT} is unavailable`);
+    } else {
+      throw err;
+    }
   }
 };
 

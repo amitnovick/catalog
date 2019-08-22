@@ -21,7 +21,12 @@ const Layout = ({ BodyComponent, HeaderComponent }) => {
         justifyContent: 'space-between',
         height: '100vh',
       }}>
-      <ToastContainer hideProgressBar={true} newestOnTop={true} draggable={false} />
+      <ToastContainer
+        enableMultiContainer
+        hideProgressBar={true}
+        newestOnTop={true}
+        draggable={false}
+      />
       <HeaderComponent />
       <BodyLayout>{BodyComponent}</BodyLayout>
     </div>
