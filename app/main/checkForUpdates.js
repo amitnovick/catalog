@@ -10,7 +10,7 @@
 /* Imported on 2019-08-23
  * Source: https://github.com/electron-userland/electron-builder/blob/docs/encapsulated%20manual%20update%20via%20menu.js
  */
-import { app, dialog, BrowserWindow } from 'electron';
+import { dialog } from 'electron';
 
 const { autoUpdater } = require('electron-updater');
 
@@ -41,51 +41,29 @@ autoUpdater.on('update-available', () => {
 });
 
 autoUpdater.on('update-not-available', () => {
-  dialog.showMessageBox({
-    title: 'No Updates',
-    message: 'Current version is up-to-date.',
-  });
-  menuItem.enabled = true;
-  menuItem = null;
-});
-
-autoUpdater.on('checking-for-update', () => {
-  dialog.showMessageBox({
-    title: 'Checking Updates',
-    message: 'Checking for update...',
-  });
-});
-
-autoUpdater.on('download-progress', (progress) => {
-  const message = [
-    `Download speed: ${progress.bytesPerSecond}`,
-    '',
-    `Downloaded ${progress.percent}%`,
-    '',
-    `( ${progress.transferred}/${progress.total} )`,
-  ].join('\n');
-
-  dialog.showMessageBox({
-    title: 'Downloading Update: Progress',
-    message: message,
-  });
+  dialog.showMessageBox(
+    {
+      title: 'No Updates',
+      message: 'Current version is up-to-date.',
+      buttons: ['Ok'],
+    },
+    () => {
+      menuItem.enabled = true;
+      menuItem = null;
+    },
+  );
 });
 
 autoUpdater.on('update-downloaded', () => {
   dialog.showMessageBox(
     {
-      title: 'Install Updates',
-      message: 'Updates downloaded, application will be quit for update...',
+      title: 'Updates Installed',
+      message: 'Updates installed',
+      buttons: ['Restart app with new version'],
     },
     () => {
       setImmediate(() => {
-        app.removeAllListeners('window-all-closed');
-        const focusedWindow = BrowserWindow.getFocusedWindow();
-        if (focusedWindow != null) {
-          focusedWindow.close();
-        }
         autoUpdater.quitAndInstall();
-        app.exit();
       });
     },
   );
