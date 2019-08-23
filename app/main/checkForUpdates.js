@@ -10,7 +10,7 @@
 /* Imported on 2019-08-23
  * Source: https://github.com/electron-userland/electron-builder/blob/docs/encapsulated%20manual%20update%20via%20menu.js
  */
-import { app, dialog, BrowserWindow } from 'electron';
+import { app, dialog } from 'electron';
 
 const { autoUpdater } = require('electron-updater');
 
@@ -53,18 +53,12 @@ autoUpdater.on('update-downloaded', () => {
   dialog.showMessageBox(
     {
       title: 'Install Updates',
-      message: 'Updates downloaded, application will be quit for update...',
+      message:
+        'Updates downloaded, application should quit for update and restart automatically. When taking more than 10 seconds, you may quit manually.',
     },
     () => {
       setImmediate(() => {
-        app.removeAllListeners('window-all-closed');
-        const browserWindows = BrowserWindow.getAllWindows();
-        browserWindows.forEach((browserWindow) => {
-          browserWindow.removeAllListeners('close');
-          browserWindow.close();
-        });
-
-        autoUpdater.quitAndInstall(false);
+        autoUpdater.quitAndInstall();
         app.exit();
       });
     },
