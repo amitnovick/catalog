@@ -49,12 +49,27 @@ autoUpdater.on('update-not-available', () => {
   updater = null;
 });
 
+autoUpdater.on('checking-for-update', () => {
+  dialog.showMessageBox({ title: 'Checking Update', message: 'Checking for update...' });
+});
+
+autoUpdater.on('download-progress', (progress) => {
+  const message = [
+    `Download speed: ${progress.bytesPerSecond}`,
+    '',
+    `Downloaded ${progress.percent}%`,
+    '',
+    `( ${progress.transferred}/${progress.total} )`,
+  ].join('\n');
+  dialog.showMessageBox({ title: 'Downloading Update', message: message });
+});
+
 autoUpdater.on('update-downloaded', () => {
   dialog.showMessageBox(
     {
       title: 'Install Updates',
       message:
-        'Updates downloaded, application should quit for update and restart automatically. When taking more than 10 seconds, you may quit manually.',
+        'Updates downloaded successfully. Please close the program and it should restart automatically with the new version.',
     },
     () => {
       setImmediate(() => {
