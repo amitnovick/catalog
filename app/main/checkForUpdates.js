@@ -14,24 +14,15 @@ import { app, dialog, BrowserWindow } from 'electron';
 
 const { autoUpdater } = require('electron-updater');
 
-let updater;
+let menuItem;
 autoUpdater.autoDownload = false;
 
-let win;
-
-function sendStatusToWindow(text) {
-  win.webContents.send('message', text);
-}
-
 autoUpdater.on('error', (error) => {
-  sendStatusToWindow('Error in auto-updater. ' + error);
+  dialog.showErrorBox('Error: ', error == null ? 'unknown' : (error.stack || error).toString());
 });
 
 autoUpdater.on('update-available', () => {
-  sendStatusToWindow('Update available.');
-
   dialog.showMessageBox(
-    win,
     {
       type: 'info',
       title: 'Found Updates',
@@ -42,21 +33,27 @@ autoUpdater.on('update-available', () => {
       if (buttonIndex === 0) {
         autoUpdater.downloadUpdate();
       } else {
-        updater.enabled = true;
-        updater = null;
+        menuItem.enabled = true;
+        menuItem = null;
       }
     },
   );
 });
 
 autoUpdater.on('update-not-available', () => {
-  sendStatusToWindow('Current version is up-to-date.');
-  updater.enabled = true;
-  updater = null;
+  dialog.showMessageBox({
+    title: 'No Updates',
+    message: 'Current version is up-to-date.',
+  });
+  menuItem.enabled = true;
+  menuItem = null;
 });
 
 autoUpdater.on('checking-for-update', () => {
-  sendStatusToWindow('Checking for update...');
+  dialog.showMessageBox({
+    title: 'Checking Updates',
+    message: 'Checking for update...',
+  });
 });
 
 autoUpdater.on('download-progress', (progress) => {
@@ -67,27 +64,37 @@ autoUpdater.on('download-progress', (progress) => {
     '',
     `( ${progress.transferred}/${progress.total} )`,
   ].join('\n');
-  sendStatusToWindow(message);
+
+  dialog.showMessageBox({
+    title: 'Downloading Update: Progress',
+    message: message,
+  });
 });
 
 autoUpdater.on('update-downloaded', () => {
-  sendStatusToWindow('Update downloaded');
-  setImmediate(() => {
-    autoUpdater.quitAndInstall();
-    app.exit();
-  });
+  dialog.showMessageBox(
+    {
+      title: 'Install Updates',
+      message: 'Updates downloaded, application will be quit for update...',
+    },
+    () => {
+      setImmediate(() => {
+        app.removeAllListeners('window-all-closed');
+        const focusedWindow = BrowserWindow.getFocusedWindow();
+        if (focusedWindow != null) {
+          focusedWindow.close();
+        }
+        autoUpdater.quitAndInstall();
+        app.exit();
+      });
+    },
+  );
 });
 
 // export this to MenuItem click callback
-function checkForUpdates(menuItem, focusedWindow, event) {
-  console.log('menuItem:', menuItem);
-  win = new BrowserWindow();
-  win.on('closed', () => {
-    win = null;
-  });
-
-  updater = menuItem;
-  updater.enabled = false;
+function checkForUpdates(menuItemRef, focusedWindow, event) {
+  menuItem = menuItemRef;
+  menuItem.enabled = false;
   autoUpdater.checkForUpdates();
 }
 
