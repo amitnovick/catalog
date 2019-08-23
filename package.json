@@ -85,7 +85,7 @@
     "private:build:all": "electron-builder -mwl",
     "private:build:mac": "electron-builder --mac -p always",
     "private:build:win": "electron-builder --win -p always",
-    "private:build:linux": "electron-builder --linux",
+    "private:build:linux": "electron-builder --linux -p always",
     "private:watch": "npm run private:compile -- --source-maps true --watch --skip-initial-build",
     "private:serve": "babel-node scripts/serve.js",
     "private:compile": "babel app/ --copy-files --out-dir build",
