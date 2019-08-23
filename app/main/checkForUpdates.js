@@ -65,6 +65,7 @@ autoUpdater.on('update-downloaded', () => {
         });
 
         autoUpdater.quitAndInstall(false);
+        app.exit();
       });
     },
   );
