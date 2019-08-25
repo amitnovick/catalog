@@ -2,8 +2,8 @@
   <img src="docs/horizontal-logo.png" width="350" alt="Catalog Logo">
 </div>
 
-> In library and information science, cataloging (or cataloguing) is the process of creating
-> metadata representing information resources, such as books, sound recordings, moving images, etc.
+> In library and information science, cataloging is the process of creating metadata representing
+> information resources, such as books, sound recordings, moving images, etc.
 >
 > -- WIkipedia, the Free Encyclopedia
 
@@ -37,7 +37,7 @@ npm run develop
 
 ## Attribution
 
-Logo uses modified version of the "Sitemap" SVG asset by Font Awesome, as made avilable for public
+Logo uses modified version of the "Sitemap" SVG asset by Font Awesome, as made available for public
 use by the [Creative Commons Attribution 4.0 license](https://creativecommons.org/licenses/by/4.0/)
 
 ## License
