@@ -1,30 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import CategoryActionsModal from './Modal/CategoryActionsModal';
 import { useMachine } from '@xstate/react';
+import { withRouter } from 'react-router-dom';
 import Categories from './Categories';
 import machine from './machine';
 import queryDeleteFileCategory from '../../../db/queries/queryDeleteCategoryOfFsResource';
-import { assign } from 'xstate';
+import routes from '../../../routes';
 
 const removeCategoryOfFile = async (category, file) => {
   return await queryDeleteFileCategory(category.id, file.id);
 };
 
 const machineWithConfig = machine.withConfig({
-  actions: {
-    updateCategoryForActionsModal: assign({
-      chosenCategoryForActionsModal: (_, event) => event.category,
-    }),
-  },
   services: {
     removeCategoryOfFile: (context, event) => removeCategoryOfFile(event.category, context.file),
   },
 });
 
-const CategoriesWidget = ({ categories, file, refetchData }) => {
-  const [current, send] = useMachine(
+const CategoriesWidget = ({ categories, file, refetchData, history }) => {
+  const [, send] = useMachine(
     machineWithConfig.withContext({
       ...machineWithConfig.initialState.context,
       file: file,
@@ -37,23 +32,17 @@ const CategoriesWidget = ({ categories, file, refetchData }) => {
     },
   );
 
-  const openCategoryActionsModal = (category) => {
-    send('OPEN_FILE_CATEGORY_ACTIONS_MODAL', { category });
-  };
-
-  const { chosenCategoryForActionsModal } = current.context;
-
   return (
     <>
-      <CategoryActionsModal
-        category={chosenCategoryForActionsModal}
-        isOpen={current.matches('fileCategoryActionsModal')}
-        onClose={() => send('CLOSE_FILE_CATEGORY_ACTIONS_MODAL')}
+      <Categories
+        categories={categories}
         onClickRemoveCategory={(category) => {
-          send('CLICK_REMOVE_CATEGORY_ACTIONS_MODAL', { category: category });
+          send('CLICKED_REMOVE_CATEGORY', { category });
         }}
+        onClickRightArowCategory={(category) =>
+          history.push(`${routes.TREE_EXPLORER}/${category.id}`)
+        }
       />
-      <Categories categories={categories} onClickCategory={openCategoryActionsModal} />
     </>
   );
 };
@@ -64,4 +53,4 @@ CategoriesWidget.propTypes = {
   refetchData: PropTypes.func.isRequired,
 };
 
-export default CategoriesWidget;
+export default withRouter(CategoriesWidget);

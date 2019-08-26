@@ -4,7 +4,6 @@ import { Machine } from 'xstate';
 const machine = Machine({
   id: 'categories-widget',
   context: {
-    chosenCategoryForActionsModal: null,
     file: null,
     categories: [],
   },
@@ -12,16 +11,7 @@ const machine = Machine({
   states: {
     idle: {
       on: {
-        OPEN_FILE_CATEGORY_ACTIONS_MODAL: {
-          target: 'fileCategoryActionsModal',
-          actions: 'updateCategoryForActionsModal',
-        },
-      },
-    },
-    fileCategoryActionsModal: {
-      on: {
-        CLOSE_FILE_CATEGORY_ACTIONS_MODAL: 'idle',
-        CLICK_REMOVE_CATEGORY_ACTIONS_MODAL: 'removingCategoryOfFile',
+        CLICKED_REMOVE_CATEGORY: 'removingCategoryOfFile',
       },
     },
     removingCategoryOfFile: {

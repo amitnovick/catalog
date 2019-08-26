@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Label, Header } from 'semantic-ui-react';
+import { Label, Header, Icon } from 'semantic-ui-react';
 import CategoryIcon from '../../../components/CategoryIcon';
 
-const Categories = ({ categories, onClickCategory }) => {
+const Categories = ({ categories, onClickRemoveCategory, onClickRightArowCategory }) => {
   return (
     <>
       <Header as="h2">
@@ -12,12 +12,20 @@ const Categories = ({ categories, onClickCategory }) => {
       </Header>
       <Label.Group color="blue" size="big">
         {categories.map((category) => (
-          <Label
-            title="More actions"
-            key={category.id}
-            style={{ cursor: 'pointer' }}
-            onClick={() => onClickCategory(category)}>
+          <Label key={category.id}>
+            <Icon
+              title="Dissociate category"
+              name="remove"
+              style={{ cursor: 'pointer' }}
+              onClick={() => onClickRemoveCategory(category)}
+            />
             {category.name}
+            <Icon
+              title="Navigate to category"
+              style={{ cursor: 'pointer', marginLeft: '0.75em', marginRight: 0 }}
+              name="arrow right"
+              onClick={() => onClickRightArowCategory(category)}
+            />
           </Label>
         ))}
       </Label.Group>
@@ -27,7 +35,8 @@ const Categories = ({ categories, onClickCategory }) => {
 
 Categories.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
-  onClickCategory: PropTypes.func.isRequired,
+  onClickRemoveCategory: PropTypes.func.isRequired,
+  onClickRightArowCategory: PropTypes.func.isRequired,
 };
 
 export default Categories;
