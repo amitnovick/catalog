@@ -1,0 +1,22 @@
+{
+  "name": "catalog-docs",
+  "version": "0.6.23",
+  "description": "Documentation website for the Catalog application",
+  "main": "init.js",
+  "author": {
+    "name": "Amit Novick",
+    "email": "axnovick@gmail.com"
+  },
+  "repository": "https://github.com/amitnovick/catalog",
+  "license": "AGPL-3.0-only",
+  "dependencies": {},
+  "devDependencies": {
+    "cpy-cli": "^2.0.0",
+    "vuepress": "^1.0.3"
+  },
+  "scripts": {
+    "docs:dev": "vuepress dev content",
+    "docs:build": "vuepress build content",
+    "docs:readme": "cpy '../README.md' content"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "catalog-web-extension",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A WebClipper web extension",
   "author": {
     "name": "Amit Novick",
@@ -10,5 +10,11 @@
   "license": "AGPL-3.0-only",
   "dependencies": {
     "webextension-polyfill": "^0.4.0"
+  },
+  "scripts": {
+    "build": "web-ext build"
+  },
+  "devDependencies": {
+    "web-ext": "^3.1.1"
   }
 }
