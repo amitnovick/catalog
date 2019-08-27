@@ -39,7 +39,7 @@ const formatInitialFileName = (fileName) => `${fileName}.png`;
 
 const formatAlternativeFileName = (fileName, suffix) => `${fileName} ${suffix}.png`;
 
-const writeFileWithNonExistingName = async (originalName, imageFileContent) => {
+const writeFileWithAvailableFileName = async (originalName, imageFileContent) => {
   try {
     const initialFileName = formatInitialFileName(originalName);
     await writeBase64EncodedFile(initialFileName, imageFileContent);
@@ -86,7 +86,7 @@ const commsConstants = {
   FILE_NAME: 'fileName',
 };
 
-const formatValidFileName = (fileName) => {
+const formatIntoValidFileName = (fileName) => {
   if (isValidFilename(fileName)) {
     if (fileName.trim() === '') {
       return 'New Webclip';
@@ -111,10 +111,10 @@ const mainRoute = {
       } = request.payload;
 
       const imageDataUriStripped = stripEncodingString(imageDataUri);
-      const safeFileName = formatValidFileName(pageTitle);
+      const validFileName = formatIntoValidFileName(pageTitle);
 
       try {
-        const fileName = await writeFileWithNonExistingName(safeFileName, imageDataUriStripped);
+        const fileName = await writeFileWithAvailableFileName(validFileName, imageDataUriStripped);
         try {
           await queryInsertWebclipResource(fileName, pageUrl, pageTitle);
           console.log('Added web clip:', fileName);
