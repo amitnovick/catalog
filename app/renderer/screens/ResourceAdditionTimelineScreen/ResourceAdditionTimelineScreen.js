@@ -3,9 +3,9 @@ import { useMachine } from '@xstate/react';
 import { Link } from 'react-router-dom';
 import {
   differenceInCalendarDays,
-  differenceInCalendarWeeks,
-  differenceInCalendarYears,
-  differenceInCalendarMonths,
+  differenceInWeeks,
+  differenceInMonths,
+  differenceInYears,
 } from 'date-fns';
 import { css } from 'emotion';
 import { List, Button } from 'semantic-ui-react';
@@ -47,15 +47,15 @@ const hoveredButtonClass = css`
 const formatDate = (isoDateString) => {
   const inputDateInLocalTime = new Date(`${isoDateString} UTC`);
   const currentDate = new Date();
-  const yearsDifference = differenceInCalendarYears(currentDate, inputDateInLocalTime);
+  const yearsDifference = differenceInYears(currentDate, inputDateInLocalTime);
   if (yearsDifference >= 1) {
     return `${yearsDifference} years ago`;
   } else {
-    const monthsDifference = differenceInCalendarMonths(currentDate, inputDateInLocalTime);
+    const monthsDifference = differenceInMonths(currentDate, inputDateInLocalTime);
     if (monthsDifference > 3) {
       return `${monthsDifference} months ago`;
     } else {
-      const weeksDifference = differenceInCalendarWeeks(currentDate, inputDateInLocalTime);
+      const weeksDifference = differenceInWeeks(currentDate, inputDateInLocalTime);
       if (weeksDifference >= 1) {
         return `${weeksDifference} weeks ago`;
       } else {
@@ -65,7 +65,11 @@ const formatDate = (isoDateString) => {
         } else if (daysDifference === 1) {
           return 'Yesterday';
         } else {
-          return `${daysDifference} days ago`;
+          if (daysDifference === 7) {
+            return `${6} days ago`; // Note: if it were 7 full days then we would've handled that case already, but since we reached here, then it must be less than full 7 days but at least 6 calendar days
+          } else {
+            return `${daysDifference} days ago`;
+          }
         }
       }
     }
