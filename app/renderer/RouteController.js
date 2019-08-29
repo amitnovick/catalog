@@ -11,6 +11,7 @@ import NavigationBoxWidget from './NavigationBoxWidget/NavigationBoxWidget';
 import LoadConfigFileScreenContainer from './screens/StartupScreens/LoadConfigFileScreen/LoadConfigFileScreen';
 import ResourceAdditionTimelineScreen from './screens/ResourceAdditionTimelineScreen/ResourceAdditionTimelineScreen';
 import BodyLayout from './components/BodyLayout';
+import FileScreenBodyLayout from './screens/FileScreen/FileScreenBodyLayout';
 
 const Layout = ({ BodyComponent, HeaderComponent }) => {
   return (
@@ -29,6 +30,27 @@ const Layout = ({ BodyComponent, HeaderComponent }) => {
       />
       {HeaderComponent}
       <BodyLayout>{BodyComponent}</BodyLayout>
+    </div>
+  );
+};
+
+const CustomLayout = ({ BodyLayout, HeaderComponent }) => {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        height: '100vh',
+      }}>
+      <ToastContainer
+        enableMultiContainer
+        hideProgressBar={true}
+        newestOnTop={true}
+        draggable={false}
+      />
+      {HeaderComponent}
+      {BodyLayout}
     </div>
   );
 };
@@ -85,9 +107,13 @@ const RouteController = () => {
           exact
           path={`${routes.FILE}/:id`}
           render={({ match }) => (
-            <Layout
+            <CustomLayout
               key={match.params.id}
-              BodyComponent={<FileScreen fsResourceId={Number(match.params.id)} />}
+              BodyLayout={
+                <FileScreenBodyLayout>
+                  <FileScreen fsResourceId={Number(match.params.id)} />
+                </FileScreenBodyLayout>
+              }
               HeaderComponent={<NavigationBoxWidget />}
             />
           )}
