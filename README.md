@@ -29,6 +29,12 @@ In addition to the desktop application, a companion Web Clipper browser extensio
 [Chrome](https://chrome.google.com/webstore/detail/catalog-web-clipper/oocdimepfbgcmbokkmfcpjmglbcclnlj),
 which offers the ability to capture screenshots from websites for later reference.
 
+## Getting Started
+
+New users are encouraged to visit the
+[Getting Started guide](https://catalog-app.netlify.com/getting-started.html) in order to learn how
+to create their Catalog instance and how Catalog saves all of its files.
+
 ## Development
 
 ```bash
