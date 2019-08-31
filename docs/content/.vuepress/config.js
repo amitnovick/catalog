@@ -1,9 +1,13 @@
 module.exports = {
   title: 'Catalog',
-  logo: '/horizontal-logo.png',
   description: 'Just playing around',
   themeConfig: {
+    logo: '/horizontal-logo.png',
     search: false,
+    lastUpdated: 'Last Updated',
+    editLinks: true,
+    repo: 'amitnovick/catalog',
+    docsDir: 'docs/content',
     nav: [{ text: 'GitHub', link: 'https://github.com/amitnovick/catalog' }],
     sidebar: [
       {
