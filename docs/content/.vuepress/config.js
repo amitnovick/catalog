@@ -8,7 +8,7 @@ module.exports = {
     editLinks: true,
     repo: 'amitnovick/catalog',
     docsDir: 'docs/content',
-    nav: [{ text: 'GitHub', link: 'https://github.com/amitnovick/catalog' }],
+    nav: [],
     sidebar: [
       {
         title: 'Guides',

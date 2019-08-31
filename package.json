@@ -54,6 +54,7 @@
     "babel-plugin-macros": "^2.6.1",
     "browser-sync": "^2.23.6",
     "chai": "^4.1.0",
+    "cpy-cli": "^2.0.0",
     "electron": "3.0.16",
     "electron-builder": "^21.2.0",
     "electron-devtools-installer": "^2.2.4",
@@ -69,7 +70,8 @@
     "npm-run-all": "^4.0.1",
     "prettier": "^1.13.7",
     "redux-mock-store": "^1.2.2",
-    "rimraf": "^2.7.1"
+    "rimraf": "^2.7.1",
+    "vuepress": "^1.0.3"
   },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
@@ -90,6 +92,9 @@
     "private:serve": "babel-node scripts/serve.js",
     "private:compile": "babel app/ --copy-files --out-dir build",
     "private:clean": "rimraf build",
-    "private:format": "prettier \"babel.config.js\" \"scripts/*.js\" \"app/**/*.js\" \"test/**/*.js\""
+    "private:format": "prettier \"babel.config.js\" \"scripts/*.js\" \"app/**/*.js\" \"test/**/*.js\"",
+    "docs:dev": "vuepress dev docs/content",
+    "docs:build": "vuepress build docs/content",
+    "docs:readme": "cpy './README.md' docs/content"
   }
 }
