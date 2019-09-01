@@ -1,6 +1,6 @@
 {
   "name": "catalog",
-  "version": "0.6.26",
+  "version": "0.6.27",
   "description": "A File Manager application",
   "main": "init.js",
   "author": {
