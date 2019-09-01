@@ -13,7 +13,7 @@ const RenameModalContent = ({
   return (
     <Modal.Content image>
       <div className="image">
-        <CategoryIcon size="10x" />
+        <CategoryIcon style={{ width: 150, height: 150 }} />
       </div>
       <Modal.Description>
         <p>Enter the new name:</p>

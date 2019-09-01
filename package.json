@@ -50,6 +50,7 @@
     "@babel/plugin-proposal-decorators": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
+    "@svgr/cli": "^4.3.2",
     "babel-eslint": "^9.0.0",
     "babel-plugin-macros": "^2.6.1",
     "browser-sync": "^2.23.6",
@@ -90,6 +91,7 @@
     "private:serve": "babel-node scripts/serve.js",
     "private:compile": "babel app/ --copy-files --out-dir build",
     "private:clean": "rimraf build",
-    "private:format": "prettier \"babel.config.js\" \"scripts/*.js\" \"app/**/*.js\" \"test/**/*.js\""
+    "private:format": "prettier \"babel.config.js\" \"scripts/*.js\" \"app/**/*.js\" \"test/**/*.js\"",
+    "svgr": "svgr -d app/renderer/components/icons/ assets/"
   }
 }

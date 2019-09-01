@@ -13,7 +13,7 @@ const AdditionModalContent = ({
   return (
     <Modal.Content image>
       <div className="image">
-        <CategoryIcon size="10x" />
+        <CategoryIcon style={{ width: 150, height: 150 }} />
       </div>
       <Modal.Description>
         <Header as="h3">Enter a name for the new category:</Header>

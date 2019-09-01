@@ -7,7 +7,7 @@ const MoveToModalContent = ({ ModalContent }) => {
   return (
     <Modal.Content image>
       <div className="image">
-        <CategoryIcon size="10x" />
+        <CategoryIcon style={{ width: 150, height: 150 }} />
       </div>
       <Modal.Description>
         <Header>Choose the category to move to:</Header>

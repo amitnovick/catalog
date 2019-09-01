@@ -2,14 +2,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Label, Header, Icon } from 'semantic-ui-react';
 import CategoryIcon from '../../../components/CategoryIcon';
+import { css } from 'emotion';
+
+const FONT_SIZE = '1.71428571rem';
+
+const headerDivClass = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+`;
 
 const Categories = ({ categories, onClickRemoveCategory, onClickRightArowCategory }) => {
   return (
     <>
-      <Header as="h2">
-        <CategoryIcon style={{ marginRight: '0.5em' }} />
-        <Header.Content>Associated Categories</Header.Content>
-      </Header>
+      <div className={headerDivClass}>
+        <CategoryIcon style={{ marginRight: '0.5em', height: 32, width: 32 }} />
+        <Header a="h2" style={{ display: 'inline-block', fontSize: FONT_SIZE, marginTop: 0 }}>
+          Associated Categories
+        </Header>
+      </div>
       <Label.Group color="blue" size="big">
         {categories.map((category) => (
           <Label key={category.id}>

@@ -10,7 +10,7 @@ const CategorizedFiles = ({ categorizedFiles }) => {
   return (
     <SemanticModal.Content image>
       <div className="image">
-        <CategoryIcon size="10x" />
+        <CategoryIcon style={{ width: 150, height: 150 }} />
       </div>
       <SemanticModal.Description>
         <Header>Categorized Files:</Header>
