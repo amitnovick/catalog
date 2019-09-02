@@ -38,6 +38,7 @@ const fetchData = async (currentCategoryId) => {
 
 const selectCategoryRowByName = (newCategoryName, categories) => {
   const categoriesWithSameName = categories.filter((category) => category.name === newCategoryName);
+
   if (categoriesWithSameName.length > 0) {
     const newCategory = categoriesWithSameName[0];
     return newCategory;
@@ -56,6 +57,12 @@ const selectCategoryRowById = (category, fetchedCategories) => {
   } else {
     return null;
   }
+};
+
+const checkIsSelectedRowToBeDeleted = (modalCategory, selectedCategory) => {
+  return (
+    modalCategory !== null && selectedCategory !== null && modalCategory.id === selectedCategory.id
+  );
 };
 
 const machineWithServices = machine.withConfig({
@@ -88,10 +95,7 @@ const machineWithServices = machine.withConfig({
     }),
     assignSelectedCategoryRowByName: assign({
       selectedCategoryRow: (context, event) =>
-        selectCategoryRowByName(
-          context.categoryRenamingModalChosenNewCategoryName,
-          event.data.childCategories,
-        ),
+        selectCategoryRowByName(context.newCategoryName, event.data.childCategories),
     }),
     assignSelectedCategoryRowById: assign({
       selectedCategoryRow: (context, event) =>
@@ -103,6 +107,13 @@ const machineWithServices = machine.withConfig({
     updateErrorMessage: assign({
       errorMessage: (_, event) => event.data.message,
     }),
+  },
+  guards: {
+    checkIsSelectedRowToBeDeleted: (context, _) =>
+      checkIsSelectedRowToBeDeleted(
+        context.categoryDeletionModalCategory,
+        context.selectedCategoryRow,
+      ),
   },
 });
 
@@ -125,31 +136,33 @@ const ExplorerScreen = ({ initialCategoryId }) => {
     categoriesInPath !== undefined ? categoriesInPath[categoriesInPath.length - 1] : null;
 
   if (
-    current.matches('idle.fetchingData') ||
-    current.matches('idle.idle') ||
-    current.matches('categoryRenamingModal') ||
-    current.matches('categoryDeletionModal') ||
-    current.matches('categoryAdditionModal') ||
-    current.matches('categoryMoveToModal')
+    current.matches('processes.fetchingData') ||
+    current.matches('processes.idle') ||
+    current.matches('processes.categoryRenamingModal') ||
+    current.matches('processes.categoryDeletionModal') ||
+    current.matches('processes.categoryAdditionModal') ||
+    current.matches('processes.categoryMoveToModal')
   ) {
     return (
       <ReactContext.Provider value={service}>
-        {current.matches('idle.idle') ? <Explorer categoriesInPath={categoriesInPath} /> : null}
-        {current.matches('categoryRenamingModal') ? (
+        {current.matches('processes.idle') ? (
+          <Explorer categoriesInPath={categoriesInPath} />
+        ) : null}
+        {current.matches('processes.categoryRenamingModal') ? (
           <CategoryRenameModalWidget
             category={categoryRenamingModalCategory}
             onClose={() => send('CATEGORY_RENAMING_MODAL_CANCEL')}
             refetchCategoryData={() => send('CATEGORY_RENAMING_MODAL_SUBMIT')}
           />
         ) : null}
-        {current.matches('categoryDeletionModal') ? (
+        {current.matches('processes.categoryDeletionModal') ? (
           <CategoryDeleteModalWidget
             category={categoryDeletionModalCategory}
             onClose={() => send('CATEGORY_DELETION_MODAL_CANCEL')}
             onConfirmDelete={() => send('CATEGORY_DELETION_MODAL_SUBMIT')}
           />
         ) : null}
-        {current.matches('categoryAdditionModal') ? (
+        {current.matches('processes.categoryAdditionModal') ? (
           <CategoryAdditionModalWidget
             parentCategoryId={currentCategory.id}
             onClose={() => send('CATEGORY_ADDITION_MODAL_CANCEL')}
@@ -158,7 +171,7 @@ const ExplorerScreen = ({ initialCategoryId }) => {
             }
           />
         ) : null}
-        {current.matches('categoryMoveToModal') ? (
+        {current.matches('processes.categoryMoveToModal') ? (
           <CategoryMoveToModalWidget
             childCategory={categoryMoveToModalCategory}
             onClose={() => send('CATEGORY_MOVE_TO_MODAL_CANCEL')}
@@ -167,7 +180,7 @@ const ExplorerScreen = ({ initialCategoryId }) => {
         ) : null}
       </ReactContext.Provider>
     );
-  } else if (current.matches('idle.failure')) {
+  } else if (current.matches('processes.failure')) {
     return <Message error>{errorMessage}</Message>;
   } else {
     return <h2>Unknown state</h2>;

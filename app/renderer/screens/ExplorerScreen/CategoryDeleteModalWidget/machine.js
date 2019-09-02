@@ -8,6 +8,7 @@ const machine = Machine({
     subcategories: [],
     categorizedFiles: [],
     category: null,
+    errorMessage: null,
   },
   states: {
     loading: {
@@ -26,7 +27,10 @@ const machine = Machine({
                 target: '#delete-category-modal.idle.subcategories',
               },
             ],
-            onError: '#delete-category-modal.failure',
+            onError: {
+              target: '#delete-category-modal.failure',
+              actions: 'updateErrorMessage',
+            },
           },
         },
         fetchingCategorizedFiles: {
@@ -42,7 +46,10 @@ const machine = Machine({
                 actions: 'updateCategorizedFiles',
               },
             ],
-            onError: '#delete-category-modal.failure',
+            onError: {
+              target: '#delete-category-modal.failure',
+              actions: 'updateErrorMessage',
+            },
           },
         },
       },
@@ -65,7 +72,10 @@ const machine = Machine({
                 onDone: {
                   actions: 'closeModal',
                 },
-                onError: '#delete-category-modal.failure',
+                onError: {
+                  target: '#delete-category-modal.failure',
+                  actions: 'updateErrorMessage',
+                },
               },
             },
           },

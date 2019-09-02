@@ -9,6 +9,8 @@ const CategoriesAccordionContainer = () => {
 
   const { childCategories, selectedCategoryRow } = current.context;
 
+  const hasSelectedRow = current.matches('categoryRowSelection.selectedRow');
+
   return (
     <CategoriesAccordion
       categories={childCategories}
@@ -26,6 +28,7 @@ const CategoriesAccordionContainer = () => {
       onClickDeleteButton={() =>
         send('CLICK_CATEGORY_DELETE_BUTTON', { category: selectedCategoryRow })
       }
+      hasSelectedRow={hasSelectedRow}
     />
   );
 };

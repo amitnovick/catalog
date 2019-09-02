@@ -1,5 +1,5 @@
 //@ts-check
-import { Machine } from 'xstate';
+import { Machine, send } from 'xstate';
 
 const machine = Machine({
   id: 'explorer-screen',
@@ -15,22 +15,48 @@ const machine = Machine({
     selectedCategoryRow: null,
     selectedFsResourceRow: null,
     errorMessage: null,
+    newCategoryName: null,
   },
-  initial: 'idle',
+  type: 'parallel',
   states: {
-    idle: {
-      id: 'explorer-screen-idle',
+    processes: {
+      id: 'processes',
       initial: 'fetchingData',
       states: {
+        idle: {
+          on: {
+            CLICK_ADD_CATEGORY_BUTTON: {
+              target: 'categoryAdditionModal',
+            },
+            CLICK_CATEGORY_RENAME_BUTTON: {
+              target: 'categoryRenamingModal',
+              in: '#explorer-screen.categoryRowSelection.selectedRow',
+              actions: 'updateCategoryRenamingModalCategory',
+            },
+            CLICK_CATEGORY_MOVE_TO__BUTTON: {
+              target: 'categoryMoveToModal',
+              in: '#explorer-screen.categoryRowSelection.selectedRow',
+              actions: 'updateCategoryMoveToModalCategory',
+            },
+            CLICK_CATEGORY_DELETE_BUTTON: {
+              target: 'categoryDeletionModal',
+              in: '#explorer-screen.categoryRowSelection.selectedRow',
+              actions: 'updateCategoryDeletionModalCategory',
+            },
+            SELECTED_FS_RESOURCE_ROW: {
+              actions: 'updateSelectedFsResourceRow',
+            },
+          },
+        },
         fetchingData: {
           invoke: {
             src: 'fetchData',
             onDone: {
-              target: '#explorer-screen-idle.idle',
+              target: 'idle',
               actions: 'updateState',
             },
             onError: {
-              target: '#explorer-screen-idle.failure',
+              target: 'failure',
               actions: 'updateErrorMessage',
             },
           },
@@ -39,11 +65,17 @@ const machine = Machine({
           invoke: {
             src: 'fetchData',
             onDone: {
-              target: '#explorer-screen-idle.idle',
-              actions: ['updateState', 'assignSelectedCategoryRowByName'],
+              target: 'idle',
+              actions: [
+                'updateState',
+                send((_, event) => ({
+                  type: 'SELECTED_NEWLY_CREATED_CATEGORY_ROW',
+                  data: event.data,
+                })),
+              ],
             },
             onError: {
-              target: '#explorer-screen-idle.failure',
+              target: 'failure',
               actions: 'updateErrorMessage',
             },
           },
@@ -52,73 +84,75 @@ const machine = Machine({
           invoke: {
             src: 'fetchData',
             onDone: {
-              target: '#explorer-screen-idle.idle',
+              target: '#processes.idle',
               actions: ['updateState', 'assignSelectedCategoryRowById'],
             },
             onError: {
-              target: '#explorer-screen-idle.failure',
+              target: '#processes.failure',
               actions: 'updateErrorMessage',
             },
           },
         },
-        idle: {
+        failure: {},
+        categoryRenamingModal: {
           on: {
-            CLICK_CATEGORY_RENAME_BUTTON: {
-              target: '#explorer-screen.categoryRenamingModal',
-              actions: 'updateCategoryRenamingModalCategory',
-            },
-            CLICK_CATEGORY_DELETE_BUTTON: {
-              target: '#explorer-screen.categoryDeletionModal',
-              actions: 'updateCategoryDeletionModalCategory',
-            },
-            CLICK_ADD_CATEGORY_BUTTON: {
-              target: '#explorer-screen.categoryAdditionModal',
-            },
-            CLICK_CATEGORY_MOVE_TO__BUTTON: {
-              target: '#explorer-screen.categoryMoveToModal',
-              actions: 'updateCategoryMoveToModalCategory',
-            },
-            SELECTED_CATEGORY_ROW: {
-              actions: 'updateSelectedCategoryRow',
-            },
-            SELECTED_FS_RESOURCE_ROW: {
-              actions: 'updateSelectedFsResourceRow',
+            CATEGORY_RENAMING_MODAL_CANCEL: 'idle',
+            CATEGORY_RENAMING_MODAL_SUBMIT:
+              'fetchingRenamedCategoryDataAndAssigningSelectedCategoryRow',
+          },
+        },
+        categoryDeletionModal: {
+          on: {
+            CATEGORY_DELETION_MODAL_CANCEL: 'idle',
+            CATEGORY_DELETION_MODAL_SUBMIT: 'fetchingData',
+          },
+        },
+        categoryAdditionModal: {
+          on: {
+            CATEGORY_ADDITION_MODAL_CANCEL: 'idle',
+            CATEGORY_ADDITION_MODAL_SUBMIT: {
+              target: 'fetchingNewCategoryDataAndAssigningSelectedCategoryRow',
+              actions: 'updateNewCategoryName',
             },
           },
         },
-        failure: {},
-      },
-    },
-    categoryRenamingModal: {
-      on: {
-        CATEGORY_RENAMING_MODAL_CANCEL: 'idle.idle',
-        CATEGORY_RENAMING_MODAL_SUBMIT:
-          'idle.fetchingRenamedCategoryDataAndAssigningSelectedCategoryRow',
-      },
-    },
-    categoryDeletionModal: {
-      on: {
-        CATEGORY_DELETION_MODAL_CANCEL: 'idle.idle',
-        CATEGORY_DELETION_MODAL_SUBMIT: {
-          target: 'idle.fetchingData',
-          actions: 'clearSelectedCategoryRow',
+        categoryMoveToModal: {
+          on: {
+            CATEGORY_MOVE_TO_MODAL_CANCEL: 'idle',
+            CATEGORY_MOVE_TO_MODAL_SUBMIT: 'fetchingData',
+          },
         },
       },
     },
-    categoryAdditionModal: {
-      on: {
-        CATEGORY_ADDITION_MODAL_CANCEL: 'idle.idle',
-        CATEGORY_ADDITION_MODAL_SUBMIT: {
-          target: 'idle.fetchingNewCategoryDataAndAssigningSelectedCategoryRow',
-          actions: 'updateNewCategoryName',
-        },
+    categoryRowSelection: {
+      id: 'category-row-selection',
+      initial: 'noSelectedRow',
+      states: {
+        noSelectedRow: {},
+        selectedRow: {},
       },
-    },
-    categoryMoveToModal: {
       on: {
-        CATEGORY_MOVE_TO_MODAL_CANCEL: 'idle.idle',
+        SELECTED_CATEGORY_ROW: {
+          target: '#category-row-selection.selectedRow',
+          in: 'processes.idle',
+          actions: 'updateSelectedCategoryRow',
+        },
+        SELECTED_NEWLY_CREATED_CATEGORY_ROW: {
+          target: 'categoryRowSelection.selectedRow',
+          actions: 'assignSelectedCategoryRowByName',
+        },
+        CATEGORY_DELETION_MODAL_SUBMIT: [
+          {
+            target: 'categoryRowSelection.noSelectedRow',
+            cond: 'checkIsSelectedRowToBeDeleted',
+            actions: 'clearSelectedCategoryRow',
+          },
+          {
+            actions: 'clearSelectedCategoryRow',
+          },
+        ],
         CATEGORY_MOVE_TO_MODAL_SUBMIT: {
-          target: 'idle.fetchingData',
+          target: 'categoryRowSelection.noSelectedRow',
           actions: 'clearSelectedCategoryRow',
         },
       },

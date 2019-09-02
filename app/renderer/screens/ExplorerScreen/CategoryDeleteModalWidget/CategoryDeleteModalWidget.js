@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Header, Modal as SemanticModal, Button } from 'semantic-ui-react';
+import { Header, Modal as SemanticModal, Button, Message } from 'semantic-ui-react';
 import { useMachine } from '@xstate/react';
 
 import machine from './machine';
@@ -44,6 +44,7 @@ const machineWithConfig = machine.withConfig({
   actions: {
     updateSubcategories: assign({ subcategories: (_, event) => event.data }),
     updateCategorizedFiles: assign({ categorizedFiles: (_, event) => event.data }),
+    updateErrorMessage: assign({ errorMessage: (_, event) => event.data.message }),
   },
   guards: {
     isSubcategoriesEmpty: (_, event) => isSubcategoriesEmpty(event.data),
@@ -60,10 +61,12 @@ const CategoryDeleteModalWidget = ({ onClose, onConfirmDelete, category }) => {
         },
       })
       .withContext({
+        ...machineWithConfig.initialState.context,
         category: category,
       }),
-    { devTools: true },
   );
+
+  const { errorMessage } = current.context;
 
   if (current.matches('idle')) {
     if (current.matches('idle.subcategories')) {
@@ -144,7 +147,7 @@ const CategoryDeleteModalWidget = ({ onClose, onConfirmDelete, category }) => {
   } else if (current.matches('loading')) {
     return <LoadingModal category={category} onClose={onClose} />;
   } else if (current.matches('failure')) {
-    return <h2 style={{ color: 'red' }}>Error: failed somehow</h2>;
+    return <Message error>{errorMessage}</Message>;
   } else {
     return <h2>Unknown state</h2>;
   }
