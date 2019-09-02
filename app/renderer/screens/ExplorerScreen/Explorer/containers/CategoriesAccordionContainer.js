@@ -7,12 +7,13 @@ const CategoriesAccordionContainer = () => {
   const service = React.useContext(ReactContext);
   const [current, send] = useService(service);
 
-  const { childCategories, selectedCategoryRow } = current.context;
+  const { childCategories, selectedCategoryRow, categoriesListRef } = current.context;
 
   const hasSelectedRow = current.matches('categoryRowSelection.selectedRow');
 
   return (
     <CategoriesAccordion
+      listRef={categoriesListRef}
       categories={childCategories}
       selectedCategoryRow={selectedCategoryRow}
       onClickAddCategoryButton={() => send('CLICK_ADD_CATEGORY_BUTTON')}

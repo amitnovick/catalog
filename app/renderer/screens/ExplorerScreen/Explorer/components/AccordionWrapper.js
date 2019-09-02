@@ -29,12 +29,11 @@ const AccordionWrapper = ({ title, Content, shouldDefaultToActive, Controls, ...
         active={true}
         style={{
           height: '100%',
-          overflowY: 'scroll',
           border: '1px solid grey',
           paddingTop: 0,
           paddingBottom: 0,
         }}>
-        <Content />
+        {Content}
       </Accordion.Content>
     </Accordion>
   );

@@ -12,26 +12,28 @@ const FsResourcesAccordion = ({ fsResources, selectedFileRow, onClickRow }) => {
       title="Files"
       shouldDefaultToActive={fsResources.length === 0}
       style={{ height: '100%' }}
-      Content={() => (
-        <List size="big" style={{ padding: fsResources.length === 0 ? '0.5em' : 0 }}>
+      Content={
+        <>
           {fsResources.length > 0 ? (
-            fsResources.map((fsResource) => (
-              <FsResourcesListItemWithNavigation
-                key={fsResource.id}
-                fsResource={fsResource}
-                isSelected={selectedFileRow !== null && selectedFileRow.id === fsResource.id}
-                onClickRow={onClickRow}
-              />
-            ))
+            <List size="big" style={{ padding: 0 }}>
+              {fsResources.map((fsResource) => (
+                <FsResourcesListItemWithNavigation
+                  key={fsResource.id}
+                  fsResource={fsResource}
+                  isSelected={selectedFileRow !== null && selectedFileRow.id === fsResource.id}
+                  onClickRow={onClickRow}
+                />
+              ))}
+            </List>
           ) : (
-            <List.Item>
+            <div style={{ padding: '0.5em' }}>
               <Message info>
                 <Message.Header>No Files</Message.Header>
               </Message>
-            </List.Item>
+            </div>
           )}
-        </List>
-      )}
+        </>
+      }
     />
   );
 };

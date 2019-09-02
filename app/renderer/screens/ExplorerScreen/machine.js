@@ -16,6 +16,7 @@ const machine = Machine({
     selectedFsResourceRow: null,
     errorMessage: null,
     newCategoryName: null,
+    categoriesListRef: null,
   },
   type: 'parallel',
   states: {
@@ -93,7 +94,6 @@ const machine = Machine({
             },
           },
         },
-        failure: {},
         categoryRenamingModal: {
           on: {
             CATEGORY_RENAMING_MODAL_CANCEL: 'idle',
@@ -122,6 +122,7 @@ const machine = Machine({
             CATEGORY_MOVE_TO_MODAL_SUBMIT: 'fetchingData',
           },
         },
+        failure: {},
       },
     },
     categoryRowSelection: {
@@ -139,7 +140,7 @@ const machine = Machine({
         },
         SELECTED_NEWLY_CREATED_CATEGORY_ROW: {
           target: 'categoryRowSelection.selectedRow',
-          actions: 'assignSelectedCategoryRowByName',
+          actions: ['assignSelectedCategoryRowByName', 'scrollToCategoryRow'],
         },
         CATEGORY_DELETION_MODAL_SUBMIT: [
           {

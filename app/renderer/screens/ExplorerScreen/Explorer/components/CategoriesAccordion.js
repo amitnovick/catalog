@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Message, List } from 'semantic-ui-react';
 import { faEdit, faPlus, faArrowCircleRight, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import AccordionWrapper from './AccordionWrapper';
-import CategoryListItem from './CategoryListItem';
+import WindowedCategoryList from './WindowedCategoryList';
 
 const CategoryActionIcon = ({ icon, onClick, isDisabled, title }) => {
   return (
@@ -34,6 +33,7 @@ const CategoriesAccordion = ({
   onClickRow,
   selectedCategoryRow,
   hasSelectedRow,
+  listRef,
 }) => {
   const isRenameButtonDisabled = hasSelectedRow === false;
   const isMoveToButtonDisabled = hasSelectedRow === false;
@@ -44,30 +44,15 @@ const CategoriesAccordion = ({
       title="Categories"
       shouldDefaultToActive={true}
       style={{ height: '100%' }}
-      Content={() => (
-        <List size="big" style={{ padding: categories.length === 0 ? '0.5em' : 0 }}>
-          {categories.length > 0 ? (
-            categories.map((childCategory) => (
-              <CategoryListItem
-                category={childCategory}
-                isSelected={
-                  hasSelectedRow &&
-                  selectedCategoryRow !== null &&
-                  selectedCategoryRow.id === childCategory.id
-                }
-                key={childCategory.id}
-                onClickRow={onClickRow}
-              />
-            ))
-          ) : (
-            <List.Item>
-              <Message info>
-                <Message.Header>No Categories</Message.Header>
-              </Message>
-            </List.Item>
-          )}
-        </List>
-      )}
+      Content={
+        <WindowedCategoryList
+          listRef={listRef}
+          categories={categories}
+          hasSelectedRow={hasSelectedRow}
+          selectedCategoryRow={selectedCategoryRow}
+          onClickRow={onClickRow}
+        />
+      }
       Controls={() => (
         <div>
           <CategoryActionIcon
@@ -109,6 +94,7 @@ CategoriesAccordion.propTypes = {
   onClickMoveToButton: PropTypes.func.isRequired,
   onClickDeleteButton: PropTypes.func.isRequired,
   hasSelectedRow: PropTypes.bool.isRequired,
+  listRef: PropTypes.any.isRequired,
 };
 
 export default CategoriesAccordion;

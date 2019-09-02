@@ -118,11 +118,25 @@ const machineWithServices = machine.withConfig({
 });
 
 const ExplorerScreen = ({ initialCategoryId }) => {
+  const categoriesListRef = React.useRef();
+
   const [current, send, service] = useMachine(
     machineWithServices.withContext({
       ...machineWithServices.initialState.context,
       initialCategoryId: initialCategoryId,
+      categoriesListRef: categoriesListRef,
     }),
+    {
+      actions: {
+        scrollToCategoryRow: (context, _) =>
+          categoriesListRef.current.scrollToItem(
+            context.childCategories.findIndex(
+              (category) => category.id === context.selectedCategoryRow.id,
+            ),
+          ),
+      },
+      devTools: true,
+    },
   );
   const {
     categoryRenamingModalCategory,
@@ -136,8 +150,10 @@ const ExplorerScreen = ({ initialCategoryId }) => {
     categoriesInPath !== undefined ? categoriesInPath[categoriesInPath.length - 1] : null;
 
   if (
-    current.matches('processes.fetchingData') ||
     current.matches('processes.idle') ||
+    current.matches('processes.fetchingData') ||
+    current.matches('processes.fetchingNewCategoryDataAndAssigningSelectedCategoryRow') ||
+    current.matches('processes.fetchingRenamedCategoryDataAndAssigningSelectedCategoryRow') ||
     current.matches('processes.categoryRenamingModal') ||
     current.matches('processes.categoryDeletionModal') ||
     current.matches('processes.categoryAdditionModal') ||
