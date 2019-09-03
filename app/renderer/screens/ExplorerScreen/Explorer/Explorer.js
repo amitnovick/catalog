@@ -14,10 +14,16 @@ const divClass = css`
   margin-top: 0px !important;
 `;
 
+const pathCategoriesContainerClass = css`
+  padding-bottom: 0.8em;
+  margin-bottom: 0.5em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+`;
+
 const Explorer = ({ categoriesInPath }) => {
   return (
     <>
-      <div style={{ marginBottom: '1em' }}>
+      <div className={pathCategoriesContainerClass}>
         <PathCategoriesMenu categoriesInPath={categoriesInPath} />
       </div>
       <div className={divClass}>

@@ -13,6 +13,7 @@ const accordionClass = css`
 const barAboveListClass = css`
   display: inline-flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
   height: ${BAR_ABOVE_LIST_HEIGHT}px;
 `;
