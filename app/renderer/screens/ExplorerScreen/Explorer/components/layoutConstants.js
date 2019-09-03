@@ -1,1 +1,2 @@
 export const CATEGORY_LIST_ITEM_HEIGHT = 50;
+export const BAR_ABOVE_LIST_HEIGHT = 48.25;

@@ -1,5 +1,4 @@
 import React from 'react';
-import { List } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import PathCategoriesMenu from './components/PathCategoriesMenu';
@@ -7,7 +6,7 @@ import CategoriesAccordionContainer from './containers/CategoriesAccordionContai
 import FsResourcesAccordionContainer from './containers/FsResourcesAccordionContainer';
 import { css } from 'emotion';
 
-const listClass = css`
+const divClass = css`
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -21,14 +20,14 @@ const Explorer = ({ categoriesInPath }) => {
       <div style={{ marginBottom: '1em' }}>
         <PathCategoriesMenu categoriesInPath={categoriesInPath} />
       </div>
-      <List celled className={listClass}>
-        <List.Item style={{ height: '50%' }}>
+      <div className={divClass}>
+        <div style={{ height: '50%' }}>
           <CategoriesAccordionContainer />
-        </List.Item>
-        <List.Item style={{ height: '50%' }}>
+        </div>
+        <div style={{ height: '50%' }}>
           <FsResourcesAccordionContainer />
-        </List.Item>
-      </List>
+        </div>
+      </div>
     </>
   );
 };

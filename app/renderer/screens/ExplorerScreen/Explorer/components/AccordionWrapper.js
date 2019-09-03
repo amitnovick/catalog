@@ -1,6 +1,7 @@
 import React from 'react';
-import { Accordion, Header } from 'semantic-ui-react';
+import { Header } from 'semantic-ui-react';
 import { css } from 'emotion';
+import { BAR_ABOVE_LIST_HEIGHT } from './layoutConstants';
 
 const accordionClass = css`
   height: 100%;
@@ -9,39 +10,33 @@ const accordionClass = css`
   justify-content: space-between;
 `;
 
-const AccordionWrapper = ({
-  title,
-  Content,
-  shouldDefaultToActive,
-  Controls,
-  contentStyle = {},
-}) => {
+const barAboveListClass = css`
+  display: inline-flex;
+  justify-content: space-between;
+  width: 100%;
+  height: ${BAR_ABOVE_LIST_HEIGHT}px;
+`;
+
+const listContainerClass = css`
+  height: 100%;
+  border: 1px solid grey;
+  padding-top: 0px;
+  padding-bottom: 0px;
+`;
+
+const AccordionWrapper = ({ title, Content, Controls, contentStyle = {} }) => {
   return (
-    <Accordion
-      className={accordionClass}
-      // defaultActiveIndex={shouldDefaultToActive === true ? 0 : undefined}
-    >
-      <Accordion.Title active={true} index={0}>
-        {/* <Icon name="dropdown" /> */}
-        <div style={{ display: 'inline-flex', justifyContent: 'space-between', width: '100%' }}>
-          <Header as="h4" style={{ margin: 'auto 0' }}>
-            {title}
-          </Header>
-          {Controls !== undefined ? <Controls /> : null}
-        </div>
-      </Accordion.Title>
-      <Accordion.Content
-        active={true}
-        style={{
-          ...contentStyle,
-          height: '100%',
-          border: '1px solid grey',
-          paddingTop: 0,
-          paddingBottom: 0,
-        }}>
+    <div className={accordionClass}>
+      <div className={barAboveListClass}>
+        <Header as="h4" style={{ margin: 'auto 0' }}>
+          {title}
+        </Header>
+        {Controls !== undefined ? <Controls /> : null}
+      </div>
+      <div className={listContainerClass} style={contentStyle}>
         {Content}
-      </Accordion.Content>
-    </Accordion>
+      </div>
+    </div>
   );
 };
 
