@@ -16,7 +16,9 @@ internet connection, nor user's registration to run on desktop devices.
   <img src="https://raw.githubusercontent.com/amitnovick/catalog/master/docs/app-screenshot.png" width="700" alt="Catalog App Screenshot">
 </div>
 
-## Desktop application
+## Downloads
+
+### Desktop application
 
 | Operating System | Download                                                                                                                                                                                                                                    |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -24,10 +26,10 @@ internet connection, nor user's registration to run on desktop devices.
 | macOS            | <a href='https://github.com/amitnovick/catalog/releases/download/v0.6.31/Catalog-0.6.31.dmg'><img alt='Get it on macOS' width="134px" src='https://raw.githubusercontent.com/amitnovick/catalog/master/docs/BadgeMacOS.png'/></a>           |
 | Linux            | <a href='https://github.com/amitnovick/catalog/releases/download/v0.6.31/catalog-0.6.31.AppImage'><img alt='Get it on Linux' width="134px" src='https://raw.githubusercontent.com/amitnovick/catalog/master/docs/BadgeLinux.png'/></a>      |
 
-### Web Clipper extension
+### Web Clipper browser extension
 
-In addition to the desktop application, a companion Web Clipper browser extension is available,
-which offers the ability to capture screenshots from websites for later reference.
+The Web Clipper browser extension is an **optional** companion to the Desktop application, It offers
+the ability to capture screenshots from websites for later reference.
 
 | Browser | Download                                                                                                                                                                                                                                                                                 |
 | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
