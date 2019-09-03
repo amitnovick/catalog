@@ -20,9 +20,9 @@ internet connection, nor user's registration to run on desktop devices.
 
 | Operating System | Download                                                                                                                                                                                                                                    |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Windows          | <a href='https://github.com/amitnovick/catalog/releases/download/v0.6.23/catalog-setup-0.6.23.exe'><img alt='Get it on Windows' width="134px" src='https://raw.githubusercontent.com/amitnovick/catalog/master/docs/BadgeWindows.png'/></a> |
-| macOS            | <a href='https://github.com/amitnovick/catalog/releases/download/v0.6.23/Catalog-0.6.23.dmg'><img alt='Get it on macOS' width="134px" src='https://raw.githubusercontent.com/amitnovick/catalog/master/docs/BadgeMacOS.png'/></a>           |
-| Linux            | <a href='https://github.com/amitnovick/catalog/releases/download/v0.6.23/catalog-0.6.23.AppImage'><img alt='Get it on Linux' width="134px" src='https://raw.githubusercontent.com/amitnovick/catalog/master/docs/BadgeLinux.png'/></a>      |
+| Windows          | <a href='https://github.com/amitnovick/catalog/releases/download/v0.6.31/catalog-setup-0.6.31.exe'><img alt='Get it on Windows' width="134px" src='https://raw.githubusercontent.com/amitnovick/catalog/master/docs/BadgeWindows.png'/></a> |
+| macOS            | <a href='https://github.com/amitnovick/catalog/releases/download/v0.6.31/Catalog-0.6.31.dmg'><img alt='Get it on macOS' width="134px" src='https://raw.githubusercontent.com/amitnovick/catalog/master/docs/BadgeMacOS.png'/></a>           |
+| Linux            | <a href='https://github.com/amitnovick/catalog/releases/download/v0.6.31/catalog-0.6.31.AppImage'><img alt='Get it on Linux' width="134px" src='https://raw.githubusercontent.com/amitnovick/catalog/master/docs/BadgeLinux.png'/></a>      |
 
 In addition to the desktop application, a companion Web Clipper browser extension is available for
 [Firefox](https://addons.mozilla.org/en-US/firefox/addon/catalog-web-clipper/) and
