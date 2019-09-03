@@ -5,6 +5,7 @@ import { css } from 'emotion';
 
 import routes from '../../../../routes';
 import CategoryIcon from '../../../../components/CategoryIcon';
+import { CATEGORY_LIST_ITEM_HEIGHT } from './layoutConstants';
 
 const BLUE = '#2196F3';
 
@@ -17,7 +18,7 @@ const liClass = css`
   align-items: center;
   cursor: pointer;
   width: 100%;
-  height: 50px;
+  height: ${CATEGORY_LIST_ITEM_HEIGHT}px;
 `;
 
 const spanClass = css`

@@ -5,8 +5,7 @@ import { FixedSizeList as WindowedList } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
 import CategoryListItem from './CategoryListItem';
-
-const ITEM_SIZE = 50; // TODO: Reuse this constant on `CategoryListItem`
+import { CATEGORY_LIST_ITEM_HEIGHT } from './layoutConstants';
 
 const CategoryItemContext = React.createContext();
 
@@ -61,7 +60,7 @@ const CategoriesList = ({
                 height={height}
                 width={width}
                 itemCount={categories.length}
-                itemSize={ITEM_SIZE}
+                itemSize={CATEGORY_LIST_ITEM_HEIGHT}
                 style={{ padding: categories.length === 0 ? '0.5em' : 0 }}>
                 {Row}
               </WindowedList>
