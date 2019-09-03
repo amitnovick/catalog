@@ -31,7 +31,7 @@ which offers the ability to capture screenshots from websites for later referenc
 
 | Operating System | Download                                                                                                                                                                                                                                                         |
 | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Firefox          | <a href='https://raw.githubusercontent.com/amitnovick/catalog/master/docs/webclipper-badge-firefox-172x60px.png'><img alt='Get extension for Firefox' width="134px" src='https://addons.mozilla.org/en-US/firefox/addon/catalog-web-clipper/'/></a>              |
+| Firefox          | <a href='https://addons.mozilla.org/en-US/firefox/addon/catalog-web-clipper/'><img alt='Get extension for Firefox' width="134px" src='https://raw.githubusercontent.com/amitnovick/catalog/master/docs/webclipper-badge-firefox-172x60px.png'/></a>              |
 | Chrome           | <a href='https://github.com/amitnovick/catalog/releases/download/v0.6.31/Catalog-0.6.31.dmg'><img alt='Get extension for Google Chrome' width="134px" src='https://chrome.google.com/webstore/detail/catalog-web-clipper/oocdimepfbgcmbokkmfcpjmglbcclnlj'/></a> |
 
 ## Motivation
