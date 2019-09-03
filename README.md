@@ -13,7 +13,7 @@ platforms. Catalog is compatible with Windows, Linux and Mac. The application re
 internet connection, nor user's registration to run on desktop devices.
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/amitnovick/catalog/master/docs/app-screenshot.png" width="350" alt="Catalog App Screenshot">
+  <img src="https://raw.githubusercontent.com/amitnovick/catalog/master/docs/app-screenshot.png" width="700" alt="Catalog App Screenshot">
 </div>
 
 ## Desktop application
