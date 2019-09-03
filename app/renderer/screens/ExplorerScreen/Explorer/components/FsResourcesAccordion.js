@@ -11,7 +11,7 @@ const FsResourcesAccordion = ({ fsResources, selectedFileRow, onClickRow }) => {
     <AccordionWrapper
       title="Files"
       shouldDefaultToActive={fsResources.length === 0}
-      style={{ height: '100%' }}
+      contentStyle={{ overflowY: 'auto' }}
       Content={
         <>
           {fsResources.length > 0 ? (

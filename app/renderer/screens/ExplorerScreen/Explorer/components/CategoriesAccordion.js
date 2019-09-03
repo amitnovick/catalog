@@ -4,7 +4,7 @@ import { faEdit, faPlus, faArrowCircleRight, faTrash } from '@fortawesome/free-s
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import AccordionWrapper from './AccordionWrapper';
-import WindowedCategoryList from './WindowedCategoryList';
+import CategoriesList from './CategoriesList';
 
 const CategoryActionIcon = ({ icon, onClick, isDisabled, title }) => {
   return (
@@ -43,9 +43,8 @@ const CategoriesAccordion = ({
     <AccordionWrapper
       title="Categories"
       shouldDefaultToActive={true}
-      style={{ height: '100%' }}
       Content={
-        <WindowedCategoryList
+        <CategoriesList
           listRef={listRef}
           categories={categories}
           hasSelectedRow={hasSelectedRow}

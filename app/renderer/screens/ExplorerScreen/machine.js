@@ -140,22 +140,14 @@ const machine = Machine({
         },
         SELECTED_NEWLY_CREATED_CATEGORY_ROW: {
           target: 'categoryRowSelection.selectedRow',
-          actions: ['assignSelectedCategoryRowByName', 'scrollToCategoryRow'],
+          actions: ['assignSelectedCategoryRowByName', 'scrollToSelectedCategoryRow'],
         },
-        CATEGORY_DELETION_MODAL_SUBMIT: [
-          {
-            target: 'categoryRowSelection.noSelectedRow',
-            cond: 'checkIsSelectedRowToBeDeleted',
-            actions: 'clearSelectedCategoryRow',
-          },
-          {
-            actions: 'clearSelectedCategoryRow',
-          },
-        ],
-        CATEGORY_MOVE_TO_MODAL_SUBMIT: {
+        CATEGORY_DELETION_MODAL_SUBMIT: {
           target: 'categoryRowSelection.noSelectedRow',
-          actions: 'clearSelectedCategoryRow',
+          cond: 'checkIsSelectedRowToBeDeleted',
         },
+
+        CATEGORY_MOVE_TO_MODAL_SUBMIT: 'categoryRowSelection.noSelectedRow',
       },
     },
   },

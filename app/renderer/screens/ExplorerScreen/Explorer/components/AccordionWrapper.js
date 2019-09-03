@@ -9,11 +9,16 @@ const accordionClass = css`
   justify-content: space-between;
 `;
 
-const AccordionWrapper = ({ title, Content, shouldDefaultToActive, Controls, ...props }) => {
+const AccordionWrapper = ({
+  title,
+  Content,
+  shouldDefaultToActive,
+  Controls,
+  contentStyle = {},
+}) => {
   return (
     <Accordion
       className={accordionClass}
-      {...props}
       // defaultActiveIndex={shouldDefaultToActive === true ? 0 : undefined}
     >
       <Accordion.Title active={true} index={0}>
@@ -28,6 +33,7 @@ const AccordionWrapper = ({ title, Content, shouldDefaultToActive, Controls, ...
       <Accordion.Content
         active={true}
         style={{
+          ...contentStyle,
           height: '100%',
           border: '1px solid grey',
           paddingTop: 0,

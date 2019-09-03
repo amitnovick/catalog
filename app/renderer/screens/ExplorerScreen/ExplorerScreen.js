@@ -90,9 +90,6 @@ const machineWithServices = machine.withConfig({
     updateSelectedFsResourceRow: assign({
       selectedFsResourceRow: (_, event) => event.fsResource,
     }),
-    clearSelectedCategoryRow: assign({
-      selectedCategoryRow: (_, __) => null,
-    }),
     assignSelectedCategoryRowByName: assign({
       selectedCategoryRow: (context, event) =>
         selectCategoryRowByName(context.newCategoryName, event.data.childCategories),
@@ -128,7 +125,7 @@ const ExplorerScreen = ({ initialCategoryId }) => {
     }),
     {
       actions: {
-        scrollToCategoryRow: (context, _) =>
+        scrollToSelectedCategoryRow: (context, _) =>
           categoriesListRef.current.scrollToItem(
             context.childCategories.findIndex(
               (category) => category.id === context.selectedCategoryRow.id,
@@ -159,11 +156,20 @@ const ExplorerScreen = ({ initialCategoryId }) => {
     current.matches('processes.categoryAdditionModal') ||
     current.matches('processes.categoryMoveToModal')
   ) {
+    const isExplorerVisible = current.matches('processes.idle');
+
     return (
       <ReactContext.Provider value={service}>
-        {current.matches('processes.idle') ? (
+        <div
+          style={{
+            visibility: isExplorerVisible ? 'visible' : 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            width: '100%',
+          }}>
           <Explorer categoriesInPath={categoriesInPath} />
-        ) : null}
+        </div>
         {current.matches('processes.categoryRenamingModal') ? (
           <CategoryRenameModalWidget
             category={categoryRenamingModalCategory}

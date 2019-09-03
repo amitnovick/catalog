@@ -12,12 +12,15 @@ const listClass = css`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin-top: 0px !important;
 `;
 
 const Explorer = ({ categoriesInPath }) => {
   return (
     <>
-      <PathCategoriesMenu categoriesInPath={categoriesInPath} />
+      <div style={{ marginBottom: '1em' }}>
+        <PathCategoriesMenu categoriesInPath={categoriesInPath} />
+      </div>
       <List celled className={listClass}>
         <List.Item style={{ height: '50%' }}>
           <CategoriesAccordionContainer />
