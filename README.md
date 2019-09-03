@@ -29,10 +29,10 @@ internet connection, nor user's registration to run on desktop devices.
 In addition to the desktop application, a companion Web Clipper browser extension is available,
 which offers the ability to capture screenshots from websites for later reference.
 
-| Operating System | Download                                                                                                                                                                                                                                                 |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Firefox          | <a href='https://raw.githubusercontent.com/amitnovick/catalog/master/docs/webclipper-badge-firefox-172x60px.png'><img alt='Get Add-on for Firefox' width="134px" src='https://addons.mozilla.org/en-US/firefox/addon/catalog-web-clipper/'/></a>         |
-| Chrome           | <a href='https://github.com/amitnovick/catalog/releases/download/v0.6.31/Catalog-0.6.31.dmg'><img alt='Get it on Google Chrome' width="134px" src='https://chrome.google.com/webstore/detail/catalog-web-clipper/oocdimepfbgcmbokkmfcpjmglbcclnlj'/></a> |
+| Operating System | Download                                                                                                                                                                                                                                                         |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Firefox          | <a href='https://raw.githubusercontent.com/amitnovick/catalog/master/docs/webclipper-badge-firefox-172x60px.png'><img alt='Get extension for Firefox' width="134px" src='https://addons.mozilla.org/en-US/firefox/addon/catalog-web-clipper/'/></a>              |
+| Chrome           | <a href='https://github.com/amitnovick/catalog/releases/download/v0.6.31/Catalog-0.6.31.dmg'><img alt='Get extension for Google Chrome' width="134px" src='https://chrome.google.com/webstore/detail/catalog-web-clipper/oocdimepfbgcmbokkmfcpjmglbcclnlj'/></a> |
 
 ## Motivation
 
