@@ -57,7 +57,7 @@
     "babel-plugin-macros": "^2.6.1",
     "browser-sync": "^2.23.6",
     "chai": "^4.1.0",
-    "electron": "3.0.16",
+    "electron": "9.4.0",
     "electron-builder": "^21.2.0",
     "electron-devtools-installer": "^2.2.4",
     "electron-mocha": "^6.0.1",
